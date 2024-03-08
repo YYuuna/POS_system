@@ -6,7 +6,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import Group, Permission
 
-#Model pour la gestion des comptes , il faut le definir pour django
+
+# Model pour la gestion des comptes, il faut le définir pour django
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
         if not username:
@@ -16,7 +17,8 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-#Compte
+
+# Compte
 class Account(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('Username'), max_length=150, unique=True)
     is_active = models.BooleanField(_('Active'), default=True)
@@ -38,6 +40,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
 
+
 # Signal to update groups in Account model based on role in Employee model
 @receiver(post_save, sender=Account)
 def update_account_groups(sender, instance, created, **kwargs):
@@ -47,6 +50,7 @@ def update_account_groups(sender, instance, created, **kwargs):
             instance.groups.add(Group.objects.get(name='Admin'))
         elif employee.role == 'Employee':
             instance.groups.add(Group.objects.get(name='Employee'))
+
 
 class Supplier(models.Model):
     name = models.CharField(max_length=100)
@@ -70,15 +74,6 @@ class Client(models.Model):
 
 
 class Product(models.Model):
-    CATEGORY_CHOICES = [
-        ('TÉLÉPHONE', 'Téléphone'),
-        ('PC', 'PC'),
-        ('TABLETTE', 'Tablette'),
-        ('ACCESSOIRE', 'Accessoire'),
-        ('APPAREIL_PHOTO', 'Appareil photo'),
-        ('AUTRE', 'Autre')
-    ]
-
     STATUS_CHOICES = [
         ('EN_VENTE', 'En vente'),
         ('EN_RÉPARATION', 'En réparation'),
@@ -87,11 +82,12 @@ class Product(models.Model):
 
     name = models.CharField(max_length=100)
     description = models.TextField()
+    quantity = models.PositiveIntegerField(default=0)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='EN_VENTE')
     initial_buying_price = models.DecimalField(max_digits=10, decimal_places=2)
     initial_selling_price = models.DecimalField(max_digits=10, decimal_places=2)
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='EN_VENTE')
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+
     # Other fields...
 
     def __str__(self):
@@ -103,6 +99,7 @@ class PurchaseOrder(models.Model):
     order_date = models.DateField(auto_now_add=True)
     delivery_date = models.DateField(null=True, blank=True)
     is_delivered = models.BooleanField(default=False)
+
     # Other fields...
 
     def __str__(self):
@@ -114,6 +111,7 @@ class PurchaseOrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     purchase_price = models.DecimalField(max_digits=10, decimal_places=2)  # Dynamic price for purchase order
+
     # Other fields...
 
     def __str__(self):
@@ -126,6 +124,7 @@ class PurchaseOrderItem(models.Model):
 class Sale(models.Model):
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True)
     sale_date = models.DateField(auto_now_add=True)
+
     # Other fields...
 
     def __str__(self):
@@ -137,6 +136,7 @@ class SaleItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     sale_price = models.DecimalField(max_digits=10, decimal_places=2)  # Dynamic price for sale
+
     # Other fields...
 
     def __str__(self):
@@ -157,6 +157,7 @@ class Repair(models.Model):
     description = models.TextField()
     repair_date = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='EN_COURS')
+
     # Other fields...
 
     def __str__(self):
@@ -181,4 +182,4 @@ class Employee(models.Model):
         verbose_name_plural = _('Employees')
 
     def __str__(self):
-        return f"{self.prenom} {self.nom}"
+        return f"{self.first_name} {self.last_name}"
