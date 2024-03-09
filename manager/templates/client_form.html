@@ -3,12 +3,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
-    <title>liste des produits</title>
+    <title>ajouter client</title>
+
 </head>
 <body>
+
+
 <div class="corp">
+
 
     <div class="nav">
 
@@ -85,36 +90,45 @@
 
     </div>
 
+    <div class="container">
 
-    <div class="liste">
+        <form action="" class="form" method="post">
 
-
-        <div class="c1">
-
-            <div class="colone1"><h3>listes des client</h3></div>
-
-            <div class="colone1">
-                <form method="GET" action="">
-                    {{ form }}
-                    <button type="submit">Rechercher</button>
-                </form>
+            <div class="titre">
+                <h3>ajouter un client </h3>
             </div>
+            <br><br>
 
-            <div class="colone1">
-                <button class="button"><a href="client_form.html" class="link">ajouter client</a></button>
+            <div class="box">
+                <!--        <input  class="input" type="text" name="nom" id="nom" placeholder="nom">-->
+                <!--        <input  class="input" type="text" name="prenom" id="prenom" placeholder="prenom">-->
+                <!--       -->
+                <!--            <input  class="input"  type="tel" name="tel" id="tel" placeholder="tel"     >-->
+                <!--           -->
+                <!--        <input  class="input" type="email" name="email" id="email" placeholder="email">-->
+                <!--        <input  class="input" type="adresse" name="adresse" id="adresse" placeholder="adresse"  > -->
+                {% csrf_token %}
+<!--                {{form.last_name}}-->
+<!--                {{form.first_name}}-->
+<!--                {{form.phone}}-->
+<!--                {{form.email}}-->
+<!--                {{form.address}}-->
+                {% for field in form %}
+                    {{ field.errors }}
+                    {{ field }}
+                    {{ field.help_text }}
+                {% endfor %}
+
             </div>
+            <input class="button" id="valider" type="submit" value="valider">
 
-        </div>
-
-        <div class="c2">
-            <p>hnaya la liste</p>
-
-        </div>
+        </form>
 
     </div>
 
 
 </div>
+
 
 </body>
 </html>

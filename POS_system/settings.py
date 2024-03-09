@@ -123,3 +123,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+STATIC_ROOT = BASE_DIR / 'productionfiles'
+
+
+STATICFILES_DIRS = [BASE_DIR / 'manager/static']
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
+
+AUTH_USER_MODEL = 'manager.Account'
+
+PHONENUMBER_DB_FORMAT='NATIONAL'
+PHONENUMBER_DEFAULT_FORMAT='NATIONAL'
+PHONENUMBER_DEFAULT_REGION = 'DZ'
+

@@ -54,7 +54,7 @@ def update_account_groups(sender, instance, created, **kwargs):
 
 class Supplier(models.Model):
     name = models.CharField(max_length=100)
-    phone = PhoneNumberField(unique=True)
+    phone = PhoneNumberField(unique=True,region='DZ')
     email = models.EmailField(unique=True)
     address = models.TextField()
 
@@ -65,7 +65,7 @@ class Supplier(models.Model):
 class Client(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    phone = PhoneNumberField(unique=True)
+    phone = PhoneNumberField(unique=True,region='DZ')
     email = models.EmailField(unique=True)
     address = models.TextField()
 

@@ -1,26 +1,27 @@
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
-from manager.models import Employee  # Import your models as needed
+from manager.models import Employee ,Account # Import your models as needed
 
 # Create or get the content types for your models
-my_model_content_type = ContentType.objects.get_for_model(Employee)
+employee_content_type = ContentType.objects.get_for_model(Employee)
+account_content_type = ContentType.objects.get_for_model(Account)
 
 # Define permissions
 manage_users_permission, created = Permission.objects.get_or_create(
-    codename='manage_users',
-    content_type=my_model_content_type,
-    defaults={'name': 'Managing Users'}
+    codename='manage_accounts',
+    content_type=account_content_type,
+    defaults={'name': 'Managing Accounts'}
 )
 
 manage_employees_permission, created = Permission.objects.get_or_create(
     codename='manage_employees',
-    content_type=my_model_content_type,
+    content_type=employee_content_type,
     defaults={'name': 'Managing Employees'}
 )
 
 manage_pos_services_permission, created = Permission.objects.get_or_create(
     codename='manage_pos_services',
-    content_type=my_model_content_type,
+    content_type=employee_content_type,
     defaults={'name': 'Managing POS Services'}
 )
 
