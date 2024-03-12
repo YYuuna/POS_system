@@ -1,11 +1,11 @@
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView
 from django.urls import reverse_lazy
-from .models import Client
-from .forms import ClientForm, UserLoginForm, ClientSearchForm
+from .models import Client, Supplier
+from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm
 
 
 class AddClientView(LoginRequiredMixin, CreateView):
@@ -33,7 +33,7 @@ class ClientListView(LoginRequiredMixin, ListView):
     model = Client
     template_name = 'listeclient.html'
     context_object_name = 'clients'
-    form_class = ClientSearchForm
+    form_class = FilterForm
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -44,5 +44,21 @@ class ClientListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = ClientSearchForm(self.request.GET)
+        context['form'] = FilterForm(self.request.GET)
         return context
+
+class ClientUpdateView(UpdateView):
+    model = Client
+    fields = ['last_name', 'first_name', 'phone', 'email', 'address']
+    template_name = 'client_update_form.html'
+    success_url = reverse_lazy('client_list')
+
+class ClientDeleteView(DeleteView):
+    model = Client
+    template_name = 'client_confirm_delete.html'
+    success_url = reverse_lazy('client_list')
+class AddSupplierView(CreateView):
+    model = Supplier
+    form_class = SupplierForm
+    template_name = 'ajouterfournisseur.html'
+    success_url = reverse_lazy('supplier-list')

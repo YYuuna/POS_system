@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Employee, Account, Client
+from .models import Employee, Account, Client, Supplier
 
 
 class AccountRegistrationForm(UserCreationForm):
@@ -27,11 +27,41 @@ class ClientForm(forms.ModelForm):
         model = Client
         fields = ['last_name', 'first_name', 'phone', 'email', 'address']
         widgets = {
-            'first_name': forms.TextInput(attrs={'placeholder': 'Entrer le prenom'}),
+            'first_name': forms.TextInput(attrs={'placeholder': 'Entrer le prénom'}),
             'last_name': forms.TextInput(attrs={'placeholder': 'Entrer le nom'}),
             'phone': forms.TextInput(attrs={'placeholder': 'Entrer le numero teléphone'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Entrer l\'email'}),
             'address': forms.TextInput(attrs={'placeholder': 'Entrer l\'adresse'}),
+        }
+        labels = {
+            'first_name': "",
+            'last_name': "",
+            'phone': "",
+            'email': "",
+            'address': "",
+        }
+        error_messages = {
+            'first_name': {
+                'required': "Le prénom du client est requis.",
+                'max_length': "Le prénom du client ne peut pas dépasser %(max)d caractères.",
+            },
+            'last_name': {
+                'required': "Le nom de famille du client est requis.",
+                'max_length': "Le nom de famille du client ne peut pas dépasser %(max)d caractères.",
+            },
+            'phone': {
+                'required': "Le numéro de téléphone est requis.",
+                'invalid': "Veuillez entrer un numéro de téléphone valide.",
+                'unique': "Un client avec ce numéro de téléphone existe déjà.",
+            },
+            'email': {
+                'required': "L'adresse e-mail est requise.",
+                'invalid': "Veuillez fournir une adresse e-mail valide.",
+                'unique': "Un client avec cette adresse e-mail existe déjà.",
+            },
+            'address': {
+                'required': "L'adresse est requise.",
+            }
         }
 
 
@@ -68,5 +98,43 @@ class UserLoginForm(AuthenticationForm):
         super().add_error(field, error)
 
 
-class ClientSearchForm(forms.Form):
-    query = forms.IntegerField(label='', required=False,widget=forms.TextInput(attrs={'placeholder': 'Rechercher par ID'}))
+class FilterForm(forms.Form):
+    query = forms.IntegerField(label='', required=False,
+                               widget=forms.TextInput(attrs={'placeholder': 'Rechercher par ID'}))
+
+
+class SupplierForm(forms.ModelForm):
+    class Meta:
+        model = Supplier
+        fields = ['name', 'phone', 'email', 'address']
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Entrer le nom de fournisseur'}),
+            'phone': forms.TextInput(attrs={'placeholder': 'Entrer le numero teléphone'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Entrer l\'email'}),
+            'address': forms.TextInput(attrs={'placeholder': 'Entrer l\'adresse'}),
+        }
+        labels = {
+            'name': None,
+            'phone': None,
+            'email': None,
+            'address': None,
+        }
+        error_messages = {
+            'name': {
+                'required': "Le nom du fournisseur est requis.",
+                'max_length': "Le nom du fournisseur ne peut pas dépasser %(max)d caractères.",
+            },
+            'phone': {
+                'required': "Le numéro de téléphone est requis.",
+                'invalid': "Veuillez entrer un numéro de téléphone valide.",
+                'unique': "Un fournisseur avec ce numéro de téléphone existe déjà.",
+            },
+            'email': {
+                'required': "L'adresse e-mail est requise.",
+                'invalid': "Veuillez fournir une adresse e-mail valide.",
+                'unique': "Un fournisseur avec cette adresse e-mail existe déjà.",
+            },
+            'address': {
+                'required': "L'adresse est requise.",
+            }
+        }

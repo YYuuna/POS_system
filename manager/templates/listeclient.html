@@ -91,63 +91,65 @@
 
         <div class="c1">
 
-            <div class="colone1"><h3>listes des client</h3></div>
+            <div class="colone1"><h3>Listes des client</h3></div>
 
             <div class="colone1">
                 <form method="GET" action="">
                     {{ form }}
-                    <button type="submit">Rechercher</button>
+                    <button class="button" type="submit">Rechercher</button>
                 </form>
             </div>
 
             <div class="colone1">
-                <button class="button"><a href="client_form.html" class="link">ajouter client</a></button>
+                <button class="button"><a href="{% url 'add-client' %}" class="link">Ajouter client</a></button>
             </div>
 
         </div>
 
         <div class="c2">
+            {% if clients %}
             <table>
+                <thead>
                 <tr>
-                     <th>id</th>
-                     <th>nom</th>
-                     <th>prénom</th>
-                     <th>tel</th>
-                     <th>email</th>
-                     <th>adress</th>
-                     
-                     <th>modifier</th>
-                     <th>supprimer</th>
-                     
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Teléphone</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+
+                    <th>Modifier</th>
+                    <th>Supprimer</th>
+
                 </tr>
+                </thead>
                 <tbody id="tbody">
-                    <tr>
-                      <td></td>
-                     <td>mourad</td>
-                     <td>djb</td>
-                     <td>0558266261</td>
-                     <td>mou@gmail.com</td>
-                     <td>alger</td>
-      
-                     <td><button class="button" id="modifier">modifier</button></td>
-                     <td><button class="button" id="supprimer">supprimer</button></td>
-                    </tr>
-      
-                    <tr>
-                    <td></td>
-                     <td>younes</td>
-                     <td>bad</td>
-                     <td>0558266261</td>
-                     <td>younes@gmail.com</td>
-                     <td>alger</td>
-      
-                     <td><button class="button" id="modifier">modifier</button></td>
-                     <td><button class="button" id="supprimer">supprimer</button></td>
-                      
-                    </tr>
+                {% for client in clients %}
+                <tr>
+                    <td>{{ client.id }}</td>
+                    <td>{{ client.last_name }}</td>
+                    <td>{{ client.first_name }}</td>
+                    <td>{{ client.phone }}</td>
+                    <td>{{ client.email }}</td>
+                    <td>{{ client.address }}</td>
+
+                    <td>
+                        <button class="button" id="modifier"
+                                onclick="location.href='{% url 'update-client' client.id %}';">Modifier
+                        </button>
+                    </td>
+                    <td>
+                        <button class="button" id="supprimer"
+                                onclick="location.href='{% url 'delete-client' client.id %}';">Supprimer
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
                 </tbody>
-              </table>
-           
+            </table>
+            {% else %}
+            <p>Pas de clients trouvés.</p>
+            {% endif %}
         </div>
 
     </div>

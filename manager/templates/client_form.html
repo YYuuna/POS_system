@@ -95,7 +95,7 @@
         <form action="" class="form" method="post">
 
             <div class="titre">
-                <h3>ajouter un client </h3>
+                <h3>Ajouter un client </h3>
             </div>
             <br>
 
@@ -108,19 +108,10 @@
                 <!--        <input  class="input" type="email" name="email" id="email" placeholder="email">-->
                 <!--        <input  class="input" type="adresse" name="adresse" id="adresse" placeholder="adresse"  > -->
                 {% csrf_token %}
-<!--                {{form.last_name}}-->
-<!--                {{form.first_name}}-->
-<!--                {{form.phone}}-->
-<!--                {{form.email}}-->
-<!--                {{form.address}}-->
-                {% for field in form %}
-                    {{ field.errors }}
-                    {{ field }}
-                    {{ field.help_text }}
-                {% endfor %}
+                {{ form }}
 
             </div>
-            <input class="button" id="valider" type="submit" value="valider">
+            <input class="button" id="valider" type="submit" value="Valider">
 
         </form>
 
