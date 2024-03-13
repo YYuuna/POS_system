@@ -34,12 +34,13 @@ class ClientListView(LoginRequiredMixin, ListView):
     template_name = 'listeclient.html'
     context_object_name = 'clients'
     form_class = FilterForm
+    paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        client_id = self.request.GET.get('client_id')
-        if client_id:
-            queryset = queryset.filter(id=client_id)
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(id=query)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -47,18 +48,55 @@ class ClientListView(LoginRequiredMixin, ListView):
         context['form'] = FilterForm(self.request.GET)
         return context
 
-class ClientUpdateView(UpdateView):
+
+class ClientUpdateView(LoginRequiredMixin, UpdateView):
     model = Client
     fields = ['last_name', 'first_name', 'phone', 'email', 'address']
     template_name = 'client_update_form.html'
     success_url = reverse_lazy('client_list')
 
-class ClientDeleteView(DeleteView):
+
+class ClientDeleteView(LoginRequiredMixin, DeleteView):
     model = Client
     template_name = 'client_confirm_delete.html'
     success_url = reverse_lazy('client_list')
-class AddSupplierView(CreateView):
+
+
+class AddSupplierView(LoginRequiredMixin, CreateView):
     model = Supplier
     form_class = SupplierForm
     template_name = 'ajouterfournisseur.html'
+    success_url = reverse_lazy('supplier-list')
+
+
+class SupplierListView(LoginRequiredMixin, ListView):
+    model = Supplier
+    template_name = 'listefournisseur.html'
+    context_object_name = 'suppliers'
+    paginate_by = 10
+    form_class = FilterForm
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(id=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = FilterForm(self.request.GET)
+        return context
+
+
+class SupplierUpdateView(LoginRequiredMixin, UpdateView):
+    model = Supplier
+    fields = ['name', 'phone', 'email', 'address']
+    template_name = 'supplier_update_form.html'
+    success_url = reverse_lazy('supplier-list')
+
+
+class SupplierDeleteView(LoginRequiredMixin, DeleteView):
+    model = Supplier
+    template_name = 'supplier_confirm_delete.html'
     success_url = reverse_lazy('supplier-list')

@@ -114,10 +114,10 @@ class SupplierForm(forms.ModelForm):
             'address': forms.TextInput(attrs={'placeholder': 'Entrer l\'adresse'}),
         }
         labels = {
-            'name': None,
-            'phone': None,
-            'email': None,
-            'address': None,
+            'name': "",
+            'phone': "",
+            'email': "",
+            'address': "",
         }
         error_messages = {
             'name': {
