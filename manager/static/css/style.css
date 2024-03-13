@@ -71,7 +71,7 @@ input:focus{
     border-radius:10px ;
     border: none;
     cursor: pointer;
-    background: #390053;
+    background: #4f3aeb;
     color: white;
     transition: 0.7s;
 
@@ -215,4 +215,13 @@ table{
     background: #1bb635b7;
    
 }
+.boxsup{
+    padding-top: 10%;
+    display: grid;
+    grid-template-rows: 80% 20% ;
+    justify-items: center;
+    align-items: center;
+
+}
+
 
