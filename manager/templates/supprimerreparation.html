@@ -6,7 +6,7 @@
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
-    <title>Supprimer client</title>
+    <title>Supprimer réparation </title>
 
 </head>
 <body>
@@ -96,12 +96,12 @@
             <form action="" class="form" method="post">
 
                 <div class="titre">
-                    <h3>Supprimer un client </h3>
+                    <h3>Supprimer une réparation  </h3>
                 </div>
                 <br>
 
 
-                <p>Êtes-vous sûr de vouloir supprimer ce client ?</p><br><br>
+                <p>Êtes-vous sûr de vouloir supprimer cette réparation  ?</p><br><br>
 
                 {% csrf_token %}
                 <input class="button" id="supprimer" type="submit" value="Supprimer">

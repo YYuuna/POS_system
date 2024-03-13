@@ -6,7 +6,7 @@
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
-    <title>Supprimer client</title>
+    <title>Modifier employé</title>
 
 </head>
 <body>
@@ -92,26 +92,26 @@
 
     <div class="container">
 
-        <div class="boxsup">
-            <form action="" class="form" method="post">
+        <form action="" class="form" method="post">
 
-                <div class="titre">
-                    <h3>Supprimer un client </h3>
-                </div>
-                <br>
+            <div class="titre">
+                <h3>Modifier l'employé </h3>
+            </div>
+            <br>
 
-
-                <p>Êtes-vous sûr de vouloir supprimer ce client ?</p><br><br>
-
+            <div class="box">
+<!--                 <input  class="input" type="text" name="nom" id="nom" placeholder="nom">-->
+<!--                 <input  class="input" type="text" name="prenom" id="prenom" placeholder="prenom">-->
+<!--                 <input  class="input"  type="tel" name="tel" id="tel" placeholder="tel"     >-->
+<!--                 <input  class="input" type="email" name="email" id="email" placeholder="email">-->
+<!--                 <input  class="input" type="adresse" name="adresse" id="adresse" placeholder="adresse"  > -->
                 {% csrf_token %}
-                <input class="button" id="supprimer" type="submit" value="Supprimer">
+                {{ form }}
+            </div>
+            <input class="button" id="valider" type="submit" value="Valider">
 
-            </form>
-                <button class="button" id="modifier"
-                        onclick="location.href='{% url 'client-list'%}';">Annuler
-                </button>
+        </form>
 
-        </div>
     </div>
 
 
