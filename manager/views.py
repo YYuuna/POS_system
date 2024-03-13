@@ -4,8 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView
 from django.urls import reverse_lazy
-from .models import Client, Supplier
-from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm
+from .models import Client, Supplier, Product
+from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm
 
 
 class AddClientView(LoginRequiredMixin, CreateView):
@@ -51,15 +51,15 @@ class ClientListView(LoginRequiredMixin, ListView):
 
 class ClientUpdateView(LoginRequiredMixin, UpdateView):
     model = Client
-    fields = ['last_name', 'first_name', 'phone', 'email', 'address']
-    template_name = 'client_update_form.html'
-    success_url = reverse_lazy('client_list')
+    form_class = ClientForm
+    template_name = 'modifierclient.html'
+    success_url = reverse_lazy('client-list')
 
 
 class ClientDeleteView(LoginRequiredMixin, DeleteView):
     model = Client
-    template_name = 'client_confirm_delete.html'
-    success_url = reverse_lazy('client_list')
+    template_name = 'supprimerclient.html'
+    success_url = reverse_lazy('client-list')
 
 
 class AddSupplierView(LoginRequiredMixin, CreateView):
@@ -100,3 +100,30 @@ class SupplierDeleteView(LoginRequiredMixin, DeleteView):
     model = Supplier
     template_name = 'supplier_confirm_delete.html'
     success_url = reverse_lazy('supplier-list')
+
+
+class AddProductView(LoginRequiredMixin, CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'ajouterproduit.html'
+    success_url = reverse_lazy('product-list')
+
+
+class ProductListView(LoginRequiredMixin, ListView):
+    model = Product
+    template_name = 'listeproduit.html'  # replace with your template
+    context_object_name = 'products'
+    paginate_by = 10
+    form_class = FilterForm
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(id=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = FilterForm(self.request.GET)
+        return context

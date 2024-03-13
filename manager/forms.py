@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Employee, Account, Client, Supplier
+from .models import Employee, Account, Client, Supplier, Product
 
 
 class AccountRegistrationForm(UserCreationForm):
@@ -138,3 +138,55 @@ class SupplierForm(forms.ModelForm):
                 'required': "L'adresse est requise.",
             }
         }
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields=['name','description','status','initial_buying_price','initial_selling_price','supplier']
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Entrer le nom du produit'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Entrer la description du produit'}),# Add 'rows': 3, 'cols': 30 as needed
+            'status': forms.Select(attrs={'placeholder': 'Choisir le statut du produit'}),  # Add 'size': 3 as needed
+            'initial_buying_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix d\'achat'}),
+            'initial_selling_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix de vente'}),
+            'supplier': forms.Select(attrs={'placeholder': 'Choisir le fournisseur'}),
+        }
+        labels={
+            'name': "",
+            'description': "",
+            'status': "",
+            'initial_buying_price': "",
+            'initial_selling_price': "",
+            'supplier': "",
+        }
+        error_messages = {
+            'name': {
+                'required': "Le nom du produit est requis.",
+                'max_length': "Le nom du produit ne peut pas dépasser %(max)d caractères.",
+            },
+            'description': {
+                'required': "La description du produit est requise.",
+            },
+            'status': {
+                'required': "Le statut du produit est requis.",
+            },
+            'initial_buying_price': {
+                'required': "Le prix d'achat est requis.",
+                'invalid': "Veuillez entrer un prix d'achat valide.",
+            },
+            'initial_selling_price': {
+                'required': "Le prix de vente est requis.",
+                'invalid': "Veuillez entrer un prix de vente valide.",
+            },
+            'supplier': {
+                'required': "Le fournisseur est requis.",
+            }
+        }
+        widgets = {
+            'status': forms.Select(choices=[
+                ('EN_VENTE', 'En vente'),
+                ('EN_REPARATION', 'En réparation'),
+                # do not include 'reparation_terminee' here
+            ]),
+        }
+

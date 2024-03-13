@@ -72,6 +72,11 @@ class Client(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    def __str__(self):
+        return self.name
 
 class Product(models.Model):
     STATUS_CHOICES = [
@@ -81,11 +86,12 @@ class Product(models.Model):
     ]
 
     name = models.CharField(max_length=100)
+    category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default=1)
     description = models.TextField()
-    quantity = models.PositiveIntegerField(default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='EN_VENTE')
-    initial_buying_price = models.DecimalField(max_digits=10, decimal_places=2)
-    initial_selling_price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=0,blank=True, null=True)
+    initial_buying_price = models.DecimalField(max_digits=10, decimal_places=2,blank=True, null=True)
+    initial_selling_price = models.DecimalField(max_digits=10, decimal_places=2,blank=True, null=True)
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True)
 
     # Other fields...

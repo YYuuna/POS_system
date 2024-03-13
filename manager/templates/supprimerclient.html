@@ -6,7 +6,7 @@
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
-    <title>supprimer client</title>
+    <title>Supprimer client</title>
 
 </head>
 <body>
@@ -94,20 +94,23 @@
 
         <div class="boxsup">
             <form action="" class="form" method="post">
-    
+
                 <div class="titre">
-                    <h3>supprimer le client </h3>
+                    <h3>Supprimer un client </h3>
                 </div>
                 <br>
-    
-                
-                     <p>Êtes-vous sûr de vouloir supprimer ?</p><br><br>
-                    
-                
+
+
+                <p>Êtes-vous sûr de vouloir supprimer le client ?</p><br><br>
+
+                {% csrf_token %}
                 <input class="button" id="supprimer" type="submit" value="Supprimer">
-                
+
             </form>
-                 <input class="button" id="modifier" type="submit" value="Anuller">
+                <button class="button" id="modifier"
+                        onclick="location.href='{% url 'client-list'%}';">Annuler
+                </button>
+
         </div>
     </div>
 
