@@ -120,15 +120,13 @@ input:focus{
 
 .c2{
     padding-top: 2%;
-
-
 }
+
 
 .box{
     display: grid;
     grid-template-rows: 1fr 1fr 1fr 1fr ;
-   
-   
+     
     justify-items: center;
     align-items: center;
     
@@ -144,8 +142,7 @@ input:focus{
 .boxcommande{
     display: grid;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr ;
-    
-   
+ 
     justify-items: center;
     align-items: center;
     
@@ -218,3 +215,4 @@ table{
     background: #1bb635b7;
    
 }
+
