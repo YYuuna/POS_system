@@ -2,7 +2,7 @@ from django.contrib.auth.views import LoginView
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic import ListView
+from django.views.generic import ListView,TemplateView
 from django.urls import reverse_lazy
 from .models import Client, Supplier, Product
 from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm
@@ -147,3 +147,7 @@ class SaleListView(LoginRequiredMixin, ListView):
 
 class RepairListView(LoginRequiredMixin, ListView):
     pass
+
+
+class HomeView(LoginRequiredMixin,TemplateView):
+    template_name = 'menu.html'

@@ -19,4 +19,5 @@ path('login/',views.UserLoginView.as_view(),name='login'),
     path('ventes', views.SaleListView.as_view(), name='sale-list'),
     path('stock', views.ProductListView.as_view(), name='products-list'),
     path('reparations', views.RepairListView.as_view(), name='repair-list'),
+    path('', views.HomeView.as_view(), name='home'),
 ]
