@@ -20,6 +20,7 @@ body{
     margin-top: 10px;
     text-align: center;
     letter-spacing: 5px;
+    transition: 300ms;
 }
 .logoo:hover {
     letter-spacing:10px;
@@ -46,7 +47,7 @@ body{
 .c{
 
    height: 80%;
-    text-align: center;
+   text-align: center;
    background-color: 111111a7;
 }
 
