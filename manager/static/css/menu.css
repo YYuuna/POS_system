@@ -20,10 +20,10 @@ body{
     margin-top: 10px;
     text-align: center;
     letter-spacing: 5px;
-    transition: 300ms;
+    transition: 0.9s;
 }
 .logoo:hover {
-    letter-spacing:10px;
+    letter-spacing:8px;
   
 }
 
