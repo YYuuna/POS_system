@@ -8,15 +8,10 @@ body{
     font-family:system-ui ;
 }
 
-
-
 .link{
   text-decoration: none;
   color: white;
 }
-
-
-
 
 .logo{
   
@@ -35,8 +30,6 @@ body{
     transform: scale(0.95, 0.95);
   }
   
-
-
 .input {
     display: flex;
     flex-direction: column;
@@ -46,8 +39,7 @@ body{
     border-radius: 10px;
     transition: 1s;
     padding: 10px;
-    overflow: hidden;
-    
+    overflow: hidden;    
 }
   
   .value {
@@ -62,32 +54,23 @@ body{
     cursor: pointer;
     border-radius: 10px;
     transition: 1s;
-    box-sizing: border-box;
-
-    
+    box-sizing: border-box;  
 }
   
-
-
-
-
-
   .value:not(:active):hover,
   .value:focus {
     display: flex;
     box-sizing: border-box;
     border: 2px solid #1a1f24;
     color: #637185;
-  }
+}
   
-
-
   .value:focus,
   .value:active {
     background-color: #1a1f24;
     outline: none;
     margin-left: 19px;
-  }
+}
   
   .value::before {
     content: "";
@@ -96,14 +79,12 @@ body{
     left: -15px;
     width: 5px;
     height: 100%;
-    background-color:#390053 ;
+    background-color:#007acc ;
     border-radius: 5px;
     opacity: 0;
     transition: 1s;
   }
-  
-
-  
+   
   .value:focus::before,
   .value:active::before {
     opacity: 1;
