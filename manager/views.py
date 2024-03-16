@@ -91,7 +91,7 @@ class SupplierListView(LoginRequiredMixin, ListView):
 
 class SupplierUpdateView(LoginRequiredMixin, UpdateView):
     model = Supplier
-    fields = ['name', 'phone', 'email', 'address']
+    form_class = SupplierForm
     template_name = 'supplier_update_form.html'
     success_url = reverse_lazy('supplier-list')
 
@@ -127,3 +127,23 @@ class ProductListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['form'] = FilterForm(self.request.GET)
         return context
+
+
+class AccountListView(LoginRequiredMixin, ListView):
+    pass
+
+
+class EmployeeListView(LoginRequiredMixin, ListView):
+    pass
+
+
+class PurchaseOrderListView(LoginRequiredMixin, ListView):
+    pass
+
+
+class SaleListView(LoginRequiredMixin, ListView):
+    pass
+
+
+class RepairListView(LoginRequiredMixin, ListView):
+    pass

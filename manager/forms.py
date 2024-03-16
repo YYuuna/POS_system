@@ -142,17 +142,23 @@ class SupplierForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields=['name','description','status','initial_buying_price','initial_selling_price','supplier']
+        fields=['name','category','description','status','initial_buying_price','initial_selling_price','supplier']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Entrer le nom du produit'}),
+            'category': forms.Select(attrs={'placeholder': 'Choisir la catégorie du produit'}),  # Add 'size': 3 as needed
             'description': forms.Textarea(attrs={'placeholder': 'Entrer la description du produit'}),# Add 'rows': 3, 'cols': 30 as needed
-            'status': forms.Select(attrs={'placeholder': 'Choisir le statut du produit'}),  # Add 'size': 3 as needed
+            'status': forms.Select(attrs={'placeholder': 'Choisir le statut du produit'},choices=[
+                ('EN_VENTE', 'En vente'),
+                ('EN_REPARATION', 'En réparation')
+                # do not include 'reparation_terminee' here
+            ]),  # Add 'size': 3 as needed
             'initial_buying_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix d\'achat'}),
             'initial_selling_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix de vente'}),
             'supplier': forms.Select(attrs={'placeholder': 'Choisir le fournisseur'}),
         }
         labels={
             'name': "",
+            'category': "",
             'description': "",
             'status': "",
             'initial_buying_price': "",
@@ -163,6 +169,9 @@ class ProductForm(forms.ModelForm):
             'name': {
                 'required': "Le nom du produit est requis.",
                 'max_length': "Le nom du produit ne peut pas dépasser %(max)d caractères.",
+            },
+            'category': {
+                'required': "La catégorie du produit est requise.",
             },
             'description': {
                 'required': "La description du produit est requise.",
@@ -182,11 +191,10 @@ class ProductForm(forms.ModelForm):
                 'required': "Le fournisseur est requis.",
             }
         }
-        widgets = {
-            'status': forms.Select(choices=[
-                ('EN_VENTE', 'En vente'),
-                ('EN_REPARATION', 'En réparation'),
-                # do not include 'reparation_terminee' here
-            ]),
-        }
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['status'].choices = [(key, value) for key, value in Product.STATUS_CHOICES if key != 'RÉPARATION_TERMINÉE']
+
+
 

@@ -82,7 +82,7 @@ class Product(models.Model):
     STATUS_CHOICES = [
         ('EN_VENTE', 'En vente'),
         ('EN_RÉPARATION', 'En réparation'),
-        ('RÉPARATION_TERMINÉE', 'Réparation terminée')
+        # ('RÉPARATION_TERMINÉE', 'Réparation terminée')
     ]
 
     name = models.CharField(max_length=100)
