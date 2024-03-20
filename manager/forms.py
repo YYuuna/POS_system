@@ -10,6 +10,9 @@ class AccountRegistrationForm(UserCreationForm):
         model = Account  # Assuming your custom account model is named Account
         fields = ('username', 'password1', 'password2', 'employee')
 
+    def __init__(self, *args, **kwargs):
+        super(AccountRegistrationForm, self).__init__(*args, **kwargs)
+        self.fields['employee'].queryset = Employee.objects.filter(account__isnull=True)
     def save(self, commit=True):
         account = super().save(commit=False)
         account.save()
@@ -142,12 +145,12 @@ class SupplierForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields=['name','category','description','status','initial_buying_price','initial_selling_price','supplier']
+        fields=['name','category','description', 'state', 'initial_buying_price', 'initial_selling_price', 'supplier']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Entrer le nom du produit'}),
             'category': forms.Select(attrs={'placeholder': 'Choisir la catégorie du produit'}),  # Add 'size': 3 as needed
             'description': forms.Textarea(attrs={'placeholder': 'Entrer la description du produit'}),# Add 'rows': 3, 'cols': 30 as needed
-            'status': forms.Select(attrs={'placeholder': 'Choisir le statut du produit'},choices=[
+            'state': forms.Select(attrs={'placeholder': 'Choisir le statut du produit'}, choices=[
                 ('EN_VENTE', 'En vente'),
                 ('EN_REPARATION', 'En réparation')
                 # do not include 'reparation_terminee' here
@@ -160,7 +163,7 @@ class ProductForm(forms.ModelForm):
             'name': "",
             'category': "",
             'description': "",
-            'status': "",
+            'state': "",
             'initial_buying_price': "",
             'initial_selling_price': "",
             'supplier': "",
@@ -176,7 +179,7 @@ class ProductForm(forms.ModelForm):
             'description': {
                 'required': "La description du produit est requise.",
             },
-            'status': {
+            'state': {
                 'required': "Le statut du produit est requis.",
             },
             'initial_buying_price': {
@@ -194,7 +197,7 @@ class ProductForm(forms.ModelForm):
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.fields['status'].choices = [(key, value) for key, value in Product.STATUS_CHOICES if key != 'RÉPARATION_TERMINÉE']
+            self.fields['status'].choices = [(key, value) for key, value in Product.STATE_CHOICES if key != 'RÉPARATION_TERMINÉE']
 
 
 

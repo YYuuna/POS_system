@@ -1,11 +1,12 @@
 from django.contrib.auth.views import LoginView
-from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic import ListView,TemplateView
+from django.views.generic import ListView, TemplateView
 from django.urls import reverse_lazy
-from .models import Client, Supplier, Product
-from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm
+from .models import Client, Supplier, Product, Account, Employee
+from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm, AccountRegistrationForm
 
 
 class AddClientView(LoginRequiredMixin, CreateView):
@@ -129,8 +130,31 @@ class ProductListView(LoginRequiredMixin, ListView):
         return context
 
 
-class AccountListView(LoginRequiredMixin, ListView):
-    pass
+class AccountListView(UserPassesTestMixin, LoginRequiredMixin, ListView):
+    model = Account
+    template_name = 'listecompte.html'
+    context_object_name = 'accounts'
+    paginate_by = 10
+    form_class = FilterForm
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(id=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = FilterForm(self.request.GET)
+        return context
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admin').exists()
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
+        return redirect('dashboard')
 
 
 class EmployeeListView(LoginRequiredMixin, ListView):
@@ -149,5 +173,50 @@ class RepairListView(LoginRequiredMixin, ListView):
     pass
 
 
-class HomeView(LoginRequiredMixin,TemplateView):
+class HomeView(LoginRequiredMixin, TemplateView):
     template_name = 'menu.html'
+
+
+class DashboardView(TemplateView):
+    pass
+
+
+class AddAccountView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Account
+    form_class = AccountRegistrationForm
+    template_name = 'ajoutercompte.html'
+    success_url = reverse_lazy('account-list')
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admin').exists()
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
+        return redirect('dashboard')
+
+
+class AccountUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Account
+    form_class = AccountRegistrationForm
+    template_name = 'modifiercompte.html'
+    success_url = reverse_lazy('account-list')
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admin').exists()
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
+        return redirect('dashboard')
+
+
+class AccountDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
+    model = Account
+    template_name = 'supprimercompte.html'
+    success_url = reverse_lazy('account-list')
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admin').exists()
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
+        return redirect('dashboard')
