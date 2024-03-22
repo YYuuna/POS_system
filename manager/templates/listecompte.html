@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../static/css/style.css">
-    <link rel="stylesheet" href="../static/css/accueil.css">
-    <title>liste des comptes</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
+    <title>Liste des comptes</title>
 </head>
 <body>
 <div class="corp">
@@ -88,7 +89,7 @@
     <div class="liste">
         <div class="c1">
 
-            <div class="colone1"><h3>Listes des comptes</h3></div>
+            <div class="colone1"><h3>Liste des comptes</h3></div>
 
             <div class="colone1" >
                 <form method="GET" action="">
@@ -109,10 +110,9 @@
                 <tr>
                     <th>Id</th>
                     <th>Username</th>
-                    <th>Active</th>
-                    <th>Date d'adhésion</th>
-                    <th>Employee</th>
 
+                    <th>Date d'adhésion</th>
+                    <th>Employé</th>
                     <th>Modifier</th>
                     <th>Supprimer</th>
 
@@ -123,7 +123,6 @@
                 <tr>
                     <td>{{ account.id }}</td>
                     <td>{{ account.username }}</td>
-                    <td>{{ account.is_active }}</td>
                     <td>{{ account.date_joined }}</td>
                     <td>{{ account.employee }}</td>
 

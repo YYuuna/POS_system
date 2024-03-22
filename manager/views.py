@@ -6,7 +6,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, TemplateView
 from django.urls import reverse_lazy
 from .models import Client, Supplier, Product, Account, Employee
-from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm, AccountRegistrationForm
+from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm, AccountRegistrationForm, \
+    EmployeeForm
 
 
 class AddClientView(LoginRequiredMixin, CreateView):
@@ -157,10 +158,6 @@ class AccountListView(UserPassesTestMixin, LoginRequiredMixin, ListView):
         return redirect('dashboard')
 
 
-class EmployeeListView(LoginRequiredMixin, ListView):
-    pass
-
-
 class PurchaseOrderListView(LoginRequiredMixin, ListView):
     pass
 
@@ -209,10 +206,78 @@ class AccountUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return redirect('dashboard')
 
 
-class AccountDeleteView(LoginRequiredMixin,UserPassesTestMixin, DeleteView):
+class AccountDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Account
     template_name = 'supprimercompte.html'
     success_url = reverse_lazy('account-list')
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admin').exists()
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
+        return redirect('dashboard')
+
+
+class AddEmployeeView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Employee
+    form_class = EmployeeForm
+    template_name = 'ajouteremploye.html'
+    success_url = reverse_lazy('employee-list')
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admin').exists()
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
+        return redirect('dashboard')
+
+
+class EmployeeListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = Employee
+    template_name = 'listeemploye.html'
+    context_object_name = 'employees'
+    paginate_by = 10
+    form_class = FilterForm
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(id=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = FilterForm(self.request.GET)
+        return context
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admin').exists()
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
+        return redirect('dashboard')
+
+
+class EmployeeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Employee
+    form_class = EmployeeForm
+    template_name = 'modifieremploye.html'
+    success_url = reverse_lazy('employee-list')
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Admin').exists()
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
+        return redirect('dashboard')
+
+
+class EmployeeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Employee
+    template_name = 'supprimeremploye.html'
+    success_url = reverse_lazy('employee-list')
 
     def test_func(self):
         return self.request.user.groups.filter(name='Admin').exists()
