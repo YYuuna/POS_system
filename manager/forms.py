@@ -255,3 +255,4 @@ class EmployeeForm(forms.ModelForm):
             'address': "",
             'salary': "",
         }
+

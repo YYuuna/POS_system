@@ -1,4 +1,5 @@
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -192,11 +193,16 @@ class AddAccountView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return redirect('dashboard')
 
 
-class AccountUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class AccountUpdateView(LoginRequiredMixin, UserPassesTestMixin, PasswordChangeView):
     model = Account
-    form_class = AccountRegistrationForm
+    form_class = PasswordChangeForm
     template_name = 'modifiercompte.html'
     success_url = reverse_lazy('account-list')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = Account.objects.get(pk=self.kwargs['pk'])
+        return kwargs
 
     def test_func(self):
         return self.request.user.groups.filter(name='Admin').exists()
