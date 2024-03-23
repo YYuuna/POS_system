@@ -4,15 +4,44 @@ from .models import Employee, Account, Client, Supplier, Product
 
 
 class AccountRegistrationForm(UserCreationForm):
-    employee = forms.ModelChoiceField(queryset=Employee.objects.all())
+    employee = forms.ModelChoiceField(queryset=Employee.objects.filter(account__isnull=True))
 
     class Meta:
         model = Account  # Assuming your custom account model is named Account
         fields = ('username', 'password1', 'password2', 'employee')
+        labels = {
+            'username': "",
+            'password1': "",
+            'password2': "",
+            'employee': "Employé"
+        }
+        widgets = {
+            'username': forms.TextInput(attrs={'placeholder': 'Nom d\'utilisateur'}),
+            'password1': forms.PasswordInput(attrs={'placeholder': 'Mot de passe'}),
+            'password2': forms.PasswordInput(attrs={'placeholder': 'Confirmer le mot de passe'}),
+            'employee': forms.Select(attrs={'placeholder': 'Choisir un employé'}),
+        }
+        error_messages = {
+            'username': {'required': 'Le nom d\'utilisateur est requis.',
+                         'unique': 'Ce nom d\'utilisateur est déjà utilisé. Veuillez en choisir un autre.'},
+            'password1': {'required': 'Le mot de passe est requis.'},
+            'password2': {
+                'required': 'Veuillez confirmer le mot de passe.',
+                'password_mismatch': 'Les mots de passe ne correspondent pas.'
+            },
+            'employee': {'required': 'Veuillez choisir un employé.'}
+        }
 
     def __init__(self, *args, **kwargs):
         super(AccountRegistrationForm, self).__init__(*args, **kwargs)
-        self.fields['employee'].queryset = Employee.objects.filter(account__isnull=True)
+        self.fields['password1'].label = ""
+        self.fields['password2'].label = ""
+        self.fields['employee'].label = "Employé"
+        self.fields['password1'].widget = forms.PasswordInput(
+            attrs={'placeholder': 'Mot de passe', 'autocomplete': 'new-password'})
+        self.fields['password2'].widget = forms.PasswordInput(
+            attrs={'placeholder': 'Confirmer le mot de passe', 'autocomplete': 'new-password'})
+
     def save(self, commit=True):
         account = super().save(commit=False)
         account.save()
@@ -142,14 +171,18 @@ class SupplierForm(forms.ModelForm):
             }
         }
 
+
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields=['name','category','description', 'state', 'initial_buying_price', 'initial_selling_price', 'supplier']
+        fields = ['name', 'category', 'description', 'state', 'initial_buying_price', 'initial_selling_price',
+                  'supplier']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Entrer le nom du produit'}),
-            'category': forms.Select(attrs={'placeholder': 'Choisir la catégorie du produit'}),  # Add 'size': 3 as needed
-            'description': forms.Textarea(attrs={'placeholder': 'Entrer la description du produit'}),# Add 'rows': 3, 'cols': 30 as needed
+            'category': forms.Select(attrs={'placeholder': 'Choisir la catégorie du produit'}),
+            # Add 'size': 3 as needed
+            'description': forms.Textarea(attrs={'placeholder': 'Entrer la description du produit'}),
+            # Add 'rows': 3, 'cols': 30 as needed
             'state': forms.Select(attrs={'placeholder': 'Choisir le statut du produit'}, choices=[
                 ('EN_VENTE', 'En vente'),
                 ('EN_REPARATION', 'En réparation')
@@ -159,7 +192,7 @@ class ProductForm(forms.ModelForm):
             'initial_selling_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix de vente'}),
             'supplier': forms.Select(attrs={'placeholder': 'Choisir le fournisseur'}),
         }
-        labels={
+        labels = {
             'name': "",
             'category': "",
             'description': "",
@@ -197,7 +230,29 @@ class ProductForm(forms.ModelForm):
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.fields['status'].choices = [(key, value) for key, value in Product.STATE_CHOICES if key != 'RÉPARATION_TERMINÉE']
+            self.fields['state'].choices = [(key, value) for key, value in Product.STATE_CHOICES if
+                                            key != 'RÉPARATION_TERMINÉE']
 
 
+class EmployeeForm(forms.ModelForm):
+    class Meta:
+        model = Employee
+        fields = ['first_name', 'last_name', 'salary', 'phone', 'email', 'address', 'role']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'placeholder': 'Entrez le prénom'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Entrez le nom'}),
+            'phone': forms.TextInput(attrs={'placeholder': 'Entrez le numéro de téléphone'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Entrez l\'email'}),
+            'address': forms.TextInput(attrs={'placeholder': 'Entrez l\'adresse'}),
+            'role': forms.Select(attrs={'placeholder': 'Sélectionnez le rôle'}),
+            'salary': forms.NumberInput(attrs={'placeholder': 'Entrez le salaire'}),
+        }
+        labels = {
+            'first_name': "",
+            'last_name': "",
+            'phone': "",
+            'email': "",
+            'address': "",
+            'salary': "",
+        }
 

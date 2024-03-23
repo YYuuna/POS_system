@@ -21,12 +21,12 @@ class CustomUserManager(BaseUserManager):
 # Compte
 class Account(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('Username'), max_length=150, unique=True)
-    is_active = models.BooleanField(_('Active'),db_column='Actif', default=True)
-    date_joined = models.DateTimeField(_('Date joined'),db_column='Date d\'adhésion', auto_now_add=True)
+    is_active = models.BooleanField(_('Active'), db_column='Actif', default=True)
+    date_joined = models.DateTimeField(_('Date joined'), db_column='Date d\'adhésion', auto_now_add=True)
 
     groups = models.ManyToManyField(Group, verbose_name=_('Groups'), blank=True)
 
-    employee = models.OneToOneField('Employee', on_delete=models.CASCADE,db_column='Employé', null=True, blank=True)
+    employee = models.OneToOneField('Employee', on_delete=models.CASCADE, db_column='Employé', null=True, blank=True)
 
     objects = CustomUserManager()
 
@@ -34,7 +34,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     class Meta:
-        db_table='Compte'
+        db_table = 'Compte'
         verbose_name = _('Account')
         verbose_name_plural = _('Accounts')
 
@@ -54,39 +54,42 @@ def update_account_groups(sender, instance, created, **kwargs):
 
 
 class Supplier(models.Model):
-    name = models.CharField(max_length=100,db_column='Nom')
-    phone = PhoneNumberField(unique=True,region='DZ',db_column='Téléphone')
-    email = models.EmailField(unique=True,db_column='Email')
+    name = models.CharField(max_length=100, db_column='Nom')
+    phone = PhoneNumberField(unique=True, region='DZ', db_column='Téléphone')
+    email = models.EmailField(unique=True, db_column='Email')
     address = models.TextField(db_column='Adresse')
 
     def __str__(self):
         return self.name
 
     class Meta:
-        db_table='Fournisseur'
-
+        db_table = 'Fournisseur'
 
 
 class Client(models.Model):
-    first_name = models.CharField(max_length=100,db_column='Prénom')
-    last_name = models.CharField(max_length=100,db_column='Nom')
-    phone = PhoneNumberField(unique=True,region='DZ',db_column='Téléphone')
-    email = models.EmailField(unique=True,db_column='Email')
+    first_name = models.CharField(max_length=100, db_column='Prénom')
+    last_name = models.CharField(max_length=100, db_column='Nom')
+    phone = PhoneNumberField(unique=True, region='DZ', db_column='Téléphone')
+    email = models.EmailField(unique=True, db_column='Email')
     address = models.TextField(db_column='Adresse')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
     class Meta:
-        db_table='Client'
+        db_table = 'Client'
+
+
 class Category(models.Model):
-    name = models.CharField(max_length=100,db_column='Nom')
+    name = models.CharField(max_length=100, db_column='Nom')
     description = models.TextField(db_column='Description')
+
     def __str__(self):
         return self.name
 
     class Meta:
-        db_table='Catégorie'
+        db_table = 'Catégorie'
+
 
 class Product(models.Model):
     STATE_CHOICES = [
@@ -95,14 +98,16 @@ class Product(models.Model):
         # ('RÉPARATION_TERMINÉE', 'Réparation terminée')
     ]
 
-    name = models.CharField(max_length=100,db_column='Nom')
-    category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default=1,db_column='Catégorie')
+    name = models.CharField(max_length=100, db_column='Nom')
+    category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default=1, db_column='Catégorie')
     description = models.TextField(db_column='Description')
     state = models.CharField(max_length=20, choices=STATE_CHOICES, default='EN_VENTE', db_column='État')
-    quantity = models.PositiveIntegerField(default=0,blank=True, null=True,db_column='Quantité')
-    initial_buying_price = models.DecimalField(max_digits=10, decimal_places=2,blank=True, null=True,db_column='Prix d\'achat initiale')
-    initial_selling_price = models.DecimalField(max_digits=10, decimal_places=2,blank=True, null=True,db_column='Prix de vente initiale')
-    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True,db_column='Fournisseur')
+    quantity = models.PositiveIntegerField(default=0, blank=True, null=True, db_column='Quantité')
+    initial_buying_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True,
+                                               db_column='Prix d\'achat initiale')
+    initial_selling_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True,
+                                                db_column='Prix de vente initiale')
+    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True, db_column='Fournisseur')
 
     # Other fields...
 
@@ -110,14 +115,14 @@ class Product(models.Model):
         return self.name
 
     class Meta:
-        db_table='Produit'
+        db_table = 'Produit'
 
 
 class PurchaseOrder(models.Model):
-    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True,db_column='Fournisseur')
-    order_date = models.DateField(auto_now_add=True,db_column='Date de commande')
-    delivery_date = models.DateField(null=True, blank=True,db_column='Date de livraison')
-    is_delivered = models.BooleanField(default=False,db_column='Est livré')
+    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True, db_column='Fournisseur')
+    order_date = models.DateField(auto_now_add=True, db_column='Date de commande')
+    delivery_date = models.DateField(null=True, blank=True, db_column='Date de livraison')
+    is_delivered = models.BooleanField(default=False, db_column='Est livré')
 
     # Other fields...
 
@@ -125,14 +130,15 @@ class PurchaseOrder(models.Model):
         return f"Purchase Order #{self.pk} - Supplier: {self.supplier.name}"
 
     class Meta:
-        db_table='Commande'
+        db_table = 'Commande'
 
 
 class PurchaseOrderItem(models.Model):
-    order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE,db_column='Commande')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,db_column='Produit')
+    order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, db_column='Commande')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, db_column='Produit')
     quantity = models.IntegerField(db_column='Quantité')
-    purchase_price = models.DecimalField(max_digits=10, decimal_places=2,db_column='Prix d\'achat')  # Dynamic price for purchase order
+    purchase_price = models.DecimalField(max_digits=10, decimal_places=2,
+                                         db_column='Prix d\'achat')  # Dynamic price for purchase order
 
     # Other fields...
 
@@ -140,13 +146,13 @@ class PurchaseOrderItem(models.Model):
         return f"Purchase Order Item #{self.pk} - Product: {self.product.name}"
 
     class Meta:
-        db_table='ArticleCommande'
+        db_table = 'ArticleCommande'
         unique_together = ('order', 'product')
 
 
 class Sale(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True,db_column='Client')
-    sale_date = models.DateField(auto_now_add=True,db_column='Date de vente')
+    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True, db_column='Client')
+    sale_date = models.DateField(auto_now_add=True, db_column='Date de vente')
 
     # Other fields...
 
@@ -154,14 +160,15 @@ class Sale(models.Model):
         return f"Sale #{self.pk} - Client: {self.client.first_name} {self.client.last_name}"
 
     class Meta:
-        db_table='Vente'
+        db_table = 'Vente'
 
 
 class SaleItem(models.Model):
-    sale = models.ForeignKey(Sale, on_delete=models.CASCADE,db_column='Vente')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,db_column='Produit')
+    sale = models.ForeignKey(Sale, on_delete=models.CASCADE, db_column='Vente')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, db_column='Produit')
     quantity = models.IntegerField(db_column='Quantité')
-    sale_price = models.DecimalField(max_digits=10, decimal_places=2,db_column='Prix de vente')  # Dynamic price for sale
+    sale_price = models.DecimalField(max_digits=10, decimal_places=2,
+                                     db_column='Prix de vente')  # Dynamic price for sale
 
     # Other fields...
 
@@ -169,7 +176,7 @@ class SaleItem(models.Model):
         return f"Sale Item #{self.pk} - Product: {self.product.name}"
 
     class Meta:
-        db_table='ArticleVente'
+        db_table = 'ArticleVente'
         unique_together = ('sale', 'product')
 
 
@@ -179,11 +186,11 @@ class Repair(models.Model):
         ('TERMINÉ', 'Terminé')
     ]
 
-    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True,db_column='Client')
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True,db_column='Produit')
+    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True, db_column='Client')
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True, db_column='Produit')
     description = models.TextField(db_column='Description')
-    repair_date = models.DateField(auto_now_add=True,db_column='Date de réparation')
-    state = models.CharField(max_length=20, choices=STATE_CHOICES, default='EN_COURS',db_column='État')
+    repair_date = models.DateField(auto_now_add=True, db_column='Date de réparation')
+    state = models.CharField(max_length=20, choices=STATE_CHOICES, default='EN_COURS', db_column='État')
 
     # Other fields...
 
@@ -191,23 +198,23 @@ class Repair(models.Model):
         return f"Repair for Product: {self.product.name}, Client: {self.client.first_name} {self.client.last_name}"
 
     class Meta:
-        db_table='Réparation'
+        db_table = 'Réparation'
+
 
 class Employee(models.Model):
-    first_name = models.CharField(max_length=100,db_column='Prénom')
-    last_name = models.CharField(max_length=100,db_column='Nom')
-    salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True,db_column='Salaire')
-    phone = PhoneNumberField(unique=True,region='DZ',db_column='Téléphone')
-    email = models.EmailField(unique=True,db_column='Email')
+    first_name = models.CharField(max_length=100, db_column='Prénom')
+    last_name = models.CharField(max_length=100, db_column='Nom')
+    phone = PhoneNumberField(unique=True, region='DZ', db_column='Téléphone')
+    email = models.EmailField(unique=True, db_column='Email')
     address = models.TextField(db_column='Adresse')
     ROLES_CHOICES = [
-        ('ADMIN', _('Admin')),
-        ('EMPLOYEE', _('Employee')),
+        ('Admin', _('Admin')),
+        ('Employé', _('Employé')),
     ]
-    role = models.CharField(_('Role'), max_length=100, choices=ROLES_CHOICES, default='EMPOYEE',db_column='Rôle')
-
+    role = models.CharField(_('Role'), max_length=100, choices=ROLES_CHOICES, default='Employé', db_column='Rôle')
+    salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, db_column='Salaire')
     class Meta:
-        db_table='Employé'
+        db_table = 'Employé'
         verbose_name = _('Employee')
         verbose_name_plural = _('Employees')
 
