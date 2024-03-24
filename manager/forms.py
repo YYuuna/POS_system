@@ -258,12 +258,12 @@ class EmployeeForm(forms.ModelForm):
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['name', 'description']
+        fields = ['name']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Entrer le nom de la catégorie'}),
-            'description': forms.Textarea(attrs={'placeholder': 'Entrer la description de la catégorie'}),
+
         }
         labels = {
             'name': "",
-            'description': "",
+
         }
