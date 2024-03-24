@@ -171,6 +171,8 @@ class RepairListView(LoginRequiredMixin, ListView):
     pass
 
 
+
+
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = 'menu.html'
 
