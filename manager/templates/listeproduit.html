@@ -8,9 +8,9 @@
     <title>Liste des produits</title>
 </head>
 <body>
-    <div class="corp">
+<div class="corp">
 
-      <div class="nav">
+    <div class="nav">
 
         <div class="logo">
 
@@ -39,7 +39,7 @@
                 <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                 <path d="M234.5 5.7c13.9-5 29.1-5 43.1 0l192 68.6C495 83.4 512 107.5 512 134.6V377.4c0 27-17 51.2-42.5 60.3l-192 68.6c-13.9 5-29.1 5-43.1 0l-192-68.6C17 428.6 0 404.5 0 377.4V134.6c0-27 17-51.2 42.5-60.3l192-68.6zM256 66L82.3 128 256 190l173.7-62L256 66zm32 368.6l160-57.1v-188L288 246.6v188z"/>
             </svg>
-            <a class="link" href="{% url 'products-list' %}"> Stock </a> 
+            <a class="link" href="{% url 'products-list' %}"> Stock </a>
         </button>
         <!-- ---------------------------------------------------------------------------------------- -->
         <button class="value">
@@ -55,7 +55,7 @@
                 <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                 <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM609.3 512H471.4c5.4-9.4 8.6-20.3 8.6-32v-8c0-60.7-27.1-115.2-69.8-151.8c2.4-.1 4.7-.2 7.1-.2h61.4C567.8 320 640 392.2 640 481.3c0 17-13.8 30.7-30.7 30.7zM432 256c-31 0-59-12.6-79.3-32.9C372.4 196.5 384 163.6 384 128c0-26.8-6.6-52.1-18.3-74.3C384.3 40.1 407.2 32 432 32c61.9 0 112 50.1 112 112s-50.1 112-112 112z"/>
             </svg>
-            <a class="link" href="{% url 'supplier-list' %}"> Fournisseurs </a> 
+            <a class="link" href="{% url 'supplier-list' %}"> Fournisseurs </a>
         </button>
         <!-- ---------------------------------------------------------------------------------------- -->
         <button class="value">
@@ -86,75 +86,92 @@
     </div>
 
 
-       <div class="liste">
+    <div class="liste">
         <div class="c1">
 
-          <div class="colone1">  <h3>listes des produits</h3>  </div>
+            <div class="colone1"><h3>Listes des produits</h3></div>
 
-         <div class="colone1"> <input type="search" name="recherche" id="recherche" placeholder="recherche" >   </div>
+            <div class="colone1">
+                <form method="GET" action="">
+                    {{ form }}
+                    <button class="button" type="submit">Rechercher</button>
+                </form>
+            </div>
 
-          <div class="colone1"><button class="button"><a href="{% url 'add-product' %}" class="link">ajouter produit</a></button> </div>
-          <div class="colone1"></div>
-          <div class="colone1"></div>
-          <div class="colone1"><button class="button"><a href=" class="link">ajouter catégorie</a></button> </div>
- 
-       </div>
+            <div class="colone1">
+                <button class="button"><a href="{% url 'add-product' %}" class="link">Ajouter produit</a></button>
+            </div>
+            <div class="colone1"></div>
+            <div class="colone1"></div>
+            <div class="colone1">
+                <button class="button"><a href=" class=" link">Ajouter catégorie</a></button>
+            </div>
 
-       <div class="c2">
-        <table>
-          <tr>
-               <th>id</th>
-               <th>nom</th>
-               <th>description</th>
-               <th>prix de vente</th>
-               <th>prix d'achat</th>
-               <th>catégorie</th>
-               <th>quantité</th>
-               <th>état</th>
-               
-               <th>modifier</th>
-               <th>supprimer</th>
-               
-          </tr>
-          <tbody id="tbody">
-              <tr>
-                <td></td>
-               <td>dell</td>
-               <td>pc portable</td>
-               <td>19300</td>
-               <td>12300</td>
-               <td>pc</td>
-               <td>12</td>
-               <td>en vente</td>
+        </div>
 
-               <td><button class="button" id="modifier">modifier</button></td>
-               <td><button class="button" id="supprimer">supprimer</button></td>
-              </tr>
-
-              <tr>
-                <td></td>
-                <td>samsung</td>
-                <td>telephone</td>
-                <td>1900</td>
-                <td>1300</td>
-                <td>telephone</td>
-                <td>143</td>
-                <td>en réparation</td>
-
-               <td><button class="button" id="modifier">modifier</button></td>
-               <td><button class="button" id="supprimer">supprimer</button></td>
-                
-              </tr>
-          </tbody>
-        </table>
-
-       </div>
-
-        
-       </div>
-
-
+        <div class="c2">
+            {% if products %}
+            <table>
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Catégorie</th>
+                    <th>Description</th>
+                    <th>État</th>
+                    <th>Quantité</th>
+                    <th>Prix d'achat initiale</th>
+                    <th>Prix de vente initiale</th>
+                    <th>Fournisseur</th>
+                    <th>Modifier</th>
+                    <th>Supprimer</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.id }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>{{ product.state }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.initial_buying_price }}</td>
+                    <td>{{ product.initial_selling_price }}</td>
+                    <td>{{ product.supplier }}</td>
+                    <td>
+                        <button class="button" id="modifier"
+                                onclick="location.href='{% url 'update-product' product.id %}';">Modifier
+                        </button>
+                    </td>
+                    <td>
+                        <button class="button" id="supprimer"
+                                onclick="location.href='{% url 'delete-product' product.id %}';">Supprimer
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>Pas de produits trouvés.</p>
+            {% endif %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; premiere</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">precedente</a>
+                    {% endif %}
+                    <span class="current">
+                        Page {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">prochaine</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">derniere &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
     </div>
-    
 </body>
 </html>

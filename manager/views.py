@@ -6,9 +6,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, TemplateView
 from django.urls import reverse_lazy
-from .models import Client, Supplier, Product, Account, Employee
+from .models import Client, Supplier, Product, Account, Employee, PurchaseOrder, Sale, Repair, Category
 from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm, AccountRegistrationForm, \
-    EmployeeForm
+    EmployeeForm, CategoryForm
 
 
 class AddClientView(LoginRequiredMixin, CreateView):
@@ -160,15 +160,65 @@ class AccountListView(UserPassesTestMixin, LoginRequiredMixin, ListView):
 
 
 class PurchaseOrderListView(LoginRequiredMixin, ListView):
-    pass
+    model = PurchaseOrder
+    template_name = 'listecommande.html'
+    context_object_name = 'purchase_orders'
+    paginate_by = 10
+    form_class = FilterForm
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(id=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = FilterForm(self.request.GET)
+        return context
+
 
 
 class SaleListView(LoginRequiredMixin, ListView):
-    pass
+    model = Sale
+    template_name = 'listevente.html'
+    context_object_name = 'sales'
+    paginate_by = 10
+    form_class = FilterForm
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(id=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = FilterForm(self.request.GET)
+        return context
 
 
 class RepairListView(LoginRequiredMixin, ListView):
-    pass
+    model = Repair
+    template_name = 'listereparation.html'
+    context_object_name = 'repairs'
+    paginate_by = 10
+    form_class = FilterForm
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(id=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = FilterForm(self.request.GET)
+        return context
+
 
 
 
@@ -293,3 +343,23 @@ class EmployeeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def handle_no_permission(self):
         messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
         return redirect('dashboard')
+
+
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'modifierproduit.html'
+    success_url = reverse_lazy('product-list')
+
+
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
+    model = Product
+    template_name = 'supprimerproduit.html'
+    success_url = reverse_lazy('product-list')
+
+
+class AddCategoryView(LoginRequiredMixin, CreateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'cat.html'
+    success_url = reverse_lazy('add-product')

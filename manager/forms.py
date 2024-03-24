@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Employee, Account, Client, Supplier, Product
+from .models import Employee, Account, Client, Supplier, Product, Category
 
 
 class AccountRegistrationForm(UserCreationForm):
@@ -183,7 +183,7 @@ class ProductForm(forms.ModelForm):
             # Add 'size': 3 as needed
             'description': forms.Textarea(attrs={'placeholder': 'Entrer la description du produit'}),
             # Add 'rows': 3, 'cols': 30 as needed
-            'state': forms.Select(attrs={'placeholder': 'Choisir le statut du produit'}, choices=[
+            'state': forms.Select(attrs={'placeholder': 'Choisir l\'état du produit'}, choices=[
                 ('EN_VENTE', 'En vente'),
                 ('EN_REPARATION', 'En réparation')
                 # do not include 'reparation_terminee' here
@@ -194,12 +194,12 @@ class ProductForm(forms.ModelForm):
         }
         labels = {
             'name': "",
-            'category': "",
+            'category': 'Choisir la catégorie du produit',
             'description': "",
-            'state': "",
+            'state': 'Choisir l\'état du produit',
             'initial_buying_price': "",
             'initial_selling_price': "",
-            'supplier': "",
+            'supplier': "Choisir le fournisseur",
         }
         error_messages = {
             'name': {
@@ -254,5 +254,18 @@ class EmployeeForm(forms.ModelForm):
             'email': "",
             'address': "",
             'salary': "",
+        }
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name', 'description']
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Entrer le nom de la catégorie'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Entrer la description de la catégorie'}),
+        }
+        labels = {
+            'name': "",
+            'description': "",
         }
 

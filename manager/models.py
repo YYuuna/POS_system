@@ -93,8 +93,8 @@ class Category(models.Model):
 
 class Product(models.Model):
     STATE_CHOICES = [
-        ('EN_VENTE', 'En vente'),
-        ('EN_RÉPARATION', 'En réparation'),
+        ('En vente', 'En vente'),
+        ('En réparation', 'En réparation'),
         # ('RÉPARATION_TERMINÉE', 'Réparation terminée')
     ]
 
