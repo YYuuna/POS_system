@@ -1,4 +1,5 @@
 {% load static %}
+{% load auth_extras %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +18,7 @@
             <a href="{% url 'home' %}" class="link"><h2>CRUD</h2></a>
         </div>
         <br>
-
+        {% if request.user|has_group:"Admin" %}
         <button class="value">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
                 <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
@@ -33,6 +34,7 @@
             </svg>
             <a class="link" href="{% url 'employee-list' %}">Employé </a>
         </button>
+        {% endif %}
         <!-- ---------------------------------------------------------------------------------------- -->
         <button class="value">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -89,7 +91,7 @@
     <div class="liste">
         <div class="c1">
 
-            <div class="colone1"><h3>Listes des produits</h3></div>
+            <div class="colone1"><h3>Liste des produits</h3></div>
 
             <div class="colone1">
                 <form method="GET" action="">
@@ -104,7 +106,7 @@
             <div class="colone1"></div>
             <div class="colone1"></div>
             <div class="colone1">
-                <button class="button"><a href=" class=" link">Ajouter catégorie</a></button>
+                <button class="button"><a href="" class="link">Ajouter catégorie</a></button>
             </div>
 
         </div>
@@ -117,7 +119,6 @@
                     <th>Id</th>
                     <th>Nom</th>
                     <th>Catégorie</th>
-                    <th>Description</th>
                     <th>État</th>
                     <th>Quantité</th>
                     <th>Prix d'achat initiale</th>
@@ -133,7 +134,6 @@
                     <td>{{ product.id }}</td>
                     <td>{{ product.name }}</td>
                     <td>{{ product.category }}</td>
-                    <td>{{ product.description }}</td>
                     <td>{{ product.state }}</td>
                     <td>{{ product.quantity }}</td>
                     <td>{{ product.initial_buying_price }}</td>

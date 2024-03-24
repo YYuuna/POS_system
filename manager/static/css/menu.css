@@ -12,7 +12,7 @@ body{
 
 .body{
     display: grid;
-    grid-template-rows: 25% 75%;
+    grid-template-rows: 21% 73% 6%;
 }
 
 .logoo{
@@ -60,4 +60,32 @@ body{
     box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
     transition: all 250ms;
     overflow: hidden;
+}
+.lougoutbtn{
+    justify-items: center;
+    align-items: center;
+}
+.logout{
+    
+        width: 25%;
+        height: 27px;
+        border-radius:10px ;
+        border: none;
+        cursor: pointer;
+        background: #007acc;
+        color: white;
+        transition: 0.7s;
+    
+   
+    
+}
+.logout:hover{
+        letter-spacing: 1px;
+        background: #106096;
+       
+}
+    
+    
+.logout:focus{
+        transform: scale(1.1);
 }
