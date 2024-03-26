@@ -91,92 +91,18 @@
     <div class="liste">
         <div class="c1">
 
-            <div class="colone1"><h3>Liste des produits</h3></div>
+            <div class="colone1"><h3>détaill de produit</h3></div>
 
-            <div class="colone1">
-                <form method="GET" action="">
-                    {{ form }}
-                    <button class="button" type="submit">Rechercher</button>
-                </form>
-            </div>
+            
 
-            <div class="colone1">
-                <button class="button"><a href="{% url 'add-product' %}" class="link">Ajouter produit</a></button>
-            </div>
+           
            
            
 
         </div>
 
-        <div class="c2">
-            {% if products %}
-            <table>
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Nom</th>
-                    <th>Catégorie</th>
-                    <th>État</th>
-                    <th>Quantité</th>
-                    <!-- <th>Prix d'achat</th>  -->
-                    <th>Prix de vente</th>
-                    <!-- <th>Fournisseur</th>  -->
-                    <th>détaill</th>
-                    <th>Modifier</th>
-                    <th>Supprimer</th>
-                </tr>
-                </thead>
-                <tbody id="tbody">
-                {% for product in products %}
-                <tr>
-                    <td>{{ product.id }}</td>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.category }}</td>
-                    <td>{{ product.state }}</td>
-                    <td>{{ product.quantity }}</td>
-                    <!-- <td>{{ product.initial_buying_price }}</td>  -->
-                    <td>{{ product.initial_selling_price }}</td>
-                    <!-- <td>{{ product.supplier }}</td>  -->
-               
-                    <td>
-                        <button class="button" id=""
-                                onclick="location.href='{% url 'update-product' product.id %}';">détaill
-                        </button>
-                    </td>
-
-                    <td>
-                        <button class="button" id="modifier"
-                                onclick="location.href='{% url 'update-product' product.id %}';">Modifier
-                        </button>
-                    </td>
-                    <td>
-                        <button class="button" id="supprimer"
-                                onclick="location.href='{% url 'delete-product' product.id %}';">Supprimer
-                        </button>
-                    </td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <p>Pas de produits trouvés.</p>
-            {% endif %}
-            <div class="pagination">
-                <span class="step-links">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1">&laquo; premiere</a>
-                        <a href="?page={{ page_obj.previous_page_number }}">precedente</a>
-                    {% endif %}
-                    <span class="current">
-                        Page {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
-                    </span>
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}">prochaine</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}">derniere &raquo;</a>
-                    {% endif %}
-                </span>
-            </div>
-        </div>
+        
+        
     </div>
 </body>
 </html>
