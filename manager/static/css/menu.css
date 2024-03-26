@@ -62,17 +62,20 @@ body{
     overflow: hidden;
 }
 .lougoutbtn{
+    margin-top: 5%;
+    margin-left: 20%;
+    display: flex;
     justify-items: center;
     align-items: center;
 }
 .logout{
     
-        width: 25%;
+        width: 20%;
         height: 27px;
         border-radius:10px ;
         border: none;
         cursor: pointer;
-        background: #007acc;
+        background: #001727;
         color: white;
         transition: 0.7s;
     
