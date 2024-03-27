@@ -61,34 +61,27 @@ body{
     transition: all 250ms;
     overflow: hidden;
 }
-.lougoutbtn{
-    margin-top: 5%;
-    margin-left: 20%;
-    display: flex;
-    justify-items: center;
-    align-items: center;
+
+
+.logoutbtn{
+    
+    width: 64%;
+    height: 30px;
+    border-radius:10px ;
+    border: none;
+    cursor: pointer;
+    background: #054370;
+    color: white;
+    transition: 0.7s;  
 }
-.logout{
-    
-        width: 20%;
-        height: 27px;
-        border-radius:10px ;
-        border: none;
-        cursor: pointer;
-        background: #054370;
-        color: white;
-        transition: 0.7s;
-    
-   
-    
-}
-.logout:hover{
+
+.logoutbtn:hover{
         letter-spacing: 1px;
         background: #106096;
        
 }
     
     
-.logout:focus{
+.logoutbtn:focus{
         transform: scale(1.1);
 }

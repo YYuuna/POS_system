@@ -260,7 +260,7 @@ class CategoryForm(forms.ModelForm):
         model = Category
         fields = ['name']
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Entrer le nom de la catégorie'}),
+            'name': forms.TextInput(attrs={'placeholder': 'Entrer une nouvelle catégorie'}),
 
         }
         labels = {

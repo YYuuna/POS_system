@@ -90,16 +90,27 @@
 
     <div class="liste">
         <div class="c1">
+            
+            <div class="colone1"><h3>Détails de produit :</h3></div>
+        </div>
 
-            <div class="colone1"><h1>Détails de produit</h1></div>
-            <h3>{{ product.name }}</h3>
-            <p>Catégorie: {{ product.category }}</p>
-            <p>Description: {{ product.description }}</p>
-            <p>État: {{ product.state }}</p>
-            <p>Quantité: {{ product.quantity }}</p>
-            <p>Prix d'achat initiale: {{ product.initial_buying_price }}</p>
-            <p>Prix de vente initiale: {{ product.initial_selling_price }}</p>
-            <p>Fournisseur: {{ product.supplier }}</p>
+
+
+        <div class="c2">
+
+        
+            <h4>nom de produit : {{ product.name }}</h4><br>
+
+            <p><span class="p">Catégorie :</span> {{ product.category }}</p><br>
+            <p>Description : {{ product.description }}</p><br>
+            <p>État : {{ product.state }}</p><br>
+            <p>Quantité : {{ product.quantity }}</p><br>
+            <p>Prix d'achat : {{ product.initial_buying_price }}</p><br>
+            <p>Prix de vente : {{ product.initial_selling_price }}</p><br>
+            <p>Fournisseur : {{ product.supplier }}</p><br>
+
+            
+
 
 
         </div>
