@@ -123,14 +123,13 @@
                 {{ form }}
 
             </div>
-
-
-            <input class="button" id="valider" type="submit" value="valider">
+            <input class="button" id="valider" type="submit" value="Valider">
 
         </form>
 
         <div class="btn">
-            <button class="button" id="cat"><a href="" class="link">Ajouter catégorie</a></button>
+            <button class="button" id="cat" onclick="location.href='{% url 'add-category' %}';">Ajouter catégorie
+            </button>
         </div>
     </div>
 

@@ -100,6 +100,7 @@ class Product(models.Model):
 
     name = models.CharField(max_length=100, db_column='Nom')
     category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default=1, db_column='Catégorie')
+    description = models.TextField(db_column='Description', default='Pas de description')
     state = models.CharField(max_length=20, choices=STATE_CHOICES, default='EN_VENTE', db_column='État')
     quantity = models.PositiveIntegerField(default=0, blank=True, null=True, db_column='Quantité')
     initial_buying_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True,
@@ -209,7 +210,7 @@ class Employee(models.Model):
     ROLES_CHOICES = [
         ('Admin', _('Admin')),
         ('Employé', _('Employé')),
-        ('Réparateur', _('Réparateur')),
+        # ('Réparateur', _('Réparateur')),
     ]
     role = models.CharField(_('Role'), max_length=100, choices=ROLES_CHOICES, default='Employé', db_column='Rôle')
     salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, db_column='Salaire')

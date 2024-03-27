@@ -1,8 +1,9 @@
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, TemplateView
 from django.urls import reverse_lazy
@@ -130,6 +131,11 @@ class ProductListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['form'] = FilterForm(self.request.GET)
         return context
+
+class ProductDetailView(View):
+    def get(self, request, pk):
+        product = get_object_or_404(Product, pk=pk)
+        return render(request, 'detaillproduit.html', {'product': product})
 
 
 class AccountListView(UserPassesTestMixin, LoginRequiredMixin, ListView):
