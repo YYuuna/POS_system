@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/pdf.css' %}">
+  
+    <title>imprimer pdf</title>
+</head>
+
+<body>
+<div class="piece">
+
+    <div class="element">
+        <h4>nom de produit : {{ product.name }}</h4><br>
+
+        <p>Catégorie : {{ product.category }}</p><br>
+        <p>Description : {{ product.description }}</p><br>
+        <p>État : {{ product.state }}</p><br>
+        <p>Quantité : {{ product.quantity }}</p><br>
+        <p>Prix d'achat : {{ product.initial_buying_price }}</p><br>
+        <p>Prix de vente : {{ product.initial_selling_price }}</p><br>
+        <p>Fournisseur : {{ product.supplier }}</p><br>
+
+
+
+    </div>
+
+</div>
+
+    
+
+
+   
+
+
+
+       
+
+        
+           
+            
+
+
+
+        
+
+
+   
+</body>
+
+</html>
