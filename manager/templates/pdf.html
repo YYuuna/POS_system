@@ -10,11 +10,11 @@
 </head>
 
 <body>
-<div class="piece">
-
+<div id="partieImprimer" class="printable-content">
+    
+    <div class="titre"> <h1>bon de vente :</h1></div>
     <div class="element">
         <h4>nom de produit : {{ product.name }}</h4><br>
-
         <p>Catégorie : {{ product.category }}</p><br>
         <p>Description : {{ product.description }}</p><br>
         <p>État : {{ product.state }}</p><br>
@@ -26,27 +26,37 @@
 
 
     </div>
-
+     <div></div>
+</div>
+ 
+<div class="btn">
+    <div class="imprimer">   <button onclick="imprimerPartie()">Imprimer</button>  </div>
+   
 </div>
 
     
-
-
-   
-
-
-
-       
-
-        
-           
-            
-
-
-
         
 
-
+<script>
+   function imprimerPartie() {
+  // Récupérer la partie de la page à imprimer
+  var contenuAImprimer = document.getElementById('partieImprimer').innerHTML;
+  
+  // Créer une fenêtre de prévisualisation pour le contenu à imprimer
+  var fenetreImpression = window.open('', '_blank');
+  
+  // Écrire le contenu à imprimer dans la fenêtre de prévisualisation
+  fenetreImpression.document.write('<html><head><title>Impression</title></head><body>');
+  fenetreImpression.document.write(contenuAImprimer);
+  fenetreImpression.document.write('</body></html>');
+  
+  // Imprimer le contenu
+  fenetreImpression.print();
+  
+  // Fermer la fenêtre de prévisualisation après l'impression
+  fenetreImpression.close();
+}
+  </script>
    
 </body>
 
