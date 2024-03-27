@@ -32,5 +32,5 @@ path('login/',views.UserLoginView.as_view(),name='login'),
     path('reparations/', views.RepairListView.as_view(), name='repair-list'),
     path('', views.HomeView.as_view(), name='home'),
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
-    
+    path('test/', views.TestView.as_view(), name='test'),
 ]

@@ -369,3 +369,7 @@ class AddCategoryView(LoginRequiredMixin, CreateView):
     form_class = CategoryForm
     template_name = 'cat.html'
     success_url = reverse_lazy('add-product')
+
+
+class TestView(LoginRequiredMixin, TemplateView):
+    template_name = 'pdf.html'
