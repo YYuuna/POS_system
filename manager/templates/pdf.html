@@ -6,32 +6,43 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'css/pdf.css' %}">
   
-    <title>imprimer pdf</title>
+    <title>imprimer pdf vente</title>
 </head>
 
 <body>
+
 <div id="partieImprimer" class="printable-content">
     
     <div class="titre"> <h1>bon de vente :</h1></div>
-    <div class="element">
-        <h4>nom de produit : {{ product.name }}</h4><br>
-        <p>Catégorie : {{ product.category }}</p><br>
-        <p>Description : {{ product.description }}</p><br>
-        <p>État : {{ product.state }}</p><br>
-        <p>Quantité : {{ product.quantity }}</p><br>
-        <p>Prix d'achat : {{ product.initial_buying_price }}</p><br>
-        <p>Prix de vente : {{ product.initial_selling_price }}</p><br>
-        <p>Fournisseur : {{ product.supplier }}</p><br>
 
+    <div class="element">
+        <p>nom de produit : {{ product.name }}</p>
+        <p>Catégorie : {{ product.category }}</p>
+        <p>Description : {{ product.description }}</p>
+        <p>État : {{ product.state }}</p>
+        <p>Quantité : {{ product.quantity }}</p>
+        <p>Prix d'achat : {{ product.initial_buying_price }}</p>
+        <p>Prix de vente : {{ product.initial_selling_price }}</p>
+        <p>Fournisseur : {{ product.supplier }}</p><br><br>
 
 
     </div>
-     <div></div>
+    
+     <div class="sig">
+
+       <div> <p>signateur de client :</p></div> <br><br><br>
+       <div>  <p> cachet de l'entreprise :</p></div>
+
+     </div>
+
 </div>
+
+
  
 <div class="btn">
-    <div class="imprimer">   <button onclick="imprimerPartie()">Imprimer</button>  </div>
-   
+  
+    <button onclick="imprimerPartie()">Imprimer</button>
+
 </div>
 
     

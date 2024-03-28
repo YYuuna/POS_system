@@ -1,23 +1,33 @@
-*{
-    padding: 0;
-    margin: 0; 
+
+body{ 
+    font-family:'Courier New', Courier, monospace ;
+    background-color: white;
 }
-body{
-   
-    
-    font-family:system-ui ;
-}
+
 
 .printable-content{
-    display: grid;
-    grid-template-rows: 15% 75% 10%;
-    background-color: white;
-
+    margin: 2px;
+}
+.titre{
+    text-align: center;
+    background-color: aqua;
 }
 .element{
-    margin-left: 40;
+    padding-left: 7%;
+    background-color: rgb(188, 139, 234);
 }
-.element p{
-    margin-top: 5px;
-    font-size: 25px;
+
+
+.sig{
+    display: grid;
+    grid-template-columns:1fr 1fr ;
+    justify-items: center;
+    align-items: center;
+    background-color: rgb(194, 133, 133);
+}
+
+
+
+.btn{
+    text-align: center;
 }
