@@ -18,7 +18,7 @@
 
         <div class="logo">
 
-            "{% url 'home' %}"
+             <a href="{% url 'home' %}" class="link"><h2>CRUD</h2></a>
         </div>
         <br>
         {% if request.user|has_group:"Admin" %}
@@ -120,11 +120,7 @@
 </div>
 
 
-<script>
-    function imprimerFormulaire() {
-        window.print();
-    }
-</script>
+
 
 <script src="../static/js/script.js"></script>
 

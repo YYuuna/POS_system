@@ -138,6 +138,12 @@ input:focus{
     align-items: center;
 
 }
+.boxvente{
+    display: grid;
+    grid-template-rows: 1fr;
+    justify-items: center;
+    align-items: center;
+}
 
 .boxcommande{
     display: grid;

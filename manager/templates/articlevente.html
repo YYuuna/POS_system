@@ -18,7 +18,7 @@
 
         <div class="logo">
 
-            "{% url 'home' %}"
+           <a href="{% url 'home' %}" class="link"><h2>CRUD</h2></a>
         </div>
         <br>
         {% if request.user|has_group:"Admin" %}
@@ -96,8 +96,9 @@
         <form action="" class="form" method="post">
 
             <div class="titre">
-                <h3> Ajouter des articles </h3>
+                <h3> Ajouter des articles  </h3>
             </div>
+
             {% if form.non_form_errors %}
             <div class="alert alert-danger">
                 {% for error in form.non_form_errors %}
@@ -106,7 +107,7 @@
             </div>
             {% endif %}
 
-            <div class="boxcommande">
+            <div class="boxvente">
                 {% csrf_token %}
                 {{ form.management_form }}
                 {{ form.non_form_errors.as_ul }}
@@ -141,6 +142,8 @@
 
             </div>
 
+
+
             <input class="button" id="valider" type="submit" value="Valider">
 
             <div class="imprimer">
@@ -155,11 +158,7 @@
 </div>
 
 
-<script>
-    function imprimerFormulaire() {
-        window.print();
-    }
-</script>
+
 
 <script src="{% static 'js/script.js' %}"></script>
 <script src="{% static 'js/jquery-3.7.1.js' %}"></script>
