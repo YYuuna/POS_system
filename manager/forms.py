@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Employee, Account, Client, Supplier, Product, Category
+from django.core.exceptions import ValidationError
+from django.forms import inlineformset_factory, BaseInlineFormSet
+
+from .models import Employee, Account, Client, Supplier, Product, Category, Sale, SaleItem
 
 
 class AccountRegistrationForm(UserCreationForm):
@@ -267,3 +270,57 @@ class CategoryForm(forms.ModelForm):
             'name': "",
 
         }
+
+
+class SaleForm(forms.ModelForm):
+    class Meta:
+        model = Sale
+        fields = ['client']
+
+
+class SaleItemForm(forms.ModelForm):
+    submitted_products = []
+
+    class Meta:
+        model = SaleItem
+        fields = ['product', 'quantity', 'sale_price']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['product'].queryset = Product.objects.filter(state='En vente')
+        self.fields['product'].widget.attrs.update({'class': 'product-select'})
+        self.fields['sale_price'].widget.attrs.update({'class': 'sale-price-input'})
+
+    def clean(self):
+        cleaned_data = super().clean()
+        product = cleaned_data.get('product')
+        quantity = cleaned_data.get('quantity')
+        sale_price = cleaned_data.get('sale_price')
+
+        # Check if product is in submitted_products
+        if product in SaleItemForm.submitted_products:
+            raise ValidationError({
+                'product': ValidationError(
+                    # validation error message in french
+                    'Ce produit a déjà été ajouté à la vente. Veuillez choisir un autre produit.',
+                    code='unique_together'
+                )
+            })
+        else:
+            # Add product to submitted_products
+            SaleItemForm.submitted_products.append(product)
+
+        if product and quantity:
+            if quantity > product.quantity:
+                # Raise ValidationError for 'quantity' field
+                raise ValidationError({
+                    'quantity': ValidationError(
+                        "La quantité de produit demandée est supérieure à la quantité en stock.",
+                        code='invalid'
+                    )
+                })
+        return cleaned_data
+
+
+SaleItemFormSet = inlineformset_factory(Sale, SaleItem, form=SaleItemForm,
+                                        can_delete=True, extra=1)

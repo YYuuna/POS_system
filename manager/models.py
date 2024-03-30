@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from phonenumber_field.modelfields import PhoneNumberField
@@ -98,14 +99,14 @@ class Product(models.Model):
         # ('RÉPARATION_TERMINÉE', 'Réparation terminée')
     ]
 
-    name = models.CharField(max_length=100, db_column='Nom')
+    name = models.CharField(max_length=100, db_column='Nom', unique=True)
     category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default=1, db_column='Catégorie')
     description = models.TextField(db_column='Description', default='Pas de description')
     state = models.CharField(max_length=20, choices=STATE_CHOICES, default='EN_VENTE', db_column='État')
     quantity = models.PositiveIntegerField(default=0, blank=True, null=True, db_column='Quantité')
-    initial_buying_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True,
+    initial_buying_price = models.PositiveIntegerField(blank=True, null=True,
                                                db_column='Prix d\'achat initiale')
-    initial_selling_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True,
+    initial_selling_price = models.PositiveIntegerField(blank=True, null=True,
                                                 db_column='Prix de vente initiale')
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True, db_column='Fournisseur')
 
@@ -116,6 +117,7 @@ class Product(models.Model):
 
     class Meta:
         db_table = 'Produit'
+        verbose_name = _('Produit')
 
 
 class PurchaseOrder(models.Model):
@@ -136,9 +138,8 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderItem(models.Model):
     order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, db_column='Commande')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, db_column='Produit')
-    quantity = models.IntegerField(db_column='Quantité')
-    purchase_price = models.DecimalField(max_digits=10, decimal_places=2,
-                                         db_column='Prix d\'achat')  # Dynamic price for purchase order
+    quantity = models.PositiveIntegerField(db_column='Quantité', validators=[MinValueValidator(1, message="La quantité doit être supérieure à 0")])
+    purchase_price = models.PositiveIntegerField(db_column='Prix d\'achat')  # Dynamic price for purchase order
 
     # Other fields...
 
@@ -166,9 +167,8 @@ class Sale(models.Model):
 class SaleItem(models.Model):
     sale = models.ForeignKey(Sale, on_delete=models.CASCADE, db_column='Vente')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, db_column='Produit')
-    quantity = models.IntegerField(db_column='Quantité')
-    sale_price = models.DecimalField(max_digits=10, decimal_places=2,
-                                     db_column='Prix de vente')  # Dynamic price for sale
+    quantity = models.PositiveIntegerField(db_column='Quantité', validators=[MinValueValidator(1, message="La quantité doit être supérieure à 0")])
+    sale_price = models.PositiveIntegerField(db_column='Prix de vente')  # Dynamic price for sale
 
     # Other fields...
 
@@ -178,6 +178,57 @@ class SaleItem(models.Model):
     class Meta:
         db_table = 'ArticleVente'
         unique_together = ('sale', 'product')
+
+    def cancel_sale(self):
+        # Get the related SaleItem instances
+        sale_items = self.saleitem_set.all()
+
+        # Iterate over the SaleItem instances
+        for sale_item in sale_items:
+            # Delete the SaleItem with updating the product quantity
+            sale_item.delete(update_product_quantity=True)
+
+        # Delete the Sale instance
+        self.delete()
+
+    def cancel_sale(self):
+        # Get the related SaleItem instances
+        sale_items = self.saleitem_set.all()
+
+        # Iterate over the SaleItem instances
+        for sale_item in sale_items:
+            # Delete the SaleItem with updating the product quantity
+            sale_item.delete(update_product_quantity=True)
+
+        # Delete the Sale instance
+        self.delete()
+
+    def save(self, *args, **kwargs):
+        # If the SaleItem already exists in the database
+        if self.pk:
+            # Get the old SaleItem from the database
+            old_sale_item = SaleItem.objects.get(pk=self.pk)
+
+            # If the quantity has been updated
+            if old_sale_item.quantity != self.quantity:
+                # Update the product's quantity
+                self.product.quantity += old_sale_item.quantity - self.quantity
+                self.product.save()
+
+        else:  # If the SaleItem is new
+            # Decrease the product's quantity
+            self.product.quantity -= self.quantity
+            self.product.save()
+
+        super().save(*args, **kwargs)
+
+    def delete(self, update_product_quantity=True, *args, **kwargs):
+        if update_product_quantity:
+            # Increase the product's quantity
+            self.product.quantity += self.quantity
+            self.product.save()
+
+        super().delete(*args, **kwargs)
 
 
 class Repair(models.Model):

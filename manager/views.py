@@ -1,15 +1,16 @@
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import View
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.views.generic import ListView, TemplateView
 from django.urls import reverse_lazy
-from .models import Client, Supplier, Product, Account, Employee, PurchaseOrder, Sale, Repair, Category
+from .models import Client, Supplier, Product, Account, Employee, PurchaseOrder, Sale, Repair, Category, SaleItem
 from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm, AccountRegistrationForm, \
-    EmployeeForm, CategoryForm
+    EmployeeForm, CategoryForm, SaleForm, SaleItemFormSet, SaleItemForm
 
 
 class AddClientView(LoginRequiredMixin, CreateView):
@@ -132,6 +133,7 @@ class ProductListView(LoginRequiredMixin, ListView):
         context['form'] = FilterForm(self.request.GET)
         return context
 
+
 class ProductDetailView(View):
     def get(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
@@ -185,7 +187,6 @@ class PurchaseOrderListView(LoginRequiredMixin, ListView):
         return context
 
 
-
 class SaleListView(LoginRequiredMixin, ListView):
     model = Sale
     template_name = 'listevente.html'
@@ -224,9 +225,6 @@ class RepairListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['form'] = FilterForm(self.request.GET)
         return context
-
-
-
 
 
 class HomeView(LoginRequiredMixin, TemplateView):
@@ -373,3 +371,64 @@ class AddCategoryView(LoginRequiredMixin, CreateView):
 
 class TestView(LoginRequiredMixin, TemplateView):
     template_name = 'pdf.html'
+
+
+class AddSaleView(LoginRequiredMixin, CreateView):
+    model = Sale
+    template_name = 'ajoutervente.html'
+    form_class = SaleForm
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return redirect('update-sale', pk=self.object.pk)
+
+    def get_success_url(self):
+        return reverse_lazy('update-sale', kwargs={'pk': self.object.pk})
+
+
+class SaleUpdateView(LoginRequiredMixin, FormView):
+    template_name = 'articlevente.html'
+    success_url = reverse_lazy('sale-list')
+    form_class = SaleItemFormSet
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = Sale.objects.get(pk=self.kwargs['pk'])
+        sale = Sale.objects.get(pk=self.kwargs['pk'])
+        kwargs['queryset'] = SaleItem.objects.filter(sale=sale)
+        return kwargs
+
+    def form_valid(self, form):
+        instances = form.save(commit=False)
+        for instance in form.deleted_objects:
+            instance.delete()
+        for instance in instances:
+            instance.save()
+        # Clear the submitted_products list
+        SaleItemForm.submitted_products.clear()
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # Clear the submitted_products list
+        SaleItemForm.submitted_products.clear()
+        # Add your custom behavior here
+        # For example, you can log the form errors
+        print(form.errors)
+        return super().form_invalid(form)
+
+
+class SaleDeleteView(LoginRequiredMixin, DeleteView):
+    model = Sale
+    template_name = 'supprimervente.html'
+    success_url = reverse_lazy('sale-list')
+
+
+class GetInitialSellingPriceView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        product_id = request.GET.get('product_id')
+        if product_id:
+            product = Product.objects.get(id=product_id)
+            return JsonResponse({'initial_selling_price': str(product.initial_selling_price)})
+        else:
+            return JsonResponse({'initial_selling_price': '0'})
