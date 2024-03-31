@@ -284,6 +284,11 @@ class SaleItemForm(forms.ModelForm):
     class Meta:
         model = SaleItem
         fields = ['product', 'quantity', 'sale_price']
+        labels = {
+            'product': 'Produit',
+            'quantity': 'Quantité',
+            'sale_price': 'Prix de vente'
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -295,7 +300,6 @@ class SaleItemForm(forms.ModelForm):
         cleaned_data = super().clean()
         product = cleaned_data.get('product')
         quantity = cleaned_data.get('quantity')
-        sale_price = cleaned_data.get('sale_price')
 
         # Check if product is in submitted_products
         if product in SaleItemForm.submitted_products:
@@ -315,12 +319,15 @@ class SaleItemForm(forms.ModelForm):
                 # Raise ValidationError for 'quantity' field
                 raise ValidationError({
                     'quantity': ValidationError(
-                        "La quantité de produit demandée est supérieure à la quantité en stock.",
+                        "La quantité de produit demandée est supérieure à la quantité en stock (" + product.quantity + ").",
                         code='invalid'
                     )
                 })
         return cleaned_data
 
 
-SaleItemFormSet = inlineformset_factory(Sale, SaleItem, form=SaleItemForm,
-                                        can_delete=True, extra=1)
+SaleItemFormSet = inlineformset_factory(Sale, SaleItem, form=SaleItemForm, can_delete=True, extra=1)
+
+
+class PurchaseOrderForm(forms.ModelForm):
+    pass
