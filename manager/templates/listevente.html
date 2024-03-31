@@ -115,8 +115,11 @@
                     <th>Client</th>
                     <th>Date de vente</th>
                     <!-- Add more fields as per your requirement -->
+                    
                     <th>Modifier</th>
                     <th>Supprimer</th>
+                    <th>Imprimer</th>  <!-- ki y3abez hna tadih l pdfvente.html bach yamprimi detail -->
+                   
                 </tr>
                 </thead>
                 <tbody id="tbody">
@@ -126,6 +129,8 @@
                     <td>{{ sale.client.first_name }} {{ sale.client.last_name }}</td>
                     <td>{{ sale.sale_date }}</td>
                     <!-- Add more fields as per your requirement -->
+                    
+
                     <td>
                         <button class="button" id="modifier"
                                 onclick="location.href='{% url 'update-sale' sale.id %}';">Modifier
@@ -136,6 +141,12 @@
                                 onclick="location.href='{% url 'delete-sale' sale.id %}';">Supprimer
                         </button>
                     </td>
+                    <td>
+                        <button class="button" id=""
+                                onclick="location.href='{% url 'update-sale' sale.id %}';">Imprimer
+                        </button>
+                    </td>
+
                 </tr>
                 {% endfor %}
                 </tbody>

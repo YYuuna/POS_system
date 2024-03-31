@@ -243,3 +243,26 @@ table{
 }
 
 
+.add-row{
+    width: 40%;
+    height: 27px;
+    border-radius:10px ;
+    border: none;
+    cursor: pointer;
+    background: #4dd2634a;
+    color: white;
+    transition: 0.7s;
+    text-decoration: none;
+
+}
+.delete-row{
+    width: 34%;
+    height: 27px;
+    border-radius:10px ;
+    border: none;
+    cursor: pointer;
+    background:rgba(193, 32, 32, 0.916) ;
+    color: white;
+    transition: 0.7s;
+    text-decoration: none;
+}

@@ -121,6 +121,7 @@
                         {% endfor %}
                     </tr>
                     </thead>
+                    
                     {% endif %}
                     <tr class="{% cycle row1 row2 %} sale-item">
                         {% for field in item_form.visible_fields %}
@@ -146,9 +147,7 @@
 
             <input class="button" id="valider" type="submit" value="Valider">
 
-            <div class="imprimer">
-                <button id="imprimer" onclick="imprimerFormulaire()">Imprimer</button>
-            </div>
+           
 
         </form>
 

@@ -1,0 +1,79 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/pdf.css' %}">
+  
+    <title>imprimer bon de vente</title>
+</head>
+
+<body>
+
+<div id="partieImprimer" class="printable-content">
+    
+    <div class="titre"> <h1>bon de vente :</h1></div>
+
+    <div class="element">
+        <!-- hnaya ijou le détail ta3 la vente bach yamprimiha jib les donnés ta3 vente hathom tema -->
+        <p>client : </p>
+        <p>date : </p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p><br><br>
+
+
+    </div>
+    
+     <div class="sig">
+
+       <div> <p>signateur de client :</p></div> <br><br><br>
+       <div>  <p> cachet de l'entreprise :</p></div>
+
+     </div>
+
+</div>
+
+
+ 
+<div class="btn">
+  
+    <button onclick="imprimerPartie()">Imprimer</button>
+
+</div>
+
+    
+        
+
+<script>
+   function imprimerPartie() {
+  // Récupérer la partie de la page à imprimer
+  var contenuAImprimer = document.getElementById('partieImprimer').innerHTML;
+  
+  // Créer une fenêtre de prévisualisation pour le contenu à imprimer
+  var fenetreImpression = window.open('', '_blank');
+  
+  // Écrire le contenu à imprimer dans la fenêtre de prévisualisation
+  fenetreImpression.document.write('<html><head><title>Impression</title></head><body>');
+  fenetreImpression.document.write(contenuAImprimer);
+  fenetreImpression.document.write('</body></html>');
+  
+  // Imprimer le contenu
+  fenetreImpression.print();
+  
+  // Fermer la fenêtre de prévisualisation après l'impression
+  fenetreImpression.close();
+}
+  </script>
+   
+</body>
+
+</html>
+
+
+
+
