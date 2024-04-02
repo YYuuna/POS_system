@@ -3,7 +3,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.forms import inlineformset_factory, BaseInlineFormSet
 
-from .models import Employee, Account, Client, Supplier, Product, Category, Sale, SaleItem
+from .models import Employee, Account, Client, Supplier, Product, Category, Sale, SaleItem, PurchaseOrder, \
+    PurchaseOrderItem
 
 
 class AccountRegistrationForm(UserCreationForm):
@@ -287,14 +288,16 @@ class SaleItemForm(forms.ModelForm):
         labels = {
             'product': 'Produit',
             'quantity': 'Quantité',
-            'sale_price': 'Prix de vente'
+            'sale_price': 'Prix unitaire'
         }
 
     def __init__(self, *args, **kwargs):
+        self.sale = kwargs.pop('sale', None)  # Get the 'sale' argument
         super().__init__(*args, **kwargs)
         self.fields['product'].queryset = Product.objects.filter(state='En vente')
         self.fields['product'].widget.attrs.update({'class': 'product-select'})
         self.fields['sale_price'].widget.attrs.update({'class': 'sale-price-input'})
+
 
     def clean(self):
         cleaned_data = super().clean()
@@ -315,11 +318,22 @@ class SaleItemForm(forms.ModelForm):
             SaleItemForm.submitted_products.append(product)
 
         if product and quantity:
-            if quantity > product.quantity:
+            # Get the Sale instance passed as an argument
+            sale = self.sale
+
+            # Get the SaleItem instance that is going to be removed
+            old_sale_item = SaleItem.objects.filter(sale=sale, product=product).first()
+
+            # Get the old quantity from this instance
+            old_quantity = old_sale_item.quantity if old_sale_item else 0
+
+            # Check if the difference between the old quantity and the new quantity exceeds the quantity in stock
+            if quantity - old_quantity > product.quantity:
                 # Raise ValidationError for 'quantity' field
                 raise ValidationError({
                     'quantity': ValidationError(
-                        "La quantité de produit demandée est supérieure à la quantité en stock (" + product.quantity + ").",
+                        "La quantité de produit demandée est supérieure à la quantité en stock (" + str(
+                            product.quantity+old_quantity) + ").",
                         code='invalid'
                     )
                 })
@@ -330,4 +344,47 @@ SaleItemFormSet = inlineformset_factory(Sale, SaleItem, form=SaleItemForm, can_d
 
 
 class PurchaseOrderForm(forms.ModelForm):
-    pass
+    class Meta:
+        model = PurchaseOrder
+        fields = ['supplier']
+        labels = {
+            'supplier':'Fournisseur'
+        }
+
+
+class PurchaseOrderItemForm(forms.ModelForm):
+    submitted_products=[]
+    class Meta:
+        model = PurchaseOrderItem
+        fields = ['product', 'quantity', 'purchase_price']
+        labels = {
+            'product': 'Produit',
+            'quantity': 'Quantité',
+            'purchase_price': 'Prix unitaire'
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['product'].queryset = Product.objects.filter(state='En vente')
+        self.fields['product'].widget.attrs.update({'class': 'product-select'})
+        self.fields['purchase_price'].widget.attrs.update({'class': 'purchase-price-input'})
+
+    def clean(self):
+        cleaned_data = super().clean()
+        product = cleaned_data.get('product')
+
+        if product in PurchaseOrderItemForm.submitted_products:
+            raise ValidationError({
+                'product': ValidationError(
+                    # validation error message in french
+                    'Ce produit a déjà été ajouté à la vente. Veuillez choisir un autre produit.',
+                    code='unique_together'
+                )
+            })
+        else:
+            # Add product to submitted_products
+            SaleItemForm.submitted_products.append(product)
+
+        return cleaned_data
+
+PurchaseOrderItemFormSet = inlineformset_factory(PurchaseOrder, PurchaseOrderItem, form=PurchaseOrderItemForm, can_delete=True, extra=1)

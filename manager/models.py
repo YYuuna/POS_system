@@ -136,7 +136,7 @@ class PurchaseOrder(models.Model):
 
 
 class PurchaseOrderItem(models.Model):
-    order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, db_column='Commande')
+    purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, db_column='Commande')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, db_column='Produit')
     quantity = models.PositiveIntegerField(db_column='Quantité', validators=[MinValueValidator(1, message="La quantité doit être supérieure à 0")])
     purchase_price = models.PositiveIntegerField(db_column='Prix d\'achat')  # Dynamic price for purchase order
@@ -148,7 +148,7 @@ class PurchaseOrderItem(models.Model):
 
     class Meta:
         db_table = 'ArticleCommande'
-        unique_together = ('order', 'product')
+        #unique_together = ('purchase_order', 'product')
 
 
 class Sale(models.Model):
@@ -162,6 +162,18 @@ class Sale(models.Model):
 
     class Meta:
         db_table = 'Vente'
+
+    def delete_sale(self, update_product_quantity=False):
+        # Get the related SaleItem instances
+        sale_items = self.saleitem_set.all()
+
+        # Iterate over the SaleItem instances
+        for sale_item in sale_items:
+            # Delete the SaleItem with updating the product quantity
+            sale_item.delete(update_product_quantity=update_product_quantity)
+
+        # Delete the Sale instance
+        super().delete()
 
 
 class SaleItem(models.Model):
@@ -177,31 +189,7 @@ class SaleItem(models.Model):
 
     class Meta:
         db_table = 'ArticleVente'
-        unique_together = ('sale', 'product')
-
-    def cancel_sale(self):
-        # Get the related SaleItem instances
-        sale_items = self.saleitem_set.all()
-
-        # Iterate over the SaleItem instances
-        for sale_item in sale_items:
-            # Delete the SaleItem with updating the product quantity
-            sale_item.delete(update_product_quantity=True)
-
-        # Delete the Sale instance
-        self.delete()
-
-    def cancel_sale(self):
-        # Get the related SaleItem instances
-        sale_items = self.saleitem_set.all()
-
-        # Iterate over the SaleItem instances
-        for sale_item in sale_items:
-            # Delete the SaleItem with updating the product quantity
-            sale_item.delete(update_product_quantity=True)
-
-        # Delete the Sale instance
-        self.delete()
+        #unique_together = ('sale', 'product')
 
     def save(self, *args, **kwargs):
         # If the SaleItem already exists in the database
@@ -216,6 +204,7 @@ class SaleItem(models.Model):
                 self.product.save()
 
         else:  # If the SaleItem is new
+            self.product.refresh_from_db()
             # Decrease the product's quantity
             self.product.quantity -= self.quantity
             self.product.save()

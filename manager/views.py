@@ -1,16 +1,18 @@
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.views.generic import ListView, TemplateView
 from django.urls import reverse_lazy
-from .models import Client, Supplier, Product, Account, Employee, PurchaseOrder, Sale, Repair, Category, SaleItem
+from .models import Client, Supplier, Product, Account, Employee, PurchaseOrder, Sale, Repair, Category, SaleItem, \
+    PurchaseOrderItem
 from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm, AccountRegistrationForm, \
-    EmployeeForm, CategoryForm, SaleForm, SaleItemFormSet, SaleItemForm
+    EmployeeForm, CategoryForm, SaleForm, SaleItemFormSet, SaleItemForm, PurchaseOrderForm, PurchaseOrderItemFormSet, \
+    PurchaseOrderItemForm
 
 
 class AddClientView(LoginRequiredMixin, CreateView):
@@ -396,6 +398,7 @@ class SaleUpdateView(LoginRequiredMixin, FormView):
         kwargs['instance'] = Sale.objects.get(pk=self.kwargs['pk'])
         sale = Sale.objects.get(pk=self.kwargs['pk'])
         kwargs['queryset'] = SaleItem.objects.filter(sale=sale)
+        kwargs['form_kwargs'] = {'sale': sale}  # Pass the Sale instance to the SaleItemForm
         return kwargs
 
     def form_valid(self, form):
@@ -412,10 +415,13 @@ class SaleUpdateView(LoginRequiredMixin, FormView):
     def form_invalid(self, form):
         # Clear the submitted_products list
         SaleItemForm.submitted_products.clear()
-        # Add your custom behavior here
-        # For example, you can log the form errors
-        print(form.errors)
         return super().form_invalid(form)
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        return self.form_invalid(form)
 
 
 class SaleDeleteView(LoginRequiredMixin, DeleteView):
@@ -423,12 +429,85 @@ class SaleDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'supprimervente.html'
     success_url = reverse_lazy('sale-list')
 
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete_sale()
+        return super().delete(request, *args, **kwargs)
 
-class GetInitialSellingPriceView(LoginRequiredMixin, View):
+
+class SaleCancelView(LoginRequiredMixin, DeleteView):
+    model = Sale
+    template_name = 'cancel_sale.html'
+    success_url = reverse_lazy('sale-list')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete_sale(
+            update_product_quantity=True)  # Call the delete_sale method with update_product_quantity=True
+        return super().delete(request, *args, **kwargs)
+
+
+class ProductInitialSellingPriceView(LoginRequiredMixin,View):
     def get(self, request, *args, **kwargs):
-        product_id = request.GET.get('product_id')
-        if product_id:
-            product = Product.objects.get(id=product_id)
-            return JsonResponse({'initial_selling_price': str(product.initial_selling_price)})
-        else:
-            return JsonResponse({'initial_selling_price': '0'})
+        pk = kwargs.get('pk')
+        try:
+            product = Product.objects.get(pk=pk)
+            return JsonResponse({'initial_selling_price': product.initial_selling_price})
+        except Product.DoesNotExist:
+            raise Http404("Product does not exist")
+
+class AddPurchaseOrderView(LoginRequiredMixin, CreateView):
+    model = PurchaseOrder
+    template_name = 'ajoutercommande.html'
+    form_class = PurchaseOrderForm
+    success_url = reverse_lazy('purchase-order-list')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return redirect('update-purchase-order', pk=self.object.pk)
+
+    def get_success_url(self):
+        return reverse_lazy('update-purchase-order', kwargs={'pk': self.object.pk})
+
+
+class PurchaseOrderUpdateView(LoginRequiredMixin, FormView):
+    template_name = 'articlecommande.html'
+    success_url = reverse_lazy('purchase-order-list')
+    form_class = PurchaseOrderItemFormSet
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = PurchaseOrder.objects.get(pk=self.kwargs['pk'])
+        purchase_order = PurchaseOrder.objects.get(pk=self.kwargs['pk'])
+        kwargs['queryset'] = PurchaseOrderItem.objects.filter(purchase_order=purchase_order)
+        return kwargs
+
+    def form_valid(self, form):
+        instances = form.save(commit=False)
+        for instance in form.deleted_objects:
+            instance.delete()
+        for instance in instances:
+            instance.save()
+        # Clear the submitted_products list
+        PurchaseOrderItemForm.submitted_products.clear()
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # Clear the submitted_products list
+        PurchaseOrderItemForm.submitted_products.clear()
+        return super().form_invalid(form)
+
+
+class PurchaseOrderDeleteView(LoginRequiredMixin, DeleteView):
+    model = PurchaseOrder
+    template_name = 'supprimercommande.html'
+    success_url = reverse_lazy('purchase-order-list')
+
+class ProductInitialPurchasePriceView(LoginRequiredMixin,View):
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        try:
+            product = Product.objects.get(pk=pk)
+            return JsonResponse({'initial_buying_price': product.initial_buying_price})
+        except Product.DoesNotExist:
+            raise Http404("Product does not exist")

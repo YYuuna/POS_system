@@ -2,21 +2,21 @@ $(document).ready(function() {
     // Attach event listener to the document, targeting dynamically added .product-select elements
     $(document).on('change', '.product-select', function() {
         var selectedProductPk = $(this).val();
-        var initialSellingPriceInput = $(this).closest('.sale-item').find('.sale-price-input');
+        var purchasePriceInput = $(this).closest('.purchase-order-item').find('.purchase-price-input');
 
         if (selectedProductPk) {
             $.ajax({
-                url: '/produit/' + selectedProductPk + '/prix_vente_initial/',
+                url: '/produit/' + selectedProductPk + '/prix_achat_initial/',
                 success: function(data) {
-                    initialSellingPriceInput.val(data.initial_selling_price);
+                    purchasePriceInput.val(data.initial_buying_price);
                 },
                 error: function() {
                     alert('Produit non trouvé');
-                    initialSellingPriceInput.val('0');
+                    purchasePriceInput.val('0');
                 }
             });
         } else {
-            initialSellingPriceInput.val('');
+            purchasePriceInput.val('');
         }
     });
 });
