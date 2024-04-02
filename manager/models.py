@@ -250,7 +250,7 @@ class Employee(models.Model):
     ROLES_CHOICES = [
         ('Admin', _('Admin')),
         ('Employé', _('Employé')),
-        # ('Réparateur', _('Réparateur')),
+         ('Réparateur', _('Réparateur')),
     ]
     role = models.CharField(_('Role'), max_length=100, choices=ROLES_CHOICES, default='Employé', db_column='Rôle')
     salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, db_column='Salaire')
