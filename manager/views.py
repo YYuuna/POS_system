@@ -424,20 +424,20 @@ class SaleUpdateView(LoginRequiredMixin, FormView):
         return self.form_invalid(form)
 
 
-class SaleDeleteView(LoginRequiredMixin, DeleteView):
-    model = Sale
-    template_name = 'supprimervente.html'
-    success_url = reverse_lazy('sale-list')
-
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete_sale()
-        return super().delete(request, *args, **kwargs)
+# class SaleDeleteView(LoginRequiredMixin, DeleteView):
+#     model = Sale
+#     template_name = 'supprimervente.html'
+#     success_url = reverse_lazy('sale-list')
+#
+#     def delete(self, request, *args, **kwargs):
+#         self.object = self.get_object()
+#         self.object.delete_sale()
+#         return super().delete(request, *args, **kwargs)
 
 
 class SaleCancelView(LoginRequiredMixin, DeleteView):
     model = Sale
-    template_name = 'cancel_sale.html'
+    template_name = 'supprimervente.html'
     success_url = reverse_lazy('sale-list')
 
     def delete(self, request, *args, **kwargs):

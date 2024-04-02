@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
-    <title>Supprimer vente </title>
+    <title>Annuler une vente </title>
 
 </head>
 <body>
@@ -98,15 +98,15 @@
             <form action="" class="form" method="post">
 
                 <div class="titre">
-                    <h3>Supprimer une vente  </h3>
+                    <h3>Annuler une vente  </h3>
                 </div>
                 <br>
 
 
-                <p>Êtes-vous sûr de vouloir supprimer cette vente  ?</p><br><br>
+                <p>Êtes-vous sûr de vouloir annuler cette vente ?</p><br><br>
 
                 {% csrf_token %}
-                <input class="button" id="supprimer" type="submit" value="Supprimer">
+                <input class="button" id="supprimer" type="submit" value="Annuler vente">
 
             </form>
                 <button class="button" id="modifier"
