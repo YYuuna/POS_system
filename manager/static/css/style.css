@@ -244,19 +244,19 @@ table{
 
 
 .add-row{
-    width: 50%;
+    width: 40%;
     height: 27px;
     border-radius:10px ;
     border: none;
     cursor: pointer;
-    background: #76eb894a;
+    background: #4dd2634a;
     color: white;
     transition: 0.7s;
     text-decoration: none;
 
 }
 .delete-row{
-    width: 40%;
+    width: 34%;
     height: 27px;
     border-radius:10px ;
     border: none;

@@ -116,7 +116,6 @@
                     <th>Date de commande</th>
                     <th>Date de livraison</th>
 
-                    <th>Détaill</th>
                     <th>Modifier</th>
                     <th>Supprimer</th>
                     <!-- Add more fields as per your requirement -->
@@ -135,13 +134,6 @@
                             La commande n'est pas encore livrée
                         {% endif %}
                     </td>
-
-                    <td>
-                        <button class="button" id=""
-                                onclick="location.href='{% url 'update-purchase-order' purchase_order.id %}';">Détaill
-                        </button>
-                    </td>
-
                     <td>
                         <button class="button" id="modifier"
                                 onclick="location.href='{% url 'update-purchase-order' purchase_order.id %}';">Modifier
