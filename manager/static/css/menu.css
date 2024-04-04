@@ -73,7 +73,7 @@ body{
     border-radius:10px ;
     border: none;
     cursor: pointer;
-    background: #106096;
+    background:#030d146a;
     color: white;
     transition: 0.7s;  
 }
