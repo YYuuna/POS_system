@@ -5,15 +5,15 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'css/pdf.css' %}">
-  
+
     <title>Détails de la commande</title>
 </head>
 
 <body>
 
 <div id="partieImprimer" class="printable-content">
-    
-    <div class="titre"> <h1>Détails de la commande :</h1></div>
+
+    <div class="titre"><h1>Détails de la commande :</h1></div>
 
     <div class="element">
 
@@ -22,9 +22,9 @@
         <p>Date de commande : {{purchase_order.order_date}}</p>
         <p>Date de livraison :
             {% if purchase_order.delivery_date %}
-                {{ purchase_order.delivery_date }}
+            {{ purchase_order.delivery_date }}
             {% else %}
-                La commande n'est pas encore livrée
+            La commande n'est pas encore livrée
             {% endif %}
         </p>
         <br><br>
@@ -56,6 +56,7 @@
         </tr>
         {% endfor %}
         </tbody>
+    </table>
         {% else %}
         <h3>Aucun article trouvé .</h3>
         {% endif %}
@@ -66,9 +67,8 @@
 </div>
 
 
- 
 <div class="btn">
-  
+
     <button onclick="imprimerPartie()">Imprimer</button>
 
 </div>
