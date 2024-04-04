@@ -1,7 +1,7 @@
 
 body{ 
     font-family:'Courier New', Courier, monospace ;
-    background-color: white;
+    background-color: #605d5d1b ;
 }
 
 
@@ -10,24 +10,47 @@ body{
 }
 .titre{
     text-align: center;
-    background-color: aqua;
+    
 }
 .element{
-    padding-left: 7%;
-    background-color: rgb(188, 139, 234);
+    padding-left: 5%;
+    padding-right: 5%;
+    background-color:;
 }
 
 
 .sig{
     display: grid;
-    grid-template-columns:1fr 1fr ;
-    justify-items: center;
-    align-items: center;
-    background-color: rgb(194, 133, 133);
+    grid-template-columns:1fr 1fr  ;
+    /* justify-items: center;  */
+    /* align-items: center;  */
+    padding-left:1px ;
+    padding-right:20% ;
+    background-color: ;
+
+}
+.cachet{
+text-align: right;
+
+}
+#total{
+    text-decoration:underline;
 }
 
-
-
 .btn{
+    padding-top: 5%;
     text-align: center;
+}
+
+table{
+    background-color: #66656536;
+    width: 100%;
+    text-align: center;
+    margin: 5px 0;
+ }
+ table th{
+    text-transform: uppercase; 
+ }
+ th,td{ 
+     padding: 2px; 
 }

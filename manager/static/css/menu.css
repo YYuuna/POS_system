@@ -48,7 +48,7 @@ body{
 
    height: 80%;
    text-align: center;
-   background-color: #111111a7;
+   /* background-color: #111111a7;  */
 }
 
 .value{
@@ -65,28 +65,22 @@ body{
 
 .logoutbtn{
 
-    z-index: 1;
-    position: relative;
-    font-weight: 600;
-    font-size: 17px;
-    -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
-    box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
-    transition: all 250ms;
-    overflow: hidden;
+   
     
-    /* width: 64%;
+     width: 64%;
+    font-weight: 600;
     height: 30px;
     border-radius:10px ;
     border: none;
     cursor: pointer;
-    background: #054370;
+    background: #106096;
     color: white;
-    transition: 0.7s;   */
+    transition: 0.7s;  
 }
 
 .logoutbtn:hover{
         letter-spacing: 1px;
-        background: #106096;
+        background: #04121c;
        
 }
     
