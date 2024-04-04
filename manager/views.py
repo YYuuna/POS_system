@@ -6,7 +6,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, DetailView
 from django.urls import reverse_lazy
 from .models import Client, Supplier, Product, Account, Employee, PurchaseOrder, Sale, Repair, Category, SaleItem, \
     PurchaseOrderItem
@@ -390,18 +390,21 @@ class AddSaleView(LoginRequiredMixin, CreateView):
 
 class SaleUpdateView(LoginRequiredMixin, FormView):
     template_name = 'articlevente.html'
-    success_url = reverse_lazy('sale-list')
     form_class = SaleItemFormSet
 
+    def get_success_url(self):
+        return reverse_lazy('sale-detail', kwargs={'pk': self.sale.pk})
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['instance'] = Sale.objects.get(pk=self.kwargs['pk'])
+        self.sale = Sale.objects.get(pk=self.kwargs['pk'])
+        kwargs['instance'] = self.sale
         sale = Sale.objects.get(pk=self.kwargs['pk'])
         kwargs['queryset'] = SaleItem.objects.filter(sale=sale)
         kwargs['form_kwargs'] = {'sale': sale}  # Pass the Sale instance to the SaleItemForm
         return kwargs
 
     def form_valid(self, form):
+
         instances = form.save(commit=False)
         for instance in form.deleted_objects:
             instance.delete()
@@ -446,6 +449,23 @@ class SaleCancelView(LoginRequiredMixin, DeleteView):
             update_product_quantity=True)  # Call the delete_sale method with update_product_quantity=True
         return super().delete(request, *args, **kwargs)
 
+class SaleDetailView(LoginRequiredMixin, DetailView):
+    model = Sale
+    template_name = 'detaillvente.html'
+    context_object_name = 'sale'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        sale_items = SaleItem.objects.filter(sale=self.object)
+        context['sale_items_exist'] = sale_items.exists()  # Check if there are any sale items
+        # Calculate the total for each item
+        item_totals = [item.sale_price * item.quantity for item in sale_items]
+        # Calculate the total for the sale
+        sale_total = sum(item_totals)
+        context['sale_items'] = zip(sale_items, item_totals)  # Pass both the items and their totals
+        context['sale_total'] = sale_total
+        return context
+
 
 class ProductInitialSellingPriceView(LoginRequiredMixin,View):
     def get(self, request, *args, **kwargs):
@@ -472,14 +492,13 @@ class AddPurchaseOrderView(LoginRequiredMixin, CreateView):
 
 class PurchaseOrderUpdateView(LoginRequiredMixin, FormView):
     template_name = 'articlecommande.html'
-    success_url = reverse_lazy('purchase-order-list')
     form_class = PurchaseOrderItemFormSet
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['instance'] = PurchaseOrder.objects.get(pk=self.kwargs['pk'])
-        purchase_order = PurchaseOrder.objects.get(pk=self.kwargs['pk'])
-        kwargs['queryset'] = PurchaseOrderItem.objects.filter(purchase_order=purchase_order)
+        self.purchase_order = PurchaseOrder.objects.get(pk=self.kwargs['pk'])
+        kwargs['instance'] = self.purchase_order
+        kwargs['queryset'] = PurchaseOrderItem.objects.filter(purchase_order=self.purchase_order)
         return kwargs
 
     def form_valid(self, form):
@@ -497,11 +516,31 @@ class PurchaseOrderUpdateView(LoginRequiredMixin, FormView):
         PurchaseOrderItemForm.submitted_products.clear()
         return super().form_invalid(form)
 
+    def get_success_url(self):
+        return reverse_lazy('purchase-order-detail', kwargs={'pk': self.purchase_order.pk})
+
 
 class PurchaseOrderDeleteView(LoginRequiredMixin, DeleteView):
     model = PurchaseOrder
     template_name = 'supprimercommande.html'
     success_url = reverse_lazy('purchase-order-list')
+
+class PurchaseOrderDetailView(LoginRequiredMixin, DetailView):
+    model = PurchaseOrder
+    template_name = 'detaillcommande.html'
+    context_object_name = 'purchase_order'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        purchase_order_items = PurchaseOrderItem.objects.filter(purchase_order=self.object)
+        context['purchase_order_items_exist'] = purchase_order_items.exists()  # Check if there are any purchase order items
+        # Calculate the total for each item
+        item_totals = [item.purchase_price * item.quantity for item in purchase_order_items]
+        # Calculate the total for the purchase order
+        purchase_order_total = sum(item_totals)
+        context['purchase_order_items'] = zip(purchase_order_items, item_totals)  # Pass both the items and their totals
+        context['purchase_order_total'] = purchase_order_total
+        return context
 
 class ProductInitialPurchasePriceView(LoginRequiredMixin,View):
     def get(self, request, *args, **kwargs):

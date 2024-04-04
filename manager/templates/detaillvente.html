@@ -5,71 +5,68 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'css/pdf.css' %}">
-  
-    <title>imprimer</title>
+
+    <title>Détails de la vente</title>
 </head>
 
 <body>
 
 <div id="partieImprimer" class="printable-content">
-    
-    <div class="titre"> <h1>bon de vente :</h1></div>
+
+    <div class="titre"><h1>Détail de vente :</h1></div>
 
     <div class="element">
-       
-        <p> : </p>
-        <p>date : </p>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p><br><br>
 
+        <h2>Vente :{{sale.id}}</h2>
+        <p>Client : {{sale.client}}</p>
+        <p>Date de vente : {{sale.sale_date}}</p>
 
+        <br><br>
+
+        {% if sale_items_exist %}
+        <h3>Les articles de vente :</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Numéro</th>
+                <th>Produit</th>
+                <th>Nom</th>
+                <th>Quantité</th>
+                <th>Prix</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item,total in sale_items %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.product.id }}</td>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.sale_price }}</td>
+                <td>{{ total }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <h3>Aucun article trouvé .</h3>
+        {% endif %}
+        <h3>Paiement total de la vente : </h3>
+        <p>
+            <strong>{{ sale_total }}</strong>
+        </p>
     </div>
-    
-     <div class="sig">
-
-       <div> <p>signateur de client :</p></div> <br><br><br>
-       <div>  <p> cachet de l'entreprise :</p></div>
-
-     </div>
-
 </div>
 
 
- 
 <div class="btn">
-  
+
     <button onclick="imprimerPartie()">Imprimer</button>
 
 </div>
 
-    
-        
 
-<script>
-   function imprimerPartie() {
-  // Récupérer la partie de la page à imprimer
-  var contenuAImprimer = document.getElementById('partieImprimer').innerHTML;
-  
-  // Créer une fenêtre de prévisualisation pour le contenu à imprimer
-  var fenetreImpression = window.open('', '_blank');
-  
-  // Écrire le contenu à imprimer dans la fenêtre de prévisualisation
-  fenetreImpression.document.write('<html><head><title>Impression</title></head><body>');
-  fenetreImpression.document.write(contenuAImprimer);
-  fenetreImpression.document.write('</body></html>');
-  
-  // Imprimer le contenu
-  fenetreImpression.print();
-  
-  // Fermer la fenêtre de prévisualisation après l'impression
-  fenetreImpression.close();
-}
-  </script>
-   
 </body>
 
 </html>
