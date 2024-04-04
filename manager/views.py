@@ -99,13 +99,13 @@ class SupplierListView(LoginRequiredMixin, ListView):
 class SupplierUpdateView(LoginRequiredMixin, UpdateView):
     model = Supplier
     form_class = SupplierForm
-    template_name = 'supplier_update_form.html'
+    template_name = 'modifierfournisseur.html'
     success_url = reverse_lazy('supplier-list')
 
 
 class SupplierDeleteView(LoginRequiredMixin, DeleteView):
     model = Supplier
-    template_name = 'supplier_confirm_delete.html'
+    template_name = 'supprimerfournisseur.html'
     success_url = reverse_lazy('supplier-list')
 
 

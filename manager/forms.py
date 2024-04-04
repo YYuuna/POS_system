@@ -179,11 +179,12 @@ class SupplierForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'category', 'state', 'initial_buying_price', 'initial_selling_price',
+        fields = ['name', 'category','description', 'state', 'initial_buying_price', 'initial_selling_price',
                   'supplier']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Entrer le nom du produit'}),
             'category': forms.Select(attrs={'placeholder': 'Choisir la catégorie du produit'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Entrer la description du produit'}),
             # Add 'size': 3 as needed
             # Add 'rows': 3, 'cols': 30 as needed
             'state': forms.Select(attrs={'placeholder': 'Choisir l\'état du produit'}, choices=[
@@ -198,6 +199,7 @@ class ProductForm(forms.ModelForm):
         labels = {
             'name': "",
             'category': 'Choisir la catégorie du produit',
+            'description': "",
             'state': 'Choisir l\'état du produit',
             'initial_buying_price': "",
             'initial_selling_price': "",
