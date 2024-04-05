@@ -214,11 +214,20 @@ table{
      padding: 5px; 
 }
 #supprimer{
+    width: 75%;
     background-color: rgba(193, 32, 32, 0.916);
 }
 #modifier{
+    width: 70%;
     background: #1bb635b7;
    
+}
+#detai{
+    width: 71%;
+}
+#livrer{
+    width: 70%;
+    background: #6d3e607a;
 }
 .boxsup{
     padding-top: 10%;

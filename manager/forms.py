@@ -184,7 +184,7 @@ class ProductForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Entrer le nom du produit'}),
             'category': forms.Select(attrs={'placeholder': 'Choisir la catégorie du produit'}),
-            'description': forms.Textarea(attrs={'placeholder': 'Entrer la description du produit'}),
+            'description': forms.TextInput(attrs={'placeholder': 'Entrer la description du produit'}),
             # Add 'size': 3 as needed
             # Add 'rows': 3, 'cols': 30 as needed
             'state': forms.Select(attrs={'placeholder': 'Choisir l\'état du produit'}, choices=[
