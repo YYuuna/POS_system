@@ -118,6 +118,7 @@
                     <th>Details</th>
                     <th>Modifier</th>
                     <th>Supprimer</th>
+                    <th>livrer</th>
 
                    
                 </tr>
@@ -141,7 +142,12 @@
                     </td>
                     <td>
                         <button class="button" id="supprimer"
-                                onclick="location.href='{% url 'cancel-sale' sale.id %}';">Annuler
+                                onclick="location.href='{% url 'cancel-sale' sale.id %}';">Supprimer
+                        </button>
+                    </td>
+                    <td>
+                        <button class="button" id="livrer"
+                                onclick="location.href='{% url 'cancel-sale' sale.id %}';">Livrer
                         </button>
                     </td>
 
