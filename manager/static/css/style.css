@@ -214,11 +214,20 @@ table{
      padding: 5px; 
 }
 #supprimer{
-    width: 73%;
+    width: 70%;
     background-color: rgba(193, 32, 32, 0.916);
 }
 #modifier{
     width: 70%;
+    background: #1bb635b7;
+   
+}
+#supprimerv{
+    width: 58%;
+    background-color: rgba(193, 32, 32, 0.916);
+}
+#modifierv{
+    width: 55%;
     background: #1bb635b7;
    
 }
