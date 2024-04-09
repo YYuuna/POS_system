@@ -105,7 +105,7 @@
         </div>
 
         <div class="c2">
-            {% if employees %}
+           
             <table>
                 <thead>
                 <tr>
@@ -118,57 +118,30 @@
                     <th>Rôle</th>
                     <th>Salaire</th>
 
-                    <th>Modifier</th>
-                    <th>Supprimer</th>
+                    
 
                 </tr>
                 </thead>
                 <tbody id="tbody">
-                {% for employee in employees %}
+                
                 <tr>
-                    <td>{{ employee.id }}</td>
-                    <td>{{ employee.last_name }}</td>
-                    <td>{{ employee.first_name }}</td>
-                    <td>{{ employee.phone }}</td>
-                    <td>{{ employee.email }}</td>
-                    <td>{{ employee.address }}</td>
-                    <td>{{ employee.role }}</td>
-                    <td>{{ employee.salary }}</td>
+                    <!-- <td>{{ employee.id }}</td>  -->
+                    <!-- <td>{{ employee.last_name }}</td> -->
+                    <!-- <td>{{ employee.first_name }}</td> -->
+                    <!-- <td>{{ employee.phone }}</td> -->
+                    <!-- <td>{{ employee.email }}</td> -->
+                    <!-- <td>{{ employee.address }}</td> -->
+                    <!-- <td>{{ employee.role }}</td> -->
+                    <!-- <td>{{ employee.salary }}</td> -->
 
-                    <td>
-                        <button class="button" id="modifier"
-                                onclick="location.href='{% url 'update-employee' employee.id %}';">Modifier
-                        </button>
-                    </td>
-                    <td>
-                        <button class="button" id="supprimer"
-                                onclick="location.href='{% url 'delete-employee' employee.id %}';">Supprimer
-                        </button>
-                    </td>
+                    
+                    
                 </tr>
-                {% endfor %}
+                
                 </tbody>
             </table>
-            {% else %}
-            <p>Pas d'employés trouvés.</p>
-            {% endif %}
-            <div class="pagination">
-                <span class="step-links">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1">&laquo; premiere</a>
-                        <a href="?page={{ page_obj.previous_page_number }}">precedente</a>
-                    {% endif %}
-
-                    <span class="current">
-                        Page {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
-                    </span>
-
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}">prochaine</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}">derniere &raquo;</a>
-                    {% endif %}
-                </span>
-            </div>
+           
+           
         </div>
     </div>
 
