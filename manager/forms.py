@@ -102,7 +102,8 @@ class ClientForm(forms.ModelForm):
 
 
 class UserLoginForm(AuthenticationForm):
-    remember = forms.BooleanField(required=False, label='Remember me')
+    remember = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check'}),
+                                  label="Keep me logged in")
     default_errors = {
         'required': "Ce champ est requis.",
         'invalid': "Valeur invalide.",
