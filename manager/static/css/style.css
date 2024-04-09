@@ -126,7 +126,8 @@ input:focus{
     margin-top: 2%;  
 }
 .c22{
-   padding: 2%;
+    padding: 2%;
+    padding-bottom: 4%; 
     text-align: left;
     margin-left: 3%;
     margin-right: 12%;
