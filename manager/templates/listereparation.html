@@ -111,7 +111,9 @@
                     <th>Prix</th>
                     <th>Date</th>
                     <th>État</th>
-                    <th>Actions</th>
+                    <th>Détail</th>
+                    <th>Modifier</th>
+                    <th>Supprimer</th>
                 </tr>
                 {% for repair in repairs %}
                 <tr>
@@ -123,11 +125,16 @@
                     <td>{{ repair.repair_date }}</td>
                     <td>{{ repair.state }}</td>
                     <td>
-                        <button class="button" onclick="location.href='{% url 'repair-detail' repair.id %}';">Détails</button>
+                        <button class="button" id="detai" onclick="location.href='{% url 'repair-detail' repair.id %}';">Détails</button>
+                    </td>
+                    <td>
                         <button class="button" id="modifier" onclick="location.href='{% url 'update-repair' repair.id %}';" >Modifier
                         </button>
+                     </td>   
+                     <td>
                         <button class="button" id="supprimer" onclick="location.href='{% url 'delete-repair' repair.id %}';">Supprimer
                         </button>
+                    </td>
                     </td>
                 </tr>
                 {% endfor %}

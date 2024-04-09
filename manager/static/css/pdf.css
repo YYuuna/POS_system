@@ -38,8 +38,12 @@ text-align: right;
 }
 
 .btn{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     padding-top: 5%;
-    text-align: center;
+    /* text-align: center;  */
+    justify-items: center;
+    align-items: center;
 }
 
 table{
