@@ -233,8 +233,8 @@ class HomeView(LoginRequiredMixin, TemplateView):
     template_name = 'menu.html'
 
 
-class DashboardView(TemplateView):
-    pass
+class DashboardView(LoginRequiredMixin,TemplateView):
+    template_name = 'dashbord.html'
 
 
 class AddAccountView(LoginRequiredMixin, UserPassesTestMixin, CreateView):

@@ -1,11 +1,12 @@
-
+{% load static %}
+{% load auth_extras %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
-    <title>Liste des employés</title>
+    <title>Information de mon compte</title>
 </head>
 <body>
 <div class="corp">
@@ -92,50 +93,27 @@
     <div class="liste">
         <div class="c1">
 
-            <div class="colone1"><h3>Information de l'employé</h3></div>
+            <div class="colone1"><h3>Information de mon compte</h3></div>
 
             <div class="colone1">
-                
+
             </div>
 
             <div class="colone1">
-             
+
             </div>
 
         </div>
 
         <div class="c2">
-           
-           
-                
-              
-                 <p>Id :</p>
-                 <p>Nom :</p>    
-                 <p>Prénom :</p> 
-                 <p>Teléphone :</p>   
-                 <p>Email :</p>   
-                 <p>Adresse :</p>   
-                 <p>Rôle :</p>   
-                 <p>Salaire :</p>   
-
-                    
-
-               
-                
-              
-                    <!-- <td>{{ employee.id }}</td>  -->
-                    <!-- <td>{{ employee.last_name }}</td> -->
-                    <!-- <td>{{ employee.first_name }}</td> -->
-                    <!-- <td>{{ employee.phone }}</td> -->
-                    <!-- <td>{{ employee.email }}</td> -->
-                    <!-- <td>{{ employee.address }}</td> -->
-                    <!-- <td>{{ employee.role }}</td> -->
-                    <!-- <td>{{ employee.salary }}</td> -->
-
-                    
-                    
-              
-           
+            <p>Id : {{user.employee.id}}</p>
+            <p>Nom : {{user.employee.last_name}}</p>
+            <p>Prénom : {{user.employee.first_name}}</p>
+            <p>Teléphone : {{user.employee.phone}}</p>
+            <p>Email : {{user.employee.email}}</p>
+            <p>Adresse : {{user.employee.address}}</p>
+            <p>Rôle : {{user.employee.role}}</p>
+            <p>Salaire : {{user.employee.salary}}</p>
         </div>
     </div>
 
