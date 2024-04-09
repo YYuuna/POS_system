@@ -415,7 +415,7 @@ class RepairForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(RepairForm, self).__init__(*args, **kwargs)
-        self.fields['product'].queryset = Product.objects.filter(state='En réparation')
+        self.fields['product'].queryset = Product.objects.filter(state='En réparation', repair__isnull=True)
     class Meta:
         model = Repair
         fields = ['title','description','product','client','repair_price']
