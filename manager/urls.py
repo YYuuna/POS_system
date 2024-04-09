@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import ProductDetailView
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
 path('login/',views.UserLoginView.as_view(),name='login'),
@@ -16,7 +16,7 @@ path('login/',views.UserLoginView.as_view(),name='login'),
     path('produits/', views.ProductListView.as_view(), name='product-list'),
     path('produit/<int:pk>/modifier', views.ProductUpdateView.as_view(), name='update-product'),
     path('produit/<int:pk>/supprimer', views.ProductDeleteView.as_view(), name='delete-product'),
-    path('produit/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
+    path('produit/<int:pk>/', views.ProductDetailView.as_view(), name='product-detail'),
     path('ajouter-categorie/', views.AddCategoryView.as_view(), name='add-category'),
     path('comptes/', views.AccountListView.as_view(), name='account-list'),
     path('ajouter-compte/', views.AddAccountView.as_view(), name='add-account'),
@@ -46,5 +46,6 @@ path('login/',views.UserLoginView.as_view(),name='login'),
     path('reparation/<int:pk>/supprimer/', views.RepairDeleteView.as_view(), name='delete-repair'),
     path('', views.HomeView.as_view(), name='home'),
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
+    path('logout/', views.CustomLogoutView.as_view(), name='logout'),
     path('test/', views.TestView.as_view(), name='test'),
 ]

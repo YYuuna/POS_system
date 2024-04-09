@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
 from django.contrib import messages
 from django.http import JsonResponse, Http404
 from django.shortcuts import redirect, get_object_or_404, render
@@ -574,3 +574,7 @@ class RepairDeleteView(LoginRequiredMixin, DeleteView):
     model = Repair
     template_name = 'supprimerreparation.html'
     success_url = reverse_lazy('repair-list')
+
+class CustomLogoutView(LoginRequiredMixin, LogoutView):
+    next_page = 'login'
+
