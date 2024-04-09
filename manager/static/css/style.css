@@ -110,6 +110,11 @@ input:focus{
     grid-template-columns: 18% 60% 22%;
  
 }
+.c11{
+    margin-top: 2%;
+    text-align: center;
+}
+
 
 .colone2{
     padding-top: 5%;
@@ -118,10 +123,18 @@ input:focus{
 }
 
 .c2{
-    margin-top: 2%;
+    margin-top: 2%;  
+}
+.c22{
+   padding: 2%;
+    text-align: left;
+    margin-left: 3%;
+    margin-right: 12%;
+    background-color: #66656536;
+    border-radius: 3%;
+   
    
 }
-
 
 .box{
     display: grid;

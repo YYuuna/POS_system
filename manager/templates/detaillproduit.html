@@ -89,26 +89,26 @@
 
 
     <div class="liste">
-        <div class="c1">
+        <div class="c11">
             
             <div class="colone1"><h3>Détails de produit :</h3></div>
         </div>
 
 
 
-        <div class="c2">
+        <div class="c22">
 
         
-            <h4>nom de produit : {{ product.name }}</h4><br>
+            <p> <strong>nom de produit : </strong>{{ product.name }}</p><br>
 
-            <p>Catégorie : {{ product.category }}</p><br>
-            <p>Description : {{ product.description }}</p><br>
-            <p>État : {{ product.state }}</p><br>
+            <p><strong>Catégorie :</strong> {{ product.category }}</p><br>
+            <p><strong>Description : </strong>{{ product.description }}</p><br>
+            <p><strong>État :</strong> {{ product.state }}</p><br>
             {% if product.state == "En vente" %}
-            <p>Quantité : {{ product.quantity }}</p><br>
-            <p>Prix d'achat : {{ product.initial_buying_price }}</p><br>
-            <p>Prix de vente : {{ product.initial_selling_price }}</p><br>
-            <p>Fournisseur : {{ product.supplier }}</p><br>
+            <p><strong><Quantité :/strong> {{ product.quantity }}</p><br>
+            <p><strong>Prix d'achat :</strong> {{ product.initial_buying_price }}</p><br>
+            <p><strong>Prix de vente : </strong>{{ product.initial_selling_price }}</p><br>
+            <p><strong>Fournisseur :</strong> {{ product.supplier }}</p><br>
             {% endif %}
             
 
@@ -118,7 +118,7 @@
 
 
     </div>
-<button><a href="{% url 'test' %}">imprimer</a></button>
+
 
 </body>
 </html>
