@@ -12,7 +12,7 @@ from .models import Client, Supplier, Product, Account, Employee, PurchaseOrder,
     PurchaseOrderItem
 from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm, AccountRegistrationForm, \
     EmployeeForm, CategoryForm, SaleForm, SaleItemFormSet, SaleItemForm, PurchaseOrderForm, PurchaseOrderItemFormSet, \
-    PurchaseOrderItemForm
+    PurchaseOrderItemForm, RepairForm
 
 
 class AddClientView(LoginRequiredMixin, CreateView):
@@ -550,3 +550,27 @@ class ProductInitialPurchasePriceView(LoginRequiredMixin,View):
             return JsonResponse({'initial_buying_price': product.initial_buying_price})
         except Product.DoesNotExist:
             raise Http404("Product does not exist")
+
+class AddRepairView(LoginRequiredMixin, CreateView):
+    model = Repair
+    template_name = 'ajouterreparation.html'
+    form_class = RepairForm
+    success_url = reverse_lazy('repair-list')
+
+
+class RepairDetailView(LoginRequiredMixin, DetailView):
+    model = Repair
+    template_name = 'detaillreparation.html'
+    context_object_name = 'repair'
+
+
+class RepairUpdateView(LoginRequiredMixin, UpdateView):
+    model = Repair
+    form_class = RepairForm
+    template_name = 'modifierreparation.html'
+    success_url = reverse_lazy('repair-list')
+
+class RepairDeleteView(LoginRequiredMixin, DeleteView):
+    model = Repair
+    template_name = 'supprimerreparation.html'
+    success_url = reverse_lazy('repair-list')

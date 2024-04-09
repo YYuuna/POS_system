@@ -102,7 +102,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100, db_column='Nom', unique=True)
     category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default=1, db_column='Catégorie')
     description = models.TextField(db_column='Description', default='Pas de description')
-    state = models.CharField(max_length=20, choices=STATE_CHOICES, default='EN_VENTE', db_column='État')
+    state = models.CharField(max_length=20, choices=STATE_CHOICES, default='En vente', db_column='État')
     quantity = models.PositiveIntegerField(default=0, blank=True, null=True, db_column='Quantité')
     initial_buying_price = models.PositiveIntegerField(blank=True, null=True,
                                                db_column='Prix d\'achat initiale')
@@ -222,15 +222,16 @@ class SaleItem(models.Model):
 
 class Repair(models.Model):
     STATE_CHOICES = [
-        ('EN_COURS', 'En cours'),
-        ('TERMINÉ', 'Terminé')
+        ('En cours', 'En cours'),
+        ('Terminé', 'Terminé')
     ]
-
-    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True, db_column='Client')
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True, db_column='Produit')
+    title = models.CharField(max_length=100, default='Pas de description',db_column='Titre')
     description = models.TextField(db_column='Description')
+    state = models.CharField(max_length=20, choices=STATE_CHOICES, default='En cours', db_column='État')
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True, db_column='Produit')
     repair_date = models.DateField(auto_now_add=True, db_column='Date de réparation')
-    state = models.CharField(max_length=20, choices=STATE_CHOICES, default='EN_COURS', db_column='État')
+    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True, db_column='Client')
+    repair_price = models.PositiveIntegerField(db_column='Prix de réparation',default=0)
 
     # Other fields...
 

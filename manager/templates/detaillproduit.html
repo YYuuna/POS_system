@@ -104,11 +104,12 @@
             <p>Catégorie : {{ product.category }}</p><br>
             <p>Description : {{ product.description }}</p><br>
             <p>État : {{ product.state }}</p><br>
+            {% if product.state == "En vente" %}
             <p>Quantité : {{ product.quantity }}</p><br>
             <p>Prix d'achat : {{ product.initial_buying_price }}</p><br>
             <p>Prix de vente : {{ product.initial_selling_price }}</p><br>
             <p>Fournisseur : {{ product.supplier }}</p><br>
-
+            {% endif %}
             
 
 

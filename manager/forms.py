@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.forms import inlineformset_factory, BaseInlineFormSet
 
 from .models import Employee, Account, Client, Supplier, Product, Category, Sale, SaleItem, PurchaseOrder, \
-    PurchaseOrderItem
+    PurchaseOrderItem, Repair
 
 
 class AccountRegistrationForm(UserCreationForm):
@@ -235,7 +235,26 @@ class ProductForm(forms.ModelForm):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.fields['state'].choices = [(key, value) for key, value in Product.STATE_CHOICES if
-                                            key != 'RÉPARATION_TERMINÉE']
+                                            key != 'Réparation terminée']
+
+        def clean(self):
+            cleaned_data = super().clean()
+            state = cleaned_data.get('state')
+            initial_buying_price = cleaned_data.get('initial_buying_price')
+            initial_selling_price = cleaned_data.get('initial_selling_price')
+            supplier = cleaned_data.get('supplier')
+
+            if state == 'En vente':
+                if not initial_buying_price:
+                    self.add_error('initial_buying_price',
+                                   "Lorsque le produit est en vente, le prix d'achat initial est requis.")
+                if not initial_selling_price:
+                    self.add_error('initial_selling_price',
+                                   "Lorsque le produit est en vente, le prix de vente initial est requis.")
+                if not supplier:
+                    self.add_error('supplier', "Lorsque le produit est en vente, le fournisseur est requis.")
+
+            return cleaned_data
 
 
 class EmployeeForm(forms.ModelForm):
@@ -390,3 +409,27 @@ class PurchaseOrderItemForm(forms.ModelForm):
         return cleaned_data
 
 PurchaseOrderItemFormSet = inlineformset_factory(PurchaseOrder, PurchaseOrderItem, form=PurchaseOrderItemForm, can_delete=True, extra=1)
+
+class RepairForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(RepairForm, self).__init__(*args, **kwargs)
+        self.fields['product'].queryset = Product.objects.filter(state='En réparation')
+    class Meta:
+        model = Repair
+        fields = ['title','description','product','client','repair_price']
+        labels = {
+            'title':'',
+            'description':'',
+            'client':'Choisir le client',
+            'product':'Choisir le produit',
+            'repair_price':''
+        }
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Entrer une courte description de la réparation'}),
+            'description': forms.TextInput(attrs={'placeholder': 'Entrer une description détaillée de la réparation'}),
+            'client': forms.Select(attrs={'placeholder': 'Choisir le client'}),
+            'product': forms.Select(attrs={'placeholder': 'Choisir le produit'}),
+            'repair_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix de réparation'}),
+        }
+
