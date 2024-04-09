@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, SetPasswordForm
 from django.core.exceptions import ValidationError
 from django.forms import inlineformset_factory, BaseInlineFormSet
 
@@ -432,4 +432,7 @@ class RepairForm(forms.ModelForm):
             'product': forms.Select(attrs={'placeholder': 'Choisir le produit'}),
             'repair_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix de réparation'}),
         }
+
+class CustomSetPasswordForm(SetPasswordForm):
+    old_password = None  # Remove the old_password field
 

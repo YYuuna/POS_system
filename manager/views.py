@@ -12,7 +12,7 @@ from .models import Client, Supplier, Product, Account, Employee, PurchaseOrder,
     PurchaseOrderItem
 from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm, AccountRegistrationForm, \
     EmployeeForm, CategoryForm, SaleForm, SaleItemFormSet, SaleItemForm, PurchaseOrderForm, PurchaseOrderItemFormSet, \
-    PurchaseOrderItemForm, RepairForm
+    PurchaseOrderItemForm, RepairForm, CustomSetPasswordForm
 
 
 class AddClientView(LoginRequiredMixin, CreateView):
@@ -253,7 +253,7 @@ class AddAccountView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 class AccountUpdateView(LoginRequiredMixin, UserPassesTestMixin, PasswordChangeView):
     model = Account
-    form_class = PasswordChangeForm
+    form_class = CustomSetPasswordForm
     template_name = 'modifiercompte.html'
     success_url = reverse_lazy('account-list')
 
