@@ -15,7 +15,7 @@
 
     <div class="titre"><h1>Bon de réparation :</h1></div>
 
-    <div class="element">
+    <div class="element" id="rep">
 
         <p><strong> IdRéparation :{{repair.id}}</strong></p>
         <p>Titre : {{repair.title}}</p>
@@ -25,7 +25,7 @@
         <p>Date de réparation : {{repair.repair_date}}</p>
         <p>Client : {{repair.client}}</p>
         <p>Prix : {{repair.repair_price}} DA</p>
-        <br><br>
+        
 
 
     </div>
@@ -44,9 +44,10 @@
 
 
 <div class="btn">
-     <div></div>
-    <button onclick="imprimerPartie()">Imprimer</button>
-    <button><a href="" >terminé</a></button>
+     <div> <button class="button" id="modifier" onclick="location.href='{% url 'update-repair' repair.id %}';" >Modifier
+    </button></div>
+    <button  onclick="imprimerPartie()">Imprimer</button>
+    <button class="button" id="livrer" ><a href="" >terminé</a></button>
 
 </div>
 

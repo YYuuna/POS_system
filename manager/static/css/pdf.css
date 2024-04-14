@@ -4,7 +4,9 @@ body{
     background-color: #605d5d1b ;
 }
 
-
+a{
+    text-decoration: none;
+}
 .printable-content{
     margin: 2px;
 }
@@ -51,10 +53,41 @@ table{
     width: 100%;
     text-align: center;
     margin: 5px 0;
+    border-radius: 10px;
+ }
+ #rep{
+    background-color: #66656536;
+    border-radius: 10px;
+ padding-bottom: 1px;
+ padding-top: 1px;
+   
  }
  table th{
     text-transform: uppercase; 
  }
  th,td{ 
      padding: 2px; 
+}
+.button{
+
+    height: 25px;
+    border-radius:10px ;
+    border: none;
+    cursor: pointer;
+    background: #007acc;
+    color: white;
+    transition: 0.7s;
+
+}
+.button:hover{
+    letter-spacing: 1px;
+    background: #106096;
+   
+}
+.button:focus{
+    transform: scale(1.1);
+}
+#livrer{
+    height: 25px;
+    background: #6d3e607a;
 }

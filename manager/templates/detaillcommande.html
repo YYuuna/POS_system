@@ -85,10 +85,12 @@
  
       </div>
 
+ </div>    
+
 <div class="btn">
-<div></div>
+     <div> <button class="button" id="modifier"  onclick="location.href='{% url 'update-purchase-order' purchase_order.id %}';">Modifier </button></div>
     <button onclick="imprimerPartie()">Imprimer</button>
-    <button><a href="" >livrer</a></button>
+    <button class="button" id="livrer" ><a href="" >livrer</a></button>
 
 </div>
 
