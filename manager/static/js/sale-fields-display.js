@@ -1,7 +1,7 @@
 $(document).ready(function() {
     // Function to show or hide fields
     function showOrHideFields() {
-        if ($('#id_state').val() == 'En réparation') {
+        if ($('#id_state').val() == 'En réparation' || $('#id_state').val() == 'Réparation terminée'){
             // Hide fields and set their values to null
             $('#id_initial_buying_price').hide().val(null);
             $('#id_initial_selling_price').hide().val(null);

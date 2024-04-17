@@ -9,23 +9,24 @@
 </head>
 
 <body>
-   
-
-
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 
 
 <div id="partieImprimer" class="printable-content">
 
-    
-    <div class="titre"> <h1> Bon de commande :</h1></div>
 
-
- 
+    <div class="titre"><h1> Bon de commande :</h1></div>
 
 
     <div class="element">
 
-        <p> <strong> IdCommande :{{purchase_order.id}}</strong></p>
+        <p><strong> IdCommande :{{purchase_order.id}}</strong></p>
         <p>Fournisseur : {{purchase_order.supplier}}</p>
         <p>Date de commande : {{purchase_order.order_date}}</p>
         <p>Date de livraison :
@@ -35,89 +36,93 @@
             La commande n'est pas encore livrée
             {% endif %}
         </p>
-        
 
 
- {% if purchase_order_items_exist %}
+        {% if purchase_order_items_exist %}
         <h3>Les articles de commande :</h3>
-    <table>
-        <thead>
-        <tr>
-            <th>Numéro</th>
-            <th>Id Produit</th>
-            <th>Nom de produit</th>
-            <th>Quantité</th>
-            <th>Prix</th>
-            <th>Total</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for item,total in purchase_order_items %}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ item.product.id }}</td>
-            <td>{{ item.product.name }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ item.purchase_price }} DA</td>
-            <td id="total" > {{ total }} DA</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <table>
+            <thead>
+            <tr>
+                <th>Numéro</th>
+                <th>Id Produit</th>
+                <th>Nom de produit</th>
+                <th>Quantité</th>
+                <th>Prix</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item,total in purchase_order_items %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.product.id }}</td>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.purchase_price }} DA</td>
+                <td id="total"> {{ total }} DA</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         {% else %}
         <h3>Aucun article trouvé .</h3>
         {% endif %}
-          <p> <strong>Paiement total de la commande : {{ purchase_order_total }} DA</strong></p>
-        
-         
-        
+        <p><strong>Paiement total de la commande : {{ purchase_order_total }} DA</strong></p>
 
-    </table>
+
+        </table>
 
     </div>
 
-   
+
     <div class="sig">
 
-        <div  > <p><strong> signateur de fournisseur :</strong></p></div> 
-        
-        <div class="cachet">  <p><strong> cachet de l'entreprise :</strong></p></div>
- 
-      </div>
+        <div><p><strong> signateur de fournisseur :</strong></p></div>
 
- </div>    
+        <div class="cachet"><p><strong> cachet de l'entreprise :</strong></p></div>
 
-<div class="btn">
-     <div> <button class="button" id="modifier"  onclick="location.href='{% url 'update-purchase-order' purchase_order.id %}';">Modifier </button></div>
-    <button onclick="imprimerPartie()">Imprimer</button>
-    <button class="button" id="livrer" ><a href="" >livrer</a></button>
+    </div>
 
 </div>
 
-
-
+<div class="btn">
+    {% if not purchase_order.delivery_date %}
+    <div>
+        <button class="button" id="modifier"
+                onclick="location.href='{% url 'update-purchase-order' purchase_order.id %}';">Modifier
+        </button>
+    </div>
+    {% endif %}
+    <button onclick="imprimerPartie()">Imprimer</button>
+    {% if not purchase_order.delivery_date and purchase_order_items_exist %}
+    <form method="post" action="{% url 'deliver-purchase-order' pk=purchase_order.pk %}">
+        {% csrf_token %}
+        <input type="submit" value="Livrer" class="btn btn-primary">
+    </form>
+    {% endif %}
+</div>
 
 
 <script>
     function imprimerPartie() {
-   // Récupérer la partie de la page à imprimer
-   var contenuAImprimer = document.getElementById('partieImprimer').innerHTML;
-   
-   // Créer une fenêtre de prévisualisation pour le contenu à imprimer
-   var fenetreImpression = window.open('', '_blank');
-   
-   // Écrire le contenu à imprimer dans la fenêtre de prévisualisation
-   fenetreImpression.document.write('<html><head><title>Impression</title></head><body>');
-   fenetreImpression.document.write(contenuAImprimer);
-   fenetreImpression.document.write('</body></html>');
-   
-   // Imprimer le contenu
-   fenetreImpression.print();
-   
-   // Fermer la fenêtre de prévisualisation après l'impression
-   fenetreImpression.close();
- }
-   </script>
+        // Récupérer la partie de la page à imprimer
+        var contenuAImprimer = document.getElementById('partieImprimer').innerHTML;
+
+        // Créer une fenêtre de prévisualisation pour le contenu à imprimer
+        var fenetreImpression = window.open('', '_blank');
+
+        // Écrire le contenu à imprimer dans la fenêtre de prévisualisation
+        fenetreImpression.document.write('<html><head><title>Impression</title></head><body>');
+        fenetreImpression.document.write(contenuAImprimer);
+        fenetreImpression.document.write('</body></html>');
+
+        // Imprimer le contenu
+        fenetreImpression.print();
+
+        // Fermer la fenêtre de prévisualisation après l'impression
+        fenetreImpression.close();
+    }
+</script>
 
 
 </body>

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, SetPasswordForm
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.forms import inlineformset_factory, BaseInlineFormSet
 
 from .models import Employee, Account, Client, Supplier, Product, Category, Sale, SaleItem, PurchaseOrder, \
@@ -103,7 +104,7 @@ class ClientForm(forms.ModelForm):
 
 class UserLoginForm(AuthenticationForm):
     remember = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check'}),
-                                  label="Keep me logged in")
+                                  label="Se souvenir de moi")
     default_errors = {
         'required': "Ce champ est requis.",
         'invalid': "Valeur invalide.",
@@ -128,11 +129,15 @@ class UserLoginForm(AuthenticationForm):
             'id': 'remember_field_id',
             'class': 'remember_field_class',  # Add additional classes as needed
         })
+        self.fields['username'].label = ""  # Remove label for the username field
+        self.fields['password'].label = ""  # Remove label for the password field
 
     def add_error(self, field, error):
         if error == 'invalid_login':
             error = self.default_errors['invalid_login']
         super().add_error(field, error)
+
+
 
 
 class FilterForm(forms.Form):
@@ -233,29 +238,37 @@ class ProductForm(forms.ModelForm):
             }
         }
 
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.fields['state'].choices = [(key, value) for key, value in Product.STATE_CHOICES if
-                                            key != 'Réparation terminée']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.state == 'Réparation terminée':
+            # If the form is used to update an existing product and the state is 'Réparation terminée', include this
+            # state and 'En réparation' in the choices
+            self.fields['state'].choices = [('Réparation terminée', 'Réparation terminée'),
+                                            ('En réparation', 'En réparation')]
+        else:
+            # If the form is used to create a new product or the state is not 'Réparation terminée', only include the
+            # other states
+            self.fields['state'].choices = [choice for choice in Product.STATE_CHOICES if
+                                            choice[0] != 'Réparation terminée']
 
-        def clean(self):
-            cleaned_data = super().clean()
-            state = cleaned_data.get('state')
-            initial_buying_price = cleaned_data.get('initial_buying_price')
-            initial_selling_price = cleaned_data.get('initial_selling_price')
-            supplier = cleaned_data.get('supplier')
+    def clean(self):
+        cleaned_data = super().clean()
+        state = cleaned_data.get('state')
+        initial_buying_price = cleaned_data.get('initial_buying_price')
+        initial_selling_price = cleaned_data.get('initial_selling_price')
+        supplier = cleaned_data.get('supplier')
 
-            if state == 'En vente':
-                if not initial_buying_price:
-                    self.add_error('initial_buying_price',
-                                   "Lorsque le produit est en vente, le prix d'achat initial est requis.")
-                if not initial_selling_price:
-                    self.add_error('initial_selling_price',
-                                   "Lorsque le produit est en vente, le prix de vente initial est requis.")
-                if not supplier:
-                    self.add_error('supplier', "Lorsque le produit est en vente, le fournisseur est requis.")
+        if state == 'En vente':
+            if not initial_buying_price:
+                self.add_error('initial_buying_price',
+                               "Lorsque le produit est en vente, le prix d'achat initial est requis.")
+            if not initial_selling_price:
+                self.add_error('initial_selling_price',
+                               "Lorsque le produit est en vente, le prix de vente initial est requis.")
+            if not supplier:
+                self.add_error('supplier', "Lorsque le produit est en vente, le fournisseur est requis.")
 
-            return cleaned_data
+        return cleaned_data
 
 
 class EmployeeForm(forms.ModelForm):
@@ -415,7 +428,17 @@ class RepairForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(RepairForm, self).__init__(*args, **kwargs)
-        self.fields['product'].queryset = Product.objects.filter(state='En réparation', repair__isnull=True)
+        if self.instance and self.instance.product:
+            # If the form is used to update an existing repair, include the current product in the queryset
+            self.fields['product'].queryset = Product.objects.filter(
+                Q(state='En réparation', repair__isnull=True) | Q(id=self.instance.product.id))
+        else:
+            # If the form is used to create a new repair, only include products that are in repair and do not have a
+            # related repair
+            self.fields['product'].queryset = Product.objects.filter(state='En réparation', repair__isnull=True)
+        self.fields['product'].required = True
+        self.fields['client'].required = True
+
     class Meta:
         model = Repair
         fields = ['title','description','product','client','repair_price']
@@ -433,6 +456,9 @@ class RepairForm(forms.ModelForm):
             'product': forms.Select(attrs={'placeholder': 'Choisir le produit'}),
             'repair_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix de réparation'}),
         }
+
+
+
 
 class CustomSetPasswordForm(SetPasswordForm):
     old_password = None  # Remove the old_password field

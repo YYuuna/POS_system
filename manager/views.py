@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
 from django.contrib import messages
@@ -7,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.views.generic import ListView, TemplateView, DetailView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from .models import Client, Supplier, Product, Account, Employee, PurchaseOrder, Sale, Repair, Category, SaleItem, \
     PurchaseOrderItem
 from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm, AccountRegistrationForm, \
@@ -496,7 +498,6 @@ class PurchaseOrderUpdateView(LoginRequiredMixin, FormView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        self.purchase_order = PurchaseOrder.objects.get(pk=self.kwargs['pk'])
         kwargs['instance'] = self.purchase_order
         kwargs['queryset'] = PurchaseOrderItem.objects.filter(purchase_order=self.purchase_order)
         return kwargs
@@ -518,6 +519,21 @@ class PurchaseOrderUpdateView(LoginRequiredMixin, FormView):
 
     def get_success_url(self):
         return reverse_lazy('purchase-order-detail', kwargs={'pk': self.purchase_order.pk})
+
+    def post(self, request, *args, **kwargs):
+        self.purchase_order = PurchaseOrder.objects.get(pk=self.kwargs['pk'])
+        if self.purchase_order.delivery_date:  # replace with your actual condition
+            # Display an error message in french and redirect to the purchase order detail view
+            messages.error(self.request, "Vous ne pouvez pas modifier une commande déjà livrée.")
+            return redirect('purchase-order-detail', pk=self.purchase_order.pk)  # replace 'purchase-order-detail' with your actual detail view name
+        return super().post(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        self.purchase_order = PurchaseOrder.objects.get(pk=self.kwargs['pk'])
+        if self.purchase_order.delivery_date:  # replace with your actual condition
+            messages.error(self.request, "Vous ne pouvez pas modifier une commande déjà livrée.")
+            return redirect('purchase-order-detail', pk=self.purchase_order.pk)  # replace 'purchase-order-detail' with your actual detail view name
+        return super().get(request, *args, **kwargs)
 
 
 class PurchaseOrderDeleteView(LoginRequiredMixin, DeleteView):
@@ -568,7 +584,9 @@ class RepairUpdateView(LoginRequiredMixin, UpdateView):
     model = Repair
     form_class = RepairForm
     template_name = 'modifierreparation.html'
-    success_url = reverse_lazy('repair-list')
+
+    def get_success_url(self):
+        return reverse('repair-detail', kwargs={'pk': self.object.pk})
 
 class RepairDeleteView(LoginRequiredMixin, DeleteView):
     model = Repair
@@ -577,4 +595,47 @@ class RepairDeleteView(LoginRequiredMixin, DeleteView):
 
 class CustomLogoutView(LoginRequiredMixin, LogoutView):
     next_page = 'login'
+
+class PurchaseOrderDeliverView(LoginRequiredMixin,View):
+    def post(self, request, *args, **kwargs):
+        order = get_object_or_404(PurchaseOrder, pk=kwargs['pk'])
+
+        # Check if the order is already delivered
+        if order.delivery_date is not None:
+            # Display an error message in french and redirect to the purchase order detail view
+            messages.error(request, "La commande est déjà livrée.")
+            return redirect('purchase-order-detail', pk=order.pk)
+
+        order.delivery_date = timezone.now()
+        order.save()
+
+        for item in order.purchaseorderitem_set.all():
+            product = item.product
+            product.quantity += item.quantity
+            product.save()
+
+        # Display a success message in french and redirect to the purchase order detail view
+        messages.success(request, "La commande a été livrée avec succès.")
+        return redirect('purchase-order-detail', pk=order.pk)
+
+class RepairFinishView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        repair = get_object_or_404(Repair, pk=kwargs['pk'])
+
+        # Check if the repair is already done
+        if repair.state == 'Réparation terminée':
+            # Display an error in french message and redirect to the repair detail view
+            messages.error(request, "La réparation est déjà terminée.")
+            return redirect('repair-detail', pk=repair.pk)
+
+        # Update the state of the repair and the product
+        repair.state = 'Réparation terminée'
+        repair.save()
+
+        product = repair.product
+        product.state = 'Réparation terminée'
+        product.save()
+        # Display a success message in french and redirect to the repair detail view
+        messages.success(request, "La réparation a été terminée avec succès.")
+        return redirect('repair-detail', pk=repair.pk)
 

@@ -22,11 +22,7 @@
 <!--                <input  class="input" type="username" name="username" id="username" placeholder="username">-->
 <!--                <input  class="input" type="password" name="password" id="password" placeholder="Password" minlength="4" >-->
                     {% csrf_token %}
-                    {% for field in form %}
-                    {{ field.errors }}
-                    {{ field }}
-                    {{ field.help_text }}
-                    {% endfor %}
+                    {{ form }}
                 </div>
                 <input class="button" id="connecter" type="submit" value="Se connecter">
           
