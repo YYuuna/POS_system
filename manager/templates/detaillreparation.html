@@ -116,7 +116,7 @@
             {% if repair.state == 'En cours' %}
             <form method="post" action="{% url 'finish-repair' repair.pk %}">
                 {% csrf_token %}
-                <input type="submit" value="Terminer réparation">
+                <input id="livrer" type="submit" value="Terminer" >
             </form>
             {% endif %}
 
