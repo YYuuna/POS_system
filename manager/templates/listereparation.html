@@ -125,7 +125,7 @@
                     <th>État</th>
                     <th>Détail</th>
                     <!-- <th>Modifier</th>  -->
-                    <th>Supprimer</th>
+                    <!-- <th>Supprimer</th>  -->
                 </tr>
                 {% for repair in repairs %}
                 <tr>
@@ -145,11 +145,12 @@
                        
                      <!-- </td>    -->
 
-                     <td>
-                        <button class="button" id="supprimer" onclick="location.href='{% url 'delete-repair' repair.id %}';">Supprimer
-                        </button>
-                    </td>
-                    </td>
+                     <!-- <td>  -->
+                        <!-- <button class="button" id="supprimer" onclick="location.href='{% url 'delete-repair' repair.id %}';">Supprimer  </button>  -->
+                       
+                    <!-- </td>  -->
+
+                  
                 </tr>
                 {% endfor %}
             </table>

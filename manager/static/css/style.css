@@ -115,8 +115,16 @@ input:focus{
     margin-top: 2%;
     text-align: center;
     /* font-family:'Courier New', Courier, monospace ;  */
+} 
+/* pour les pages detaill */
+.c111{
+    margin-top: 2%;
+    text-align: left;
+    display: grid;
+   
+    grid-template-columns: 40% 15% 15% 15% 15%;
+    /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr ;  */
 }
-
 
 .colone2{
     padding-top: 5%;
@@ -185,19 +193,19 @@ input:focus{
 }
 
 #imprimer{ 
-    width: 110px;
+    width: 61%;
     height: 27px;
     border-radius:10px ;
     border: none;
     cursor: pointer;
-    background: #007acc;
+    background: #51025f;
     color: white;
     transition: 0.7s;
-    margin-left: 600px;
+    
 }
 #imprimer:hover{
     letter-spacing: 1px;
-    background: #106096;
+    background: #390053;
 }
 
 .produit{
