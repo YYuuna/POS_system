@@ -1,23 +1,13 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'css/pdf.css' %}">
-    <title>Détails de la commande</title>
+    <title>Bon de commande</title>
 </head>
 
 <body>
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-
-
 <div id="partieImprimer" class="printable-content">
 
 
@@ -77,53 +67,13 @@
 
     <div class="sig">
 
-        <div><p><strong> signateur de fournisseur :</strong></p></div>
+        <div><p><strong> Signateur de fournisseur :</strong></p></div>
 
-        <div class="cachet"><p><strong> cachet de l'entreprise :</strong></p></div>
+        <div class="cachet"><p><strong> Cachet de l'entreprise :</strong></p></div>
 
     </div>
 
 </div>
-
-<div class="btn">
-    {% if not purchase_order.delivery_date %}
-    <div>
-        <button class="button" id="modifier"
-                onclick="location.href='{% url 'update-purchase-order' purchase_order.id %}';">Modifier
-        </button>
-    </div>
-    {% endif %}
-    <button onclick="imprimerPartie()">Imprimer</button>
-    {% if not purchase_order.delivery_date and purchase_order_items_exist %}
-    <form method="post" action="{% url 'deliver-purchase-order' pk=purchase_order.pk %}">
-        {% csrf_token %}
-        <input type="submit" value="Livrer" class="btn btn-primary">
-    </form>
-    {% endif %}
-</div>
-
-
-<script>
-    function imprimerPartie() {
-        // Récupérer la partie de la page à imprimer
-        var contenuAImprimer = document.getElementById('partieImprimer').innerHTML;
-
-        // Créer une fenêtre de prévisualisation pour le contenu à imprimer
-        var fenetreImpression = window.open('', '_blank');
-
-        // Écrire le contenu à imprimer dans la fenêtre de prévisualisation
-        fenetreImpression.document.write('<html><head><title>Impression</title></head><body>');
-        fenetreImpression.document.write(contenuAImprimer);
-        fenetreImpression.document.write('</body></html>');
-
-        // Imprimer le contenu
-        fenetreImpression.print();
-
-        // Fermer la fenêtre de prévisualisation après l'impression
-        fenetreImpression.close();
-    }
-</script>
-
 
 </body>
 

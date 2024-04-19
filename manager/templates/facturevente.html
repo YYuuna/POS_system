@@ -1,12 +1,73 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/pdf.css' %}">
 
-    <title>Détails de la vente</title>
+    <style>
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            /*background-color: #605d5d1b;*/
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .printable-content {
+            margin: 2px;
+        }
+
+        .titre {
+            text-align: center;
+
+        }
+
+        .element {
+            padding-left: 5%;
+            padding-right: 5%;
+            /*background-color:;*/
+        }
+
+
+        .sig {
+            display: grid;
+            grid-template-columns:1fr 1fr;
+            /* justify-items: center;  */
+            /* align-items: center;  */
+            padding-left: 1px;
+            padding-right: 20%;
+            /*background-color: ;*/
+
+        }
+
+        .cachet {
+            text-align: right;
+
+        }
+
+        #total {
+            text-decoration: underline;
+        }
+
+
+        table {
+            background-color: #66656536;
+            width: 100%;
+            text-align: center;
+            margin: 5px 0;
+            border-radius: 10px;
+        }
+
+        table th {
+            text-transform: uppercase;
+        }
+
+        th, td {
+            padding: 2px;
+        }
+    </style>
+    <title>Bon de vente</title>
 </head>
 
 <body>
@@ -50,58 +111,21 @@
         {% else %}
         <h3>Aucun article trouvé .</h3>
         {% endif %}
-       <p><strong> Paiement total de la vente : {{ sale_total }} DA </strong> </p>
-        
-            
-        
+        <p><strong> Paiement total de la vente : {{ sale_total }} DA </strong></p>
+
+
     </div>
 
 
     <div class="sig">
 
-        <div  > <p><strong> signateur de client :</strong></p></div> 
-        
-        <div class="cachet">  <p><strong> cachet de l'entreprise :</strong></p></div>
- 
-      </div>
+        <div><p><strong> Signateur de client :</strong></p></div>
+
+        <div class="cachet"><p><strong> Cachet de l'entreprise :</strong></p></div>
+
+    </div>
 
 </div>
-
-
-
-
-
-
-<div class="btn">
-  <div><button class="button" id="modifierv" onclick="location.href='{% url 'update-sale' sale.id %}';">Modifier </button></div>
-    <button onclick="imprimerPartie()">Imprimer</button>
-
- 
-
-</div>
-
-
-<script>
-    function imprimerPartie() {
-   // Récupérer la partie de la page à imprimer
-   var contenuAImprimer = document.getElementById('partieImprimer').innerHTML;
-   
-   // Créer une fenêtre de prévisualisation pour le contenu à imprimer
-   var fenetreImpression = window.open('', '_blank');
-   
-   // Écrire le contenu à imprimer dans la fenêtre de prévisualisation
-   fenetreImpression.document.write('<html><head><title>Impression</title></head><body>');
-   fenetreImpression.document.write(contenuAImprimer);
-   fenetreImpression.document.write('</body></html>');
-   
-   // Imprimer le contenu
-   fenetreImpression.print();
-   
-   // Fermer la fenêtre de prévisualisation après l'impression
-   fenetreImpression.close();
- }
-   </script>
-
 
 </body>
 

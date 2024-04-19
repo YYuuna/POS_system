@@ -7,19 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
-    <title>Détaill de réparation</title>
+    <title>Détails de réparation</title>
 </head>
 <body>
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li
+    {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
 {% endif %}
 
-    <div class="corp">
-<div class="nav">
+<div class="corp">
+    <div class="nav">
 
         <div class="logo">
 
@@ -93,98 +94,94 @@
             <a class="link" href="{% url 'repair-list' %}"> Réparations </a>
         </button>
         <button class="value">
-          
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M399 384.2C376.9 345.8 335.4 320 288 320H224c-47.4 0-88.9 25.8-111 64.2c35.2 39.2 86.2 63.8 143 63.8s107.8-24.7 143-63.8zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256 16a72 72 0 1 0 0-144 72 72 0 1 0 0 144z"/></svg>
+
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                <path d="M399 384.2C376.9 345.8 335.4 320 288 320H224c-47.4 0-88.9 25.8-111 64.2c35.2 39.2 86.2 63.8 143 63.8s107.8-24.7 143-63.8zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256 16a72 72 0 1 0 0-144 72 72 0 1 0 0 144z"/>
+            </svg>
 
             <a class="link" href="{% url 'dashboard' %}"> Mon profile </a>
-        </button> 
-       
+        </button>
+
 
     </div>
 
     <div class="liste">
         <div class="c111">
-            
-            <div class="colone1"><h3>Détails de réparation :</h3></div>
-            
-            <div>  <button class="button" id="modifier" onclick="location.href='{% url 'update-repair' repair.id %}';">Modifier</button></div>
 
-            <div>  <button class="button" id="supprimer" onclick="location.href='{% url 'delete-repair' repair.id %}';">Supprimer </button> </div>
-           
-            <div>  <button id="imprimer" onclick="imprimerPartie()">Imprimer</button></div>
+            <div class="colone1"><h3>Détails de réparation :</h3></div>
+
+            <div>
+                <button class="button" id="modifier" onclick="location.href='{% url 'update-repair' repair.id %}';">
+                    Modifier
+                </button>
+            </div>
+
+            <div>
+                <button class="button" id="supprimer" onclick="location.href='{% url 'delete-repair' repair.id %}';">
+                    Supprimer
+                </button>
+            </div>
+
+            <div>
+                <button id="imprimer" onclick="imprimerPartie()">Imprimer</button>
+            </div>
 
             {% if repair.state == 'En cours' %}
             <form method="post" action="{% url 'finish-repair' repair.pk %}">
                 {% csrf_token %}
-                <input id="livrer" type="submit" value="Terminer" >
+                <input id="livrer" type="submit" value="Terminer">
             </form>
             {% endif %}
-
 
 
         </div>
 
         <div class="c22" id="partieImprimer">
-        <p><strong> IdRéparation :{{repair.id}}</strong></p> <br>
-        <p>Titre : {{repair.title}}</p><br>
-        <p>Description : {{repair.description}}</p><br>
-        <p>État : {{repair.state}}</p><br>
-        <p>Id Produit : {{repair.product.id}}</p><br>
-        <p>Produit : {{repair.product}}</p><br>
-        <p>Date de réparation : {{repair.repair_date}}</p><br>
-        <p>Client : {{repair.client}}</p><br>
-        <p>Prix : {{repair.repair_price}} DA</p>
+            <p><strong> IdRéparation :{{repair.id}}</strong></p> <br>
+            <p>Titre : {{repair.title}}</p><br>
+            <p>Description : {{repair.description}}</p><br>
+            <p>État : {{repair.state}}</p><br>
+            <p>Id Produit : {{repair.product.id}}</p><br>
+            <p>Produit : {{repair.product}}</p><br>
+            <p>Date de réparation : {{repair.repair_date}}</p><br>
+            <p>Client : {{repair.client}}</p><br>
+            <p>Prix : {{repair.repair_price}} DA</p>
 
         </div>
 
-        
-    </div>
-
-
 
     </div>
-   
-    
 
-    <script>
-        function imprimerPartie() {
-            // Récupérer la partie de la page à imprimer
-            var contenuAImprimer = document.getElementById('partieImprimer').innerHTML;
-    
-            // Créer une fenêtre de prévisualisation pour le contenu à imprimer
-            var fenetreImpression = window.open('', '_blank');
-    
-            // Écrire le contenu à imprimer dans la fenêtre de prévisualisation
-            fenetreImpression.document.write('<html><head><title>Impression</title></head><body>');
-            fenetreImpression.document.write(contenuAImprimer);
-            fenetreImpression.document.write('</body></html>');
-    
-            // Imprimer le contenu
-            fenetreImpression.print();
-    
-            // Fermer la fenêtre de prévisualisation après l'impression
-            fenetreImpression.close();
-        }
-    </script>
+
+</div>
+
+
+<script>
+    function imprimerPartie() {
+        // Récupérer la partie de la page à imprimer
+        var contenuAImprimer = document.getElementById('partieImprimer').innerHTML;
+
+        // Créer une fenêtre de prévisualisation pour le contenu à imprimer
+        var fenetreImpression = window.open('', '_blank');
+
+        // Écrire le contenu à imprimer dans la fenêtre de prévisualisation
+        fenetreImpression.document.write('<html><head><title>Impression</title></head><body>');
+        fenetreImpression.document.write(contenuAImprimer);
+        fenetreImpression.document.write('</body></html>');
+
+        // Imprimer le contenu
+        fenetreImpression.print();
+
+        // Fermer la fenêtre de prévisualisation après l'impression
+        fenetreImpression.close();
+    }
+</script>
 </body>
 </html>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--  
+<!--
 
 {% load static %}
 

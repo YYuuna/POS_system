@@ -10,14 +10,6 @@
 </head>
 
 <body>
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-
 <div id="partieImprimer" class="printable-content">
 
     <div class="titre"><h1>Bon de réparation :</h1></div>
@@ -39,51 +31,14 @@
 
     <div class="sig">
 
-        <div><p><strong> signateur de client :</strong></p></div>
+        <div><p><strong> Signateur de client :</strong></p></div>
 
-        <div class="cachet"><p><strong> cachet de l'entreprise :</strong></p></div>
+        <div class="cachet"><p><strong> Cachet de l'entreprise :</strong></p></div>
 
     </div>
 
 
 </div>
-
-
-<div class="btn">
-    <div>
-        <button class="button" id="modifier" onclick="location.href='{% url 'update-repair' repair.id %}';">Modifier
-        </button>
-    </div>
-    <button onclick="imprimerPartie()">Imprimer</button>
-    {% if repair.state == 'En cours' %}
-    <form method="post" action="{% url 'finish-repair' repair.pk %}">
-        {% csrf_token %}
-        <input type="submit" value="Terminer réparation">
-    </form>
-    {% endif %}
-</div>
-
-
-<script>
-    function imprimerPartie() {
-        // Récupérer la partie de la page à imprimer
-        var contenuAImprimer = document.getElementById('partieImprimer').innerHTML;
-
-        // Créer une fenêtre de prévisualisation pour le contenu à imprimer
-        var fenetreImpression = window.open('', '_blank');
-
-        // Écrire le contenu à imprimer dans la fenêtre de prévisualisation
-        fenetreImpression.document.write('<html><head><title>Impression</title></head><body>');
-        fenetreImpression.document.write(contenuAImprimer);
-        fenetreImpression.document.write('</body></html>');
-
-        // Imprimer le contenu
-        fenetreImpression.print();
-
-        // Fermer la fenêtre de prévisualisation après l'impression
-        fenetreImpression.close();
-    }
-</script>
 
 
 </body>

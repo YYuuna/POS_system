@@ -1,20 +1,25 @@
+from io import BytesIO
+
+from django.template.loader import render_to_string
 from django.utils import timezone
 
-from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
 from django.contrib import messages
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse, Http404, FileResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.views.generic import ListView, TemplateView, DetailView
 from django.urls import reverse_lazy, reverse
+from weasyprint import HTML
+
 from .models import Client, Supplier, Product, Account, Employee, PurchaseOrder, Sale, Repair, Category, SaleItem, \
     PurchaseOrderItem
 from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm, AccountRegistrationForm, \
     EmployeeForm, CategoryForm, SaleForm, SaleItemFormSet, SaleItemForm, PurchaseOrderForm, PurchaseOrderItemFormSet, \
     PurchaseOrderItemForm, RepairForm, CustomSetPasswordForm
+
 
 
 class AddClientView(LoginRequiredMixin, CreateView):
@@ -235,7 +240,7 @@ class HomeView(LoginRequiredMixin, TemplateView):
     template_name = 'menu.html'
 
 
-class DashboardView(LoginRequiredMixin,TemplateView):
+class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'dashbord.html'
 
 
@@ -396,6 +401,7 @@ class SaleUpdateView(LoginRequiredMixin, FormView):
 
     def get_success_url(self):
         return reverse_lazy('sale-detail', kwargs={'pk': self.sale.pk})
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         self.sale = Sale.objects.get(pk=self.kwargs['pk'])
@@ -451,6 +457,7 @@ class SaleCancelView(LoginRequiredMixin, DeleteView):
             update_product_quantity=True)  # Call the delete_sale method with update_product_quantity=True
         return super().delete(request, *args, **kwargs)
 
+
 class SaleDetailView(LoginRequiredMixin, DetailView):
     model = Sale
     template_name = 'detaillvente.html'
@@ -469,7 +476,7 @@ class SaleDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class ProductInitialSellingPriceView(LoginRequiredMixin,View):
+class ProductInitialSellingPriceView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         try:
@@ -477,6 +484,7 @@ class ProductInitialSellingPriceView(LoginRequiredMixin,View):
             return JsonResponse({'initial_selling_price': product.initial_selling_price})
         except Product.DoesNotExist:
             raise Http404("Product does not exist")
+
 
 class AddPurchaseOrderView(LoginRequiredMixin, CreateView):
     model = PurchaseOrder
@@ -525,14 +533,18 @@ class PurchaseOrderUpdateView(LoginRequiredMixin, FormView):
         if self.purchase_order.delivery_date:  # replace with your actual condition
             # Display an error message in french and redirect to the purchase order detail view
             messages.error(self.request, "Vous ne pouvez pas modifier une commande déjà livrée.")
-            return redirect('purchase-order-detail', pk=self.purchase_order.pk)  # replace 'purchase-order-detail' with your actual detail view name
+            return redirect('purchase-order-detail',
+                            pk=self.purchase_order.pk)  # replace 'purchase-order-detail' with your actual detail
+            # view name
         return super().post(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.purchase_order = PurchaseOrder.objects.get(pk=self.kwargs['pk'])
         if self.purchase_order.delivery_date:  # replace with your actual condition
             messages.error(self.request, "Vous ne pouvez pas modifier une commande déjà livrée.")
-            return redirect('purchase-order-detail', pk=self.purchase_order.pk)  # replace 'purchase-order-detail' with your actual detail view name
+            return redirect('purchase-order-detail',
+                            pk=self.purchase_order.pk)  # replace 'purchase-order-detail' with your actual detail
+            # view name
         return super().get(request, *args, **kwargs)
 
 
@@ -540,6 +552,7 @@ class PurchaseOrderDeleteView(LoginRequiredMixin, DeleteView):
     model = PurchaseOrder
     template_name = 'supprimercommande.html'
     success_url = reverse_lazy('purchase-order-list')
+
 
 class PurchaseOrderDetailView(LoginRequiredMixin, DetailView):
     model = PurchaseOrder
@@ -549,7 +562,8 @@ class PurchaseOrderDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         purchase_order_items = PurchaseOrderItem.objects.filter(purchase_order=self.object)
-        context['purchase_order_items_exist'] = purchase_order_items.exists()  # Check if there are any purchase order items
+        context[
+            'purchase_order_items_exist'] = purchase_order_items.exists()  # Check if there are any purchase order items
         # Calculate the total for each item
         item_totals = [item.purchase_price * item.quantity for item in purchase_order_items]
         # Calculate the total for the purchase order
@@ -558,7 +572,8 @@ class PurchaseOrderDetailView(LoginRequiredMixin, DetailView):
         context['purchase_order_total'] = purchase_order_total
         return context
 
-class ProductInitialPurchasePriceView(LoginRequiredMixin,View):
+
+class ProductInitialPurchasePriceView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         try:
@@ -566,6 +581,7 @@ class ProductInitialPurchasePriceView(LoginRequiredMixin,View):
             return JsonResponse({'initial_buying_price': product.initial_buying_price})
         except Product.DoesNotExist:
             raise Http404("Product does not exist")
+
 
 class AddRepairView(LoginRequiredMixin, CreateView):
     model = Repair
@@ -588,15 +604,18 @@ class RepairUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse('repair-detail', kwargs={'pk': self.object.pk})
 
+
 class RepairDeleteView(LoginRequiredMixin, DeleteView):
     model = Repair
     template_name = 'supprimerreparation.html'
     success_url = reverse_lazy('repair-list')
 
+
 class CustomLogoutView(LoginRequiredMixin, LogoutView):
     next_page = 'login'
 
-class PurchaseOrderDeliverView(LoginRequiredMixin,View):
+
+class PurchaseOrderDeliverView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         order = get_object_or_404(PurchaseOrder, pk=kwargs['pk'])
 
@@ -617,6 +636,7 @@ class PurchaseOrderDeliverView(LoginRequiredMixin,View):
         # Display a success message in french and redirect to the purchase order detail view
         messages.success(request, "La commande a été livrée avec succès.")
         return redirect('purchase-order-detail', pk=order.pk)
+
 
 class RepairFinishView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
@@ -639,3 +659,47 @@ class RepairFinishView(LoginRequiredMixin, View):
         messages.success(request, "La réparation a été terminée avec succès.")
         return redirect('repair-detail', pk=repair.pk)
 
+
+class SaleInvoiceView(View):
+    def get(self, request, *args, **kwargs):
+        sale = get_object_or_404(Sale, id=self.kwargs['pk'])
+        sale_items = SaleItem.objects.filter(sale=sale)
+        # Calculate the total for each item
+        item_totals = [item.sale_price * item.quantity for item in sale_items]
+        # Calculate the total for the sale
+        sale_total = sum(item_totals)
+
+        data = {
+            'sale': sale,
+            # Check if there are any sale items
+            'sale_items_exist': sale_items.exists(),
+            'sale_items': zip(sale_items, item_totals),
+            'sale_total': sale_total,
+            # include any other data you need in the template
+        }
+
+        # Rendered html content as a string
+        html_string = render_to_string('facturevente.html', data)
+
+        # Create a WeasyPrint HTML object and write it to PDF
+        html = HTML(string=html_string)
+        pdf_content = BytesIO()
+        html.write_pdf(target=pdf_content)
+
+        # Rewind the BytesIO object to the start
+        pdf_content.seek(0)
+
+        # Create a Django response object, and specify content_type as pdf
+        response = FileResponse(pdf_content, content_type='application/pdf')
+
+        # Get the "download" parameter from the request
+        download = request.GET.get('download')
+
+        if download:
+            # If download is requested, set the Content-Disposition header to "attachment"
+            response['Content-Disposition'] = f'attachment; filename=facture_vente_{sale.id}.pdf'
+        else:
+            # Otherwise, set it to "inline"
+            response['Content-Disposition'] = 'inline'
+
+        return response
