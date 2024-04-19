@@ -108,22 +108,15 @@
             </div>
             <div>
                 <button class="button" id="supprimerv" onclick="location.href='{% url 'cancel-sale' sale.id %}';">
-                    Annuler
+                    Supprimer
                 </button>
             </div>
             <div>
-                <button id="imprimer" onclick="location.href='{% url 'sale-invoice' sale.id %}';">Imprimer</button>
+                <!-- <button id="imprimer" onclick="location.href='{% url 'sale-invoice' sale.id %}';">Imprimer</button>  -->
+                <button id="imprimer" onclick="printPDF();">Imprimer facture</button>
             </div>
-            <div>
-                <button onclick="window.open('{% url 'sale-invoice' sale.id %}?download=1');">Télecharger facture
-                </button>
-            </div>
-            <div>
-                <button onclick="window.open('{% url 'sale-invoice' sale.id %}');">Voir facture</button>
-            </div>
-            <div>
-                <button onclick="printPDF();">Imprimer facture</button>
-            </div>
+         
+        
 
         </div>
 

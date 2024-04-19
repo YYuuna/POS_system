@@ -16,34 +16,41 @@
 
         .printable-content {
             margin: 2px;
+            display: grid;
+            grid-template-rows: 15% 70% 15%;
+
         }
 
         .titre {
             text-align: center;
-
+            /* background-color:rgba(245, 222, 179, 0.436);  */
         }
 
         .element {
             padding-left: 5%;
             padding-right: 5%;
-            /*background-color:;*/
+            /* background-color:rgba(137, 43, 226, 0.347);  */
         }
 
 
         .sig {
             display: grid;
             grid-template-columns:1fr 1fr;
-            /* justify-items: center;  */
-            /* align-items: center;  */
+
+            justify-items: center; 
+            align-items: center; 
+            
             padding-left: 1px;
-            padding-right: 20%;
-            /*background-color: ;*/
+            padding-right: 1%;  
+            /* background-color:rgba(0, 0, 0, 0.176);  */
+           
 
         }
 
         .cachet {
-            text-align: right;
-
+            
+            text-align: right;  
+          
         }
 
         #total {
@@ -67,6 +74,7 @@
             padding: 2px;
         }
     </style>
+
     <title>Bon de vente</title>
 </head>
 
@@ -119,7 +127,8 @@
 
     <div class="sig">
 
-        <div><p><strong> Signateur de client :</strong></p></div>
+        <div ><p><strong> Signateur de client :</strong></p></div>
+       
 
         <div class="cachet"><p><strong> Cachet de l'entreprise :</strong></p></div>
 
