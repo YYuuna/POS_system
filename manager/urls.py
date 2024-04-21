@@ -50,5 +50,5 @@ path('login/',views.UserLoginView.as_view(),name='login'),
     path('', views.HomeView.as_view(), name='home'),
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
     path('logout/', views.CustomLogoutView.as_view(), name='logout'),
-    path('test/', views.TestView.as_view(), name='test'),
+    # path('test/', views.TestView.as_view(), name='test'),
 ]

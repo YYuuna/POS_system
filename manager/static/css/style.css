@@ -286,9 +286,9 @@ table{
 
 
 .add-row{
-    width: 40%;
+    width: 10%;
     height: 27px;
-    border-radius:10px ;
+    border-radius:9px ;
     border: none;
     cursor: pointer;
     background: #4dd2634a;
@@ -297,14 +297,21 @@ table{
     text-decoration: none;
 
 }
+.add-row:hover{
+    letter-spacing: 1px;
+}
 .delete-row{
-    width: 34%;
+    width: 34%; 
+    /* width: 100%; */
     height: 27px;
-    border-radius:10px ;
+    border-radius:8px ;
     border: none;
     cursor: pointer;
     background:rgba(193, 32, 32, 0.916) ;
     color: white;
     transition: 0.7s;
     text-decoration: none;
+}
+.delete-row:hover{
+   letter-spacing: 1px; 
 }

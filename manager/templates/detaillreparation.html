@@ -124,7 +124,8 @@
             </div>
 
             <div>
-                <button id="imprimer" onclick="imprimerPartie()">Imprimer</button>
+                 <button id="imprimer" onclick="imprimerPartie()">Imprimer</button>  
+                
             </div>
 
             {% if repair.state == 'En cours' %}
@@ -156,7 +157,6 @@
 
 </div>
 
-
 <script>
     function imprimerPartie() {
         // Récupérer la partie de la page à imprimer
@@ -177,6 +177,7 @@
         fenetreImpression.close();
     }
 </script>
+
 </body>
 </html>
 
