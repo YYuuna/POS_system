@@ -144,14 +144,7 @@
                 <input id="livrer" type="submit" value="Terminer">
             </form>
             {% endif %}
-<<<<<<< HEAD
            </div>
-=======
-            <div>
-                <!-- <button id="imprimer" onclick="imprimerPartie()">Imprimer</button>  -->
-                <button id="imprimer" onclick="printPDF();">Imprimer facture</button>
-            </div>
->>>>>>> 101980a7b17fd378140c7148357f0b81b430c0f4
 
         </div>
 
@@ -177,9 +170,7 @@
 <script>
     function printPDF() {
         // Open the PDF in a new window
-        var win = window.open('{% url '
-        repair - invoice
-        ' repair.id %}', '_blank'
+        var win = window.open('{% url 'repair-invoice' repair.id %}', '_blank'
     )
         ;
         // Wait for the PDF to load, then call the print function
