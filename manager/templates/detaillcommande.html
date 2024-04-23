@@ -117,16 +117,17 @@
             </div>
 
             <div>
-<!--                <button id="imprimer" onclick="imprimerPartie()">Imprimer</button>-->
+          <!--  <button id="imprimer" onclick="imprimerPartie()">Imprimer</button>-->
                 <button id="imprimer" onclick="printPDF();"
                 {% if not purchase_order_items_exist %} disabled {% endif %}
                 >Imprimer facture</button>
             </div>
 
-            <div> {% if not purchase_order.delivery_date and purchase_order_items_exist %}
+            <div> 
+                {% if not purchase_order.delivery_date and purchase_order_items_exist %}
                 <form method="post" action="{% url 'deliver-purchase-order' pk=purchase_order.pk %}">
                     {% csrf_token %}
-                    <input type="submit" value="Livrer" class="btn btn-primary">
+                    <input type="submit" id="livrer" value="Livrer" class="btn btn-primary">
                 </form>
                 {% endif %}
             </div>

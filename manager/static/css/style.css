@@ -240,10 +240,12 @@ table{
 #supprimer{
     width: 70%;
     background-color: rgba(193, 32, 32, 0.916);
+    margin-top: 6%;
 }
 #modifier{
     width: 70%;
     background: #1bb635b7;
+    margin-top: 6%;
    
 }
 #supprimerv{
@@ -259,8 +261,12 @@ table{
     width: 70%;
 }
 #livrer{
-    width: 100%;
+    width: 60%;
     background: #6d3e607a;
+    transition: 0.7s;
+}
+#livrer:hover{
+    letter-spacing: 1px;
 }
 .boxsup{
     padding-top: 10%;
