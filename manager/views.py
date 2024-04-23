@@ -751,9 +751,9 @@ class RepairInvoiceView(LoginRequiredMixin,View):
         repair = get_object_or_404(Repair, id=self.kwargs['pk'])
 
         # Check if the repair is done
-        if repair.state != 'Réparation terminée':
-            messages.error(request, "La réparation n'est pas encore terminée. Vous ne pouvez pas imprimer la facture.")
-            return redirect('repair-detail', pk=repair.pk)
+        # if repair.state != 'Réparation terminée': 
+            # messages.error(request, "La réparation n'est pas encore terminée. Vous ne pouvez pas imprimer la facture.")
+            # return redirect('repair-detail', pk=repair.pk)
 
 
         data = {
