@@ -25,10 +25,17 @@ manage_pos_services_permission, created = Permission.objects.get_or_create(
     defaults={'name': 'Managing POS Services'}
 )
 
+manage_repair_services_permission, created = Permission.objects.get_or_create(
+    codename='manage_repair_services',
+    content_type=employee_content_type,
+    defaults={'name': 'Managing Repair Services'}
+)
+
 # Create or get the groups
 admin_group, created = Group.objects.get_or_create(name='Admin')
-employee_group, created = Group.objects.get_or_create(name='Employee')
-
+employee_group, created = Group.objects.get_or_create(name='Employé')
+repairer_group, created = Group.objects.get_or_create(name='Réparateur')
 # Assign permissions to groups
 admin_group.permissions.add(manage_users_permission, manage_employees_permission, manage_pos_services_permission)
 employee_group.permissions.add(manage_pos_services_permission)
+repairer_group.permissions.add(manage_repair_services_permission)

@@ -21,7 +21,6 @@ from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductF
     PurchaseOrderItemForm, RepairForm, CustomSetPasswordForm
 
 
-
 class AddClientView(LoginRequiredMixin, CreateView):
     model = Client
     form_class = ClientForm
@@ -601,6 +600,12 @@ class RepairUpdateView(LoginRequiredMixin, UpdateView):
     form_class = RepairForm
     template_name = 'modifierreparation.html'
 
+    def form_valid(self, form):
+        # Check if any data has changed and the repair is done
+        if form.has_changed() and self.object.state=='Réparation terminée':
+            self.object.state = 'En cours'
+            self.object.save()
+        return super().form_valid(form)
     def get_success_url(self):
         return reverse('repair-detail', kwargs={'pk': self.object.pk})
 
@@ -664,6 +669,9 @@ class SaleInvoiceView(View):
     def get(self, request, *args, **kwargs):
         sale = get_object_or_404(Sale, id=self.kwargs['pk'])
         sale_items = SaleItem.objects.filter(sale=sale)
+        if (not sale_items.exists()):
+            messages.error(request, "La vente ne contient aucun article. Vous ne pouvez pas imprimer la facture.")
+            return redirect('sale-detail', pk=sale.pk)
         # Calculate the total for each item
         item_totals = [item.sale_price * item.quantity for item in sale_items]
         # Calculate the total for the sale
@@ -692,14 +700,82 @@ class SaleInvoiceView(View):
         # Create a Django response object, and specify content_type as pdf
         response = FileResponse(pdf_content, content_type='application/pdf')
 
-        # Get the "download" parameter from the request
-        download = request.GET.get('download')
+        # Otherwise, set it to "inline"
+        response['Content-Disposition'] = 'inline'
 
-        if download:
-            # If download is requested, set the Content-Disposition header to "attachment"
-            response['Content-Disposition'] = f'attachment; filename=facture_vente_{sale.id}.pdf'
-        else:
-            # Otherwise, set it to "inline"
-            response['Content-Disposition'] = 'inline'
+        return response
+
+class PurchaseOrderInvoiceView(LoginRequiredMixin,View):
+    def get(self, request, *args, **kwargs):
+        purchase_order = get_object_or_404(PurchaseOrder, id=self.kwargs['pk'])
+        purchase_order_items = PurchaseOrderItem.objects.filter(purchase_order=purchase_order)
+        if (not purchase_order_items.exists()):
+            messages.error(request, "La commande ne contient aucun article. Vous ne pouvez pas imprimer la facture.")
+            return redirect('purchase-order-detail', pk=purchase_order.pk)
+        # Calculate the total for each item
+        item_totals = [item.purchase_price * item.quantity for item in purchase_order_items]
+        # Calculate the total for the purchase order
+        purchase_order_total = sum(item_totals)
+
+        data = {
+            'purchase_order': purchase_order,
+            # Check if there are any purchase order items
+            'purchase_order_items_exist': purchase_order_items.exists(),
+            'purchase_order_items': zip(purchase_order_items, item_totals),
+            'purchase_order_total': purchase_order_total,
+            # include any other data you need in the template
+        }
+
+        # Rendered html content as a string
+        html_string = render_to_string('facturecommande.html', data)
+
+        # Create a WeasyPrint HTML object and write it to PDF
+        html = HTML(string=html_string)
+        pdf_content = BytesIO()
+        html.write_pdf(target=pdf_content)
+
+        # Rewind the BytesIO object to the start
+        pdf_content.seek(0)
+
+        # Create a Django response object, and specify content_type as pdf
+        response = FileResponse(pdf_content, content_type='application/pdf')
+
+        # Otherwise, set it to "inline"
+        response['Content-Disposition'] = 'inline'
+
+        return response
+
+
+class RepairInvoiceView(LoginRequiredMixin,View):
+    def get(self, request, *args, **kwargs):
+        repair = get_object_or_404(Repair, id=self.kwargs['pk'])
+
+        # Check if the repair is done
+        if repair.state != 'Réparation terminée':
+            messages.error(request, "La réparation n'est pas encore terminée. Vous ne pouvez pas imprimer la facture.")
+            return redirect('repair-detail', pk=repair.pk)
+
+
+        data = {
+            'repair': repair,
+            # include any other data you need in the template
+        }
+
+        # Rendered html content as a string
+        html_string = render_to_string('facturereparation.html', data)
+
+        # Create a WeasyPrint HTML object and write it to PDF
+        html = HTML(string=html_string)
+        pdf_content = BytesIO()
+        html.write_pdf(target=pdf_content)
+
+        # Rewind the BytesIO object to the start
+        pdf_content.seek(0)
+
+        # Create a Django response object, and specify content_type as pdf
+        response = FileResponse(pdf_content, content_type='application/pdf')
+
+        # Otherwise, set it to "inline"
+        response['Content-Disposition'] = 'inline'
 
         return response

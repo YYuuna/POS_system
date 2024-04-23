@@ -129,7 +129,7 @@ STATIC_ROOT = BASE_DIR / 'productionfiles'
 STATICFILES_DIRS = [BASE_DIR / 'manager/static']
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_REDIRECT_URL = 'home'
 
 AUTH_USER_MODEL = 'manager.Account'
 

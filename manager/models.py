@@ -52,6 +52,8 @@ def update_account_groups(sender, instance, created, **kwargs):
             instance.groups.add(Group.objects.get(name='Admin'))
         elif employee.role == 'Employee':
             instance.groups.add(Group.objects.get(name='Employee'))
+        elif employee.role == 'Repairer':
+            instance.groups.add(Group.objects.get(name='Repairer'))
 
 
 class Supplier(models.Model):

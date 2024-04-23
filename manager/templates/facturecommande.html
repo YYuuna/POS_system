@@ -3,7 +3,81 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/pdf.css' %}">
+
+    <style>
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            /*background-color: #605d5d1b;*/
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .printable-content {
+            margin: 2px;
+            display: grid;
+            grid-template-rows: 15% 70% 15%;
+
+        }
+
+        .titre {
+            text-align: center;
+            background-color: #66656513;
+            border-radius: 1px;
+             /* background-color:rgba(245, 222, 179, 0.274);   */
+        }
+
+        .element {
+            padding-left: 5%;
+            padding-right: 5%;
+            /* background-color:rgba(137, 43, 226, 0.347);  */
+        }
+
+
+        .sig {
+            display: grid;
+            grid-template-columns:1fr 1fr;
+
+            justify-items: center;
+            align-items: center;
+
+            padding-left: 1px;
+            padding-right: 1%;
+            /* background-color:rgba(0, 0, 0, 0.176);  */
+
+
+        }
+
+        .cachet {
+
+            text-align: right;
+
+        }
+
+        #total {
+            text-decoration: underline;
+        }
+
+
+        table {
+            background-color: #6665652c;
+            width: 100%;
+            text-align: center;
+            margin: 5px 0;
+            border-radius: 10px;
+        }
+
+        table th {
+            text-transform: uppercase;
+        }
+
+        th, td {
+            padding: 2px;
+        }
+    </style>
+
     <title>Bon de commande</title>
 </head>
 
@@ -59,8 +133,6 @@
         {% endif %}
         <p><strong>Paiement total de la commande : {{ purchase_order_total }} DA</strong></p>
 
-
-        </table>
 
     </div>
 
