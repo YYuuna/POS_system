@@ -251,10 +251,12 @@ table{
 #supprimerv{
     width: 58%;
     background-color: rgba(193, 32, 32, 0.916);
+    margin-top: 6%;
 }
 #modifierv{
     width: 55%;
     background: #1bb635b7;
+    margin-top: 6%;
    
 }
 #detai{
