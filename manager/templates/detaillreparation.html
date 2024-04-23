@@ -132,18 +132,19 @@
                     Supprimer
                 </button>
             </div>
-
-
+            <div>
+                <!-- <button id="imprimer" onclick="imprimerPartie()">Imprimer</button>  -->
+                <button id="imprimer" onclick="printPDF();">Imprimer facture</button>
+            </div>
+          
+            <div>
             {% if repair.state == 'En cours' %}
             <form method="post" action="{% url 'finish-repair' repair.pk %}">
                 {% csrf_token %}
                 <input id="livrer" type="submit" value="Terminer">
             </form>
             {% endif %}
-            <div>
-                <!-- <button id="imprimer" onclick="imprimerPartie()">Imprimer</button>  -->
-                <button id="imprimer" onclick="printPDF();">Imprimer facture</button>
-            </div>
+           </div>
 
         </div>
 
