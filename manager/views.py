@@ -47,7 +47,7 @@ class ClientListView(LoginRequiredMixin, ListView):
     template_name = 'listeclient.html'
     context_object_name = 'clients'
     form_class = FilterForm
-    paginate_by = 10
+    paginate_by = 7
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -86,7 +86,7 @@ class SupplierListView(LoginRequiredMixin, ListView):
     model = Supplier
     template_name = 'listefournisseur.html'
     context_object_name = 'suppliers'
-    paginate_by = 10
+    paginate_by = 7
     form_class = FilterForm
 
     def get_queryset(self):
@@ -126,7 +126,7 @@ class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = 'listeproduit.html'  # replace with your template
     context_object_name = 'products'
-    paginate_by = 10
+    paginate_by = 7
     form_class = FilterForm
 
     def get_queryset(self):
@@ -152,7 +152,7 @@ class AccountListView(UserPassesTestMixin, LoginRequiredMixin, ListView):
     model = Account
     template_name = 'listecompte.html'
     context_object_name = 'accounts'
-    paginate_by = 10
+    paginate_by = 7
     form_class = FilterForm
 
     def get_queryset(self):
@@ -179,7 +179,7 @@ class PurchaseOrderListView(LoginRequiredMixin, ListView):
     model = PurchaseOrder
     template_name = 'listecommande.html'
     context_object_name = 'purchase_orders'
-    paginate_by = 10
+    paginate_by = 7
     form_class = FilterForm
 
     def get_queryset(self):
@@ -199,7 +199,7 @@ class SaleListView(LoginRequiredMixin, ListView):
     model = Sale
     template_name = 'listevente.html'
     context_object_name = 'sales'
-    paginate_by = 10
+    paginate_by = 7
     form_class = FilterForm
 
     def get_queryset(self):
@@ -219,7 +219,7 @@ class RepairListView(LoginRequiredMixin, ListView):
     model = Repair
     template_name = 'listereparation.html'
     context_object_name = 'repairs'
-    paginate_by = 10
+    paginate_by = 7
     form_class = FilterForm
 
     def get_queryset(self):
@@ -307,7 +307,7 @@ class EmployeeListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Employee
     template_name = 'listeemploye.html'
     context_object_name = 'employees'
-    paginate_by = 10
+    paginate_by = 7
     form_class = FilterForm
 
     def get_queryset(self):
