@@ -9,6 +9,7 @@
         body {
             font-family: 'Courier New', Courier, monospace;
             /*background-color: #605d5d1b;*/
+          
         }
 
         a {
@@ -20,6 +21,10 @@
             display: grid;
             grid-template-rows: 15% 70% 15%;
 
+        }
+        .logo{
+            padding: 0%;
+            margin: 0%;
         }
 
         .titre {
@@ -78,13 +83,22 @@
         }
     </style>
 
-    <title>Bon de réparation</title>
+    <title>Facture de réparation</title>
 </head>
 
 <body>
 <div id="partieImprimer" class="printable-content">
+    <div class="logo">
+        <h2>ProTech</h2>
+        <p><strong>Adresse : </strong>CITE 08 MAI 45 BT N° 20, BAB-EZZOUAR, ALGER </p>
+        <p><strong>Code postal : </strong>16024</p>
+        <p><strong>Tel : </strong> 023 95 01 00 </p>
+    </div>
+    <div class="titre">
+       
+        <h1>Facture de réparation </h1>
 
-    <div class="titre"><h1>Bon de réparation :</h1></div>
+    </div>
 
     <div class="element" id="rep">
 
@@ -96,6 +110,7 @@
         <p>Date de réparation : {{repair.repair_date}}</p>
         <p>Client : {{repair.client}}</p>
         <p>Prix : {{repair.repair_price}} DA</p>
+        <p>Verssement :</p>
 
 
     </div>

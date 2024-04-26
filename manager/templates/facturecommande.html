@@ -80,14 +80,19 @@
         }
     </style>
 
-    <title>Bon de commande</title>
+    <title>Facture de commande</title>
 </head>
 
 <body>
 <div id="partieImprimer" class="printable-content">
+    <div class="logo">
+        <h2>ProTech</h2>
+        <p><strong>Adresse : </strong>CITE 08 MAI 45 BT N° 20, BAB-EZZOUAR, ALGER </p>
+        <p><strong>Code postal : </strong>16024</p>
+        <p><strong>Tel : </strong> 023 95 01 00 </p>
+    </div>
 
-
-    <div class="titre"><h1> Bon de commande :</h1></div>
+    <div class="titre"><h1> Facture de commande </h1></div>
 
 
     <div class="element">
@@ -113,8 +118,8 @@
                 <th>Id Produit</th>
                 <th>Nom de produit</th>
                 <th>Quantité</th>
-                <th>Prix</th>
-                <th>Total</th>
+                <!-- <th>Prix</th> -->
+                <!-- <th>Total</th> -->
             </tr>
             </thead>
             <tbody>
@@ -124,8 +129,8 @@
                 <td>{{ item.product.id }}</td>
                 <td>{{ item.product.name }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>{{ item.purchase_price }} DA</td>
-                <td id="total"> {{ total }} DA</td>
+                <!-- <td>{{ item.purchase_price }} DA</td> -->
+                <!-- <td id="total"> {{ total }} DA</td> -->
             </tr>
             {% endfor %}
             </tbody>
@@ -133,7 +138,7 @@
         {% else %}
         <h3>Aucun article trouvé .</h3>
         {% endif %}
-        <p><strong>Paiement total de la commande : {{ purchase_order_total }} DA</strong></p>
+        <!-- <p><strong>Paiement total de la commande : {{ purchase_order_total }} DA</strong></p> -->
 
 
     </div>

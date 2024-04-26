@@ -155,8 +155,8 @@
                     <th>Id Produit</th>
                     <th>Nom de produit</th>
                     <th>Quantité</th>
-                    <th>Prix</th>
-                    <th>Total</th>
+                    <!-- <th>Prix</th>  -->
+                    <!-- <th>Total</th>  -->
                 </tr>
                 </thead>
                 <tbody>
@@ -166,8 +166,8 @@
                     <td>{{ item.product.id }}</td>
                     <td>{{ item.product.name }}</td>
                     <td>{{ item.quantity }}</td>
-                    <td>{{ item.purchase_price }} DA</td>
-                    <td id="total"> {{ total }} DA</td>
+                    <!-- <td>{{ item.purchase_price }} DA</td> -->
+                    <!-- <td id="total"> {{ total }} DA</td> -->
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -175,7 +175,7 @@
             {% else %}
             <h3>Aucun article trouvé .</h3>
             {% endif %}
-            <p><strong>Paiement total de la commande : {{ purchase_order_total }} DA</strong></p>
+            <!-- <p><strong>Paiement total de la commande : {{ purchase_order_total }} DA</strong></p>  -->
 
 
         </div>
