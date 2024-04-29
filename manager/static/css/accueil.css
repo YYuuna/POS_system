@@ -16,9 +16,10 @@ body{
 .logo{
   
     text-align: center;
-    letter-spacing: 5px;
+    letter-spacing: 4px;
    
 }
+
 .logo:hover{
     letter-spacing: 10px;
     transform: scale(1.1);

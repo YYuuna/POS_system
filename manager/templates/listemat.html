@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
-    <title>Liste des clients</title>
+    <title>Liste des produits</title>
 </head>
 <body>
 <div class="corp">
@@ -15,16 +15,16 @@
 
         <div class="logo">
 
-            <a href="{% url 'home' %}" class="link"><h2>ProTech</h2></a>
+            <a href="{% url 'home' %}" class="link"><h2>CRUD</h2></a>
         </div>
         <br>
-        {% if request.user|has_group:"Admin" %} 
+        {% if request.user|has_group:"Admin" %}
         <button class="value">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
                 <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                 <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/>
             </svg>
-            <a class="link" href="{% url 'account-list' %}"> Compte </a> 
+            <a class="link" href="{% url 'account-list' %}"> Compte </a>
         </button>
         <!-- ---------------------------------------------------------------------------------------- -->
         <button class="value">
@@ -41,7 +41,7 @@
                 <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                 <path d="M234.5 5.7c13.9-5 29.1-5 43.1 0l192 68.6C495 83.4 512 107.5 512 134.6V377.4c0 27-17 51.2-42.5 60.3l-192 68.6c-13.9 5-29.1 5-43.1 0l-192-68.6C17 428.6 0 404.5 0 377.4V134.6c0-27 17-51.2 42.5-60.3l192-68.6zM256 66L82.3 128 256 190l173.7-62L256 66zm32 368.6l160-57.1v-188L288 246.6v188z"/>
             </svg>
-            <a class="link" href="{% url 'products-list' %}"> Stock </a> 
+            <a class="link" href="{% url 'products-list' %}"> Stock </a>
         </button>
         <!-- ---------------------------------------------------------------------------------------- -->
         <button class="value">
@@ -57,7 +57,7 @@
                 <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                 <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM609.3 512H471.4c5.4-9.4 8.6-20.3 8.6-32v-8c0-60.7-27.1-115.2-69.8-151.8c2.4-.1 4.7-.2 7.1-.2h61.4C567.8 320 640 392.2 640 481.3c0 17-13.8 30.7-30.7 30.7zM432 256c-31 0-59-12.6-79.3-32.9C372.4 196.5 384 163.6 384 128c0-26.8-6.6-52.1-18.3-74.3C384.3 40.1 407.2 32 432 32c61.9 0 112 50.1 112 112s-50.1 112-112 112z"/>
             </svg>
-            <a class="link" href="{% url 'supplier-list' %}"> Fournisseurs </a> 
+            <a class="link" href="{% url 'supplier-list' %}"> Fournisseurs </a>
         </button>
         <!-- ---------------------------------------------------------------------------------------- -->
         <button class="value">
@@ -84,34 +84,24 @@
             </svg>
             <a class="link" href="{% url 'repair-list' %}"> Réparations </a>
         </button>
-        <!-- ----------------------------------- -->
-        <button class="value">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                <path d="M78.6 5C69.1-2.4 55.6-1.5 47 7L7 47c-8.5 8.5-9.4 22-2.1 31.6l80 104c4.5 5.9 11.6 9.4 19 9.4h54.1l109 109c-14.7 29-10 65.4 14.3 89.6l112 112c12.5 12.5 32.8 12.5 45.3 0l64-64c12.5-12.5 12.5-32.8 0-45.3l-112-112c-24.2-24.2-60.6-29-89.6-14.3l-109-109V104c0-7.5-3.5-14.5-9.4-19L78.6 5zM19.9 396.1C7.2 408.8 0 426.1 0 444.1C0 481.6 30.4 512 67.9 512c18 0 35.3-7.2 48-19.9L233.7 374.3c-7.8-20.9-9-43.6-3.6-65.1l-61.7-61.7L19.9 396.1zM512 144c0-10.5-1.1-20.7-3.2-30.5c-2.4-11.2-16.1-14.1-24.2-6l-63.9 63.9c-3 3-7.1 4.7-11.3 4.7H352c-8.8 0-16-7.2-16-16V102.6c0-4.2 1.7-8.3 4.7-11.3l63.9-63.9c8.1-8.1 5.2-21.8-6-24.2C388.7 1.1 378.5 0 368 0C288.5 0 224 64.5 224 144l0 .8 85.3 85.3c36-9.1 75.8 .5 104 28.7L429 274.5c49-23 83-72.8 83-130.5zM56 432a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"/>
-            </svg>
-            <a class="link" href=""> matériel a reparer </a>
-        </button>
+        <!-- --------------------------------------- -->
         <button class="value">
           
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M399 384.2C376.9 345.8 335.4 320 288 320H224c-47.4 0-88.9 25.8-111 64.2c35.2 39.2 86.2 63.8 143 63.8s107.8-24.7 143-63.8zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256 16a72 72 0 1 0 0-144 72 72 0 1 0 0 144z"/></svg>
 
             <a class="link" href="{% url 'dashboard' %}"> Mon profile </a>
         </button> 
-        
        
 
     </div>
 
 
     <div class="liste">
-
-
         <div class="c1">
 
-            <div class="colone1"><h3>Liste des clients</h3></div>
+            <div class="colone1"><h3>Liste de matériel a reparer</h3></div>
 
-            <div class="colone1" >
+            <div class="colone1">
                 <form method="GET" action="">
                     {{ form }}
                     <button class="button" type="submit">Rechercher</button>
@@ -119,80 +109,71 @@
             </div>
 
             <div class="colone1">
-                <button class="button"><a href="{% url 'add-client' %}" class="link">Ajouter client</a></button>
+                <button class="button"><a href="{% url 'add-product' %}" class="link">Ajouter matériel</a></button>
             </div>
+           
+           
 
         </div>
 
         <div class="c2">
-            {% if clients %}
+            {% if products %}
             <table>
                 <thead>
                 <tr>
                     <th>Id</th>
                     <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Teléphone</th>
-                    <th>Email</th>
-                    <th>Adresse</th>
-              
+                    <th>Catégorie</th>
+                    <th>État</th>
+          
                     <th>Modifier</th>
                     <th>Supprimer</th>
-
                 </tr>
                 </thead>
                 <tbody id="tbody">
-                {% for client in clients %}
+                <!-- {% for product in products %}  -->
                 <tr>
-                    <td>{{ client.id }}</td>
-                    <td>{{ client.last_name }}</td>
-                    <td>{{ client.first_name }}</td>
-                    <td>{{ client.phone }}</td>
-                    <td>{{ client.email }}</td>
-                    <td>{{ client.address }}</td>
-                    
+                    <td>{{ product.id }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category }}</td>
+                    <td>{{ product.state }}</td>
                   
+               
 
                     <td>
                         <button class="button" id="modifier"
-                                onclick="location.href='{% url 'update-client' client.id %}';">Modifier
+                                onclick="location.href='{% url 'update-product' product.id %}';">Modifier
                         </button>
                     </td>
                     <td>
                         <button class="button" id="supprimer"
-                                onclick="location.href='{% url 'delete-client' client.id %}';">Supprimer
+                                onclick="location.href='{% url 'delete-product' product.id %}';">Supprimer
                         </button>
                     </td>
                 </tr>
-                {% endfor %}
+                <!-- {% endfor %}  -->
                 </tbody>
             </table>
-            {% else %}
-            <p>Pas de clients trouvés.</p>
-            {% endif %}
+            <!-- {% else %}  -->
+            <!-- <p>Pas de produits trouvés.</p>  -->
+            <!-- {% endif %}  -->
             <div class="pagination">
                 <span class="step-links">
                     {% if page_obj.has_previous %}
-                    <button class="but" >  <a href="?page=1">&laquo; premiére</a></button> 
-                        <button class="but" >   <a href="?page={{ page_obj.previous_page_number }}">précédente</a></button> 
+                     <button class="but" >  <a  href="?page=1">&laquo; première</a></button> 
+                     <button class="but"> <a  href="?page={{ page_obj.previous_page_number }}">précédente</a></button>
                     {% endif %}
-
                     <span class="current">
                         Page {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
                     </span>
-
                     {% if page_obj.has_next %}
-                    <button class="but" >    <a href="?page={{ page_obj.next_page_number }}">prochaine</a></button> 
-                        <button class="but" >   <a href="?page={{ page_obj.paginator.num_pages }}">derniére &raquo;</a></button> 
+                     <button class="but">  <a  href="?page={{ page_obj.next_page_number }}">prochaine</a></button> 
+                      <button class="but">  <a  href="?page={{ page_obj.paginator.num_pages }}">derniére &raquo;</a></button>
                     {% endif %}
                 </span>
             </div>
         </div>
-
+        
     </div>
-
-
-</div>
-
 </body>
 </html>
