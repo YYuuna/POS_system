@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.forms import inlineformset_factory, BaseInlineFormSet
 
 from .models import Employee, Account, Client, Supplier, Product, Category, Sale, SaleItem, PurchaseOrder, \
-    PurchaseOrderItem, Repair
+    PurchaseOrderItem, Repair, HardwareToRepair
 
 
 class AccountRegistrationForm(UserCreationForm):
@@ -185,7 +185,7 @@ class SupplierForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'category','description', 'state', 'initial_buying_price', 'initial_selling_price',
+        fields = ['name', 'category','description', 'initial_selling_price',
                   'supplier']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Entrer le nom du produit'}),
@@ -193,12 +193,12 @@ class ProductForm(forms.ModelForm):
             'description': forms.TextInput(attrs={'placeholder': 'Entrer la description du produit'}),
             # Add 'size': 3 as needed
             # Add 'rows': 3, 'cols': 30 as needed
-            'state': forms.Select(attrs={'placeholder': 'Choisir l\'état du produit'}, choices=[
-                ('EN_VENTE', 'En vente'),
-                ('EN_REPARATION', 'En réparation')
+            # 'state': forms.Select(attrs={'placeholder': 'Choisir l\'état du produit'}, choices=[
+            #     ('EN_VENTE', 'En vente'),
+            #     ('EN_REPARATION', 'En réparation')
                 # do not include 'reparation_terminee' here
-            ]),  # Add 'size': 3 as needed
-            'initial_buying_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix d\'achat'}),
+            # ]),  # Add 'size': 3 as needed
+            # 'initial_buying_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix d\'achat'}),
             'initial_selling_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix de vente'}),
             'supplier': forms.Select(attrs={'placeholder': 'Choisir le fournisseur'}),
         }
@@ -206,8 +206,8 @@ class ProductForm(forms.ModelForm):
             'name': "",
             'category': 'Choisir la catégorie du produit',
             'description': "",
-            'state': 'Choisir l\'état du produit',
-            'initial_buying_price': "",
+            # 'state': 'Choisir l\'état du produit',
+            # 'initial_buying_price': "",
             'initial_selling_price': "",
             'supplier': "Choisir le fournisseur",
         }
@@ -222,13 +222,13 @@ class ProductForm(forms.ModelForm):
             'description': {
                 'required': "La description du produit est requise.",
             },
-            'state': {
-                'required': "Le statut du produit est requis.",
-            },
-            'initial_buying_price': {
-                'required': "Le prix d'achat est requis.",
-                'invalid': "Veuillez entrer un prix d'achat valide.",
-            },
+            # 'state': {
+            #     'required': "Le statut du produit est requis.",
+            # },
+            # 'initial_buying_price': {
+            #     'required': "Le prix d'achat est requis.",
+            #     'invalid': "Veuillez entrer un prix d'achat valide.",
+            # },
             'initial_selling_price': {
                 'required': "Le prix de vente est requis.",
                 'invalid': "Veuillez entrer un prix de vente valide.",
@@ -238,37 +238,15 @@ class ProductForm(forms.ModelForm):
             }
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.instance and self.instance.state == 'Réparation terminée':
-            # If the form is used to update an existing product and the state is 'Réparation terminée', include this
-            # state and 'En réparation' in the choices
-            self.fields['state'].choices = [('Réparation terminée', 'Réparation terminée'),
-                                            ('En réparation', 'En réparation')]
-        else:
-            # If the form is used to create a new product or the state is not 'Réparation terminée', only include the
-            # other states
-            self.fields['state'].choices = [choice for choice in Product.STATE_CHOICES if
-                                            choice[0] != 'Réparation terminée']
-
     def clean(self):
         cleaned_data = super().clean()
-        state = cleaned_data.get('state')
-        initial_buying_price = cleaned_data.get('initial_buying_price')
-        initial_selling_price = cleaned_data.get('initial_selling_price')
         supplier = cleaned_data.get('supplier')
 
-        if state == 'En vente':
-            if not initial_buying_price:
-                self.add_error('initial_buying_price',
-                               "Lorsque le produit est en vente, le prix d'achat initial est requis.")
-            if not initial_selling_price:
-                self.add_error('initial_selling_price',
-                               "Lorsque le produit est en vente, le prix de vente initial est requis.")
-            if not supplier:
-                self.add_error('supplier', "Lorsque le produit est en vente, le fournisseur est requis.")
+        if not supplier:
+            self.add_error('supplier', 'Le fournisseur est requis.')
 
         return cleaned_data
+
 
 
 class EmployeeForm(forms.ModelForm):
@@ -428,32 +406,32 @@ class RepairForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(RepairForm, self).__init__(*args, **kwargs)
-        if self.instance and self.instance.product:
-            # If the form is used to update an existing repair, include the current product in the queryset
-            self.fields['product'].queryset = Product.objects.filter(
-                Q(state='En réparation', repair__isnull=True) | Q(id=self.instance.product.id))
+        if self.instance and self.instance.hardware:
+            # If the form is used to update an existing repair, include the current hardware in the queryset
+            self.fields['hardware'].queryset = HardwareToRepair.objects.filter(
+                Q( repair__isnull=True) | Q(id=self.instance.hardware.id))
         else:
-            # If the form is used to create a new repair, only include products that are in repair and do not have a
+            # If the form is used to create a new repair, only include hardwares that are in repair and do not have a
             # related repair
-            self.fields['product'].queryset = Product.objects.filter(state='En réparation', repair__isnull=True)
-        self.fields['product'].required = True
+            self.fields['hardware'].queryset = HardwareToRepair.objects.filter(repair__isnull=True)
+        self.fields['hardware'].required = True
         self.fields['client'].required = True
 
     class Meta:
         model = Repair
-        fields = ['title','description','product','client','repair_price']
+        fields = ['title','description','hardware','client','repair_price']
         labels = {
             'title':'',
             'description':'',
             'client':'Choisir le client',
-            'product':'Choisir le produit',
+            'hardware':'Choisir le matériel à réparer',
             'repair_price':''
         }
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Entrer une courte description de la réparation'}),
             'description': forms.TextInput(attrs={'placeholder': 'Entrer une description détaillée de la réparation'}),
             'client': forms.Select(attrs={'placeholder': 'Choisir le client'}),
-            'product': forms.Select(attrs={'placeholder': 'Choisir le produit'}),
+            'hardware': forms.Select(attrs={'placeholder': 'Choisir le matériel à réparer'}),
             'repair_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix de réparation'}),
         }
 
