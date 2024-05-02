@@ -126,8 +126,8 @@
                     <th>Catégorie</th>
                     <th>État</th>
           
-                    <th>Modifier</th>
-                    <th>Supprimer</th>
+                    <th>Détaill</th>
+                  
                 </tr>
                 </thead>
                 <tbody id="tbody">
@@ -139,17 +139,13 @@
                     <td>{{ product.state }}</td>
                   
                
-
                     <td>
-                        <button class="button" id="modifier"
-                                onclick="location.href='{% url 'update-product' product.id %}';">Modifier
+                        <button class="button" id="detai"
+                                onclick="location.href='{% url 'update-product' product.id %}';">Détaill
                         </button>
                     </td>
-                    <td>
-                        <button class="button" id="supprimer"
-                                onclick="location.href='{% url 'delete-product' product.id %}';">Supprimer
-                        </button>
-                    </td>
+                  
+                    
                 </tr>
                 <!-- {% endfor %}  -->
                 </tbody>
