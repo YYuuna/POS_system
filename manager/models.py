@@ -285,7 +285,7 @@ class HardwareToRepair(models.Model):
     description = models.TextField(db_column='Description')
     state = models.CharField(max_length=20, default='En réparation', db_column='État')
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.pk} - {self.name}"
 
     class Meta:
         db_table = 'MatérielAReparer'

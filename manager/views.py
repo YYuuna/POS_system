@@ -823,7 +823,7 @@ class AddHardwareToRepairView(LoginRequiredMixin, CreateView):
     template_name = 'ajoutermat.html'  # replace with your actual template
 
     def get_success_url(self):
-        return reverse_lazy('hardware-detail', pk=self.object.pk)  # replace with your actual url name
+        return reverse_lazy('hardware-detail', kwargs={'pk': self.object.pk})  # replace with your actual url name
 
 
 class HardwareToRepairUpdateView(LoginRequiredMixin, UpdateView):
@@ -832,7 +832,7 @@ class HardwareToRepairUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'modifiermat.html'  # replace with your actual template
 
     def get_success_url(self):
-        return reverse_lazy('hardware-detail', pk=self.object.pk)  # replace with your actual url name
+        return reverse_lazy('hardware-detail', kwargs={'pk': self.object.pk})  # replace with your actual url name
 
 
 class HardwareToRepairDeleteView(LoginRequiredMixin, DeleteView):
