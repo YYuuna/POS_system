@@ -15,10 +15,10 @@ from django.urls import reverse_lazy, reverse
 from weasyprint import HTML
 
 from .models import Client, Supplier, Product, Account, Employee, PurchaseOrder, Sale, Repair, Category, SaleItem, \
-    PurchaseOrderItem
+    PurchaseOrderItem, HardwareToRepair
 from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm, AccountRegistrationForm, \
     EmployeeForm, CategoryForm, SaleForm, SaleItemFormSet, SaleItemForm, PurchaseOrderForm, PurchaseOrderItemFormSet, \
-    PurchaseOrderItemForm, RepairForm, CustomSetPasswordForm
+    PurchaseOrderItemForm, RepairForm, CustomSetPasswordForm, HardwareToRepairForm
 
 
 class AddClientView(LoginRequiredMixin, CreateView):
@@ -586,13 +586,21 @@ class AddRepairView(LoginRequiredMixin, CreateView):
     model = Repair
     template_name = 'ajouterreparation.html'
     form_class = RepairForm
-    success_url = reverse_lazy('repair-list')
+
+    def get_success_url(self):
+        return reverse('repair-detail', kwargs={'pk': self.object.pk})
 
 
 class RepairDetailView(LoginRequiredMixin, DetailView):
     model = Repair
     template_name = 'detaillreparation.html'
     context_object_name = 'repair'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        left_to_pay = self.object.repair_price - self.object.prepayment
+        context['left_to_pay'] = left_to_pay
+        return context
 
 
 class RepairUpdateView(LoginRequiredMixin, UpdateView):
@@ -602,10 +610,11 @@ class RepairUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         # Check if any data has changed and the repair is done
-        if form.has_changed() and self.object.state=='Réparation terminée':
+        if form.has_changed() and self.object.state == 'Réparation terminée':
             self.object.state = 'En cours'
             self.object.save()
         return super().form_valid(form)
+
     def get_success_url(self):
         return reverse('repair-detail', kwargs={'pk': self.object.pk})
 
@@ -657,9 +666,9 @@ class RepairFinishView(LoginRequiredMixin, View):
         repair.state = 'Réparation terminée'
         repair.save()
 
-        product = repair.product
-        product.state = 'Réparation terminée'
-        product.save()
+        hardware = repair.hardware
+        hardware.state = 'Réparation terminée'
+        hardware.save()
         # Display a success message in french and redirect to the repair detail view
         messages.success(request, "La réparation a été terminée avec succès.")
         return redirect('repair-detail', pk=repair.pk)
@@ -705,7 +714,8 @@ class SaleInvoiceView(View):
 
         return response
 
-class PurchaseOrderInvoiceView(LoginRequiredMixin,View):
+
+class PurchaseOrderInvoiceView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         purchase_order = get_object_or_404(PurchaseOrder, id=self.kwargs['pk'])
         purchase_order_items = PurchaseOrderItem.objects.filter(purchase_order=purchase_order)
@@ -746,23 +756,115 @@ class PurchaseOrderInvoiceView(LoginRequiredMixin,View):
         return response
 
 
-class RepairInvoiceView(LoginRequiredMixin,View):
+class RepairInvoiceView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         repair = get_object_or_404(Repair, id=self.kwargs['pk'])
+        left_to_pay = repair.repair_price - repair.prepayment
 
         # Check if the repair is done
-        # if repair.state != 'Réparation terminée': 
-            # messages.error(request, "La réparation n'est pas encore terminée. Vous ne pouvez pas imprimer la facture.")
-            # return redirect('repair-detail', pk=repair.pk)
-
+        if repair.state != 'Réparation terminée':
+            messages.error(request, "La réparation n'est pas encore terminée. Vous ne pouvez pas imprimer la facture.")
+            return redirect('repair-detail', pk=repair.pk)
 
         data = {
             'repair': repair,
+            'left_to_pay': left_to_pay,
+            # include any other data you need in the template
+        }
+
+        # set the repair delivery date to now if it is not set yet
+        if not repair.delivery_date:
+            repair.delivery_date = timezone.now()
+            repair.save()
+
+        # Rendered html content as a string
+        html_string = render_to_string('facturereparation.html', data)
+
+        # Create a WeasyPrint HTML object and write it to PDF
+        html = HTML(string=html_string)
+        pdf_content = BytesIO()
+        html.write_pdf(target=pdf_content)
+
+        # Rewind the BytesIO object to the start
+        pdf_content.seek(0)
+
+        # Create a Django response object, and specify content_type as pdf
+        response = FileResponse(pdf_content, content_type='application/pdf')
+
+        # Otherwise, set it to "inline"
+        response['Content-Disposition'] = 'inline'
+
+        return response
+
+
+class HardwareToRepairListView(LoginRequiredMixin, ListView):
+    model = HardwareToRepair
+    template_name = 'listemat.html'  # replace with your actual template
+    context_object_name = 'hardwares'
+    paginate_by = 7
+    form_class = FilterForm
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(id=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = FilterForm(self.request.GET)
+        return context
+
+
+class AddHardwareToRepairView(LoginRequiredMixin, CreateView):
+    model = HardwareToRepair
+    form_class = HardwareToRepairForm
+    template_name = 'ajoutermat.html'  # replace with your actual template
+
+    def get_success_url(self):
+        return reverse_lazy('hardware-detail', pk=self.object.pk)  # replace with your actual url name
+
+
+class HardwareToRepairUpdateView(LoginRequiredMixin, UpdateView):
+    model = HardwareToRepair
+    form_class = HardwareToRepairForm
+    template_name = 'modifiermat.html'  # replace with your actual template
+
+    def get_success_url(self):
+        return reverse_lazy('hardware-detail', pk=self.object.pk)  # replace with your actual url name
+
+
+class HardwareToRepairDeleteView(LoginRequiredMixin, DeleteView):
+    model = HardwareToRepair
+    template_name = 'supprimermat.html'  # replace with your actual template
+    success_url = reverse_lazy('hardware-list')  # replace with your actual url name
+
+
+class HardwareToRepairDetailView(LoginRequiredMixin, DetailView):
+    model = HardwareToRepair
+    template_name = 'detaillmat.html'  # replace with your actual template
+    context_object_name = 'hardware'  # replace with your actual context object name
+
+
+class RepairReceiptView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        repair = get_object_or_404(Repair, id=self.kwargs['pk'])
+        left_to_pay = repair.repair_price - repair.prepayment
+
+        # check if the hardware is delivered , if it is then redirect to repair details page with error message
+        if repair.delivery_date:
+            messages.error(request, "Le matériel est déja livré . Vous ne pouvez pas imprimer le bon de réparation.")
+            return redirect('repair-detail', pk=repair.pk)
+
+        data = {
+            'repair': repair,
+            'left_to_pay': left_to_pay,
             # include any other data you need in the template
         }
 
         # Rendered html content as a string
-        html_string = render_to_string('facturereparation.html', data)
+        html_string = render_to_string('bonreparation.html', data)
 
         # Create a WeasyPrint HTML object and write it to PDF
         html = HTML(string=html_string)

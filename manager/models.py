@@ -233,6 +233,7 @@ class Repair(models.Model):
     deposit_date = models.DateField(auto_now_add=True, db_column='Date de dépôt')
     delivery_date = models.DateField(null=True, blank=True, db_column='Date de remise')
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True, db_column='Client')
+    prepayment = models.PositiveIntegerField(db_column='Acompte',default=0)
     repair_price = models.PositiveIntegerField(db_column='Prix de réparation',default=0)
 
     # Other fields...
@@ -280,10 +281,11 @@ class Employee(models.Model):
 
 class HardwareToRepair(models.Model):
     name = models.CharField(max_length=100, db_column='Nom')
+    category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default=1, db_column='Catégorie')
     description = models.TextField(db_column='Description')
     state = models.CharField(max_length=20, default='En réparation', db_column='État')
     def __str__(self):
-        return f"Hardware for Repair #{self.repair.pk} - Hardware: {self.name}"
+        return f"{self.name}"
 
     class Meta:
         db_table = 'MatérielAReparer'

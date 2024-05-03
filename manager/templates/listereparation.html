@@ -119,9 +119,9 @@
                     <th>Id</th>
                     <th>Titre</th>
                     <th>Client</th>
-                    <th>Produit</th>
+                    <th>Matériel</th>
                     <th>Prix</th>
-                    <th>Date</th>
+                    <th>Date de dépot</th>
                     <th>État</th>
                     <th>Détail</th>
                     <!-- <th>Modifier</th>  -->
@@ -132,9 +132,9 @@
                     <td>{{ repair.id }}</td>
                     <td>{{ repair.title }}</td>
                     <td>{{ repair.client }}</td>
-                    <td>{{ repair.product }}</td>
+                    <td>{{ repair.hardware }}</td>
                     <td>{{ repair.repair_price }}</td>
-                    <td>{{ repair.repair_date }}</td>
+                    <td>{{ repair.deposit_date }}</td>
                     <td>{{ repair.state }}</td>
                     <td>
                         <button class="button" id="detai" onclick="location.href='{% url 'repair-detail' repair.id %}';">Détails</button>
