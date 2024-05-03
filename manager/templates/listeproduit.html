@@ -125,7 +125,7 @@
                     <th>Nom</th>
                     <th>Catégorie</th>
                     <!-- <th>Description</th>-->
-                    <th>État</th>
+
                     <th>Quantité</th>
                     <!-- <th>Prix d'achat</th>  -->
                     <th>Prix de vente</th>
@@ -141,16 +141,12 @@
                     <td>{{ product.id }}</td>
                     <td>{{ product.name }}</td>
                     <td>{{ product.category }}</td>
-                    <td>{{ product.state }}</td>
-                    {% if product.state == "En vente" %}
+
+
                     <td>{{ product.quantity }}</td>
                     <!-- <td>{{ product.initial_buying_price }}</td>  -->
                     <td>{{ product.initial_selling_price }}</td>
                     <!-- <td>{{ product.supplier }}</td>  -->
-                    {% else %}
-                    <td></td>
-                    <td></td>
-                    {% endif %}
                
                     <td>
                         <button class="button" id="detai"

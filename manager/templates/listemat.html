@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
-    <title>Liste des produits</title>
+    <title>Liste des matériels à réparer</title>
 </head>
 <body>
 <div class="corp">
@@ -99,7 +99,7 @@
     <div class="liste">
         <div class="c1">
 
-            <div class="colone1"><h3>Liste de matériel a reparer</h3></div>
+            <div class="colone1"><h3>Liste des matériels à réparer</h3></div>
 
             <div class="colone1">
                 <form method="GET" action="">
@@ -109,7 +109,7 @@
             </div>
 
             <div class="colone1">
-                <button class="button"><a href="{% url 'add-product' %}" class="link">Ajouter matériel</a></button>
+                <button class="button"><a href="{% url 'add-hardware' %}" class="link">Ajouter matériel</a></button>
             </div>
            
            
@@ -117,7 +117,7 @@
         </div>
 
         <div class="c2">
-            {% if products %}
+            {% if hardwares %}
             <table>
                 <thead>
                 <tr>
@@ -126,33 +126,34 @@
                     <th>Catégorie</th>
                     <th>État</th>
           
-                    <th>Détaill</th>
+                    <th>Détails</th>
                   
                 </tr>
                 </thead>
                 <tbody id="tbody">
-                <!-- {% for product in products %}  -->
+                 {% for hardware in hardwares %}
                 <tr>
-                    <td>{{ product.id }}</td>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.category }}</td>
-                    <td>{{ product.state }}</td>
+                    <td>{{ hardware.id }}</td>
+                    <td>{{ hardware.name }}</td>
+                    <td>{{ hardware.category }}</td>
+
+                    <td>{{ hardware.state }}</td>
                   
                
                     <td>
                         <button class="button" id="detai"
-                                onclick="location.href='{% url 'update-product' product.id %}';">Détaill
+                                onclick="location.href='{% url 'hardware-detail' hardware.id %}';">Détails
                         </button>
                     </td>
                   
                     
                 </tr>
-                <!-- {% endfor %}  -->
+                 {% endfor %}
                 </tbody>
             </table>
-            <!-- {% else %}  -->
-            <!-- <p>Pas de produits trouvés.</p>  -->
-            <!-- {% endif %}  -->
+             {% else %}
+             <p>Pas de matériels à réparer trouvés.</p>
+             {% endif %}
             <div class="pagination">
                 <span class="step-links">
                     {% if page_obj.has_previous %}

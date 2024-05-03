@@ -1,5 +1,3 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -96,12 +94,15 @@
         <p><strong> IdRéparation :{{repair.id}}</strong></p>
         <p>Titre : {{repair.title}}</p>
         <p>Description : {{repair.description}}</p>
-        <p>Id Produit : {{repair.product.id}}</p>
-        <p>Produit : {{repair.product}}</p>
-        <p>Date de réparation : {{repair.repair_date}}</p>
-        <p>Client : {{repair.client}}</p>
-        <p>Prix : {{repair.repair_price}} DA</p>
-        <p>Verssement : </p>
+        <p>Id matériel : {{repair.hardware.id}}</p>
+        <p>Matériel : {{repair.hardware}}</p>
+        <p>Description du matériel : {{repair.hardware.description}}</p>
+        <p>Date de dépôt : {{repair.deposit_date}}</p>
+        <p>Client : {{repair.client.id}} - {{repair.client}}</p>
+        <p>Acompte : {{repair.prepayment }} DA</p>
+        <p>Prix de réparation : {{repair.repair_price}} DA</p>
+        <p>Reste à payer : {{left_to_pay}} DA</p>
+
 
 
     </div>

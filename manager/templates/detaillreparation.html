@@ -123,19 +123,22 @@
                     Supprimer
                 </button>
             </div>
+            {% if repair.state == 'Réparation terminée' %}
             <div>
                 <!-- <button id="imprimer" onclick="imprimerPartie()">Imprimer</button>  -->
-                <button id="imprimer" onclick="printPDF();">Imprimer facture</button>
+                <button id="imprimer" onclick="printInvoicePDF();">Imprimer facture</button>
             </div>
-          
+            {% else %}
             <div>
-            {% if repair.state == 'En cours' %}
+                <button id="imprimer" onclick="printReceiptPDF();">Imprimer bon de réparation</button>
+            </div>
+            <div>
             <form method="post" action="{% url 'finish-repair' repair.pk %}">
-                {% csrf_token %}
-                <input id="livrer" type="submit" value="Terminer">
+                    {% csrf_token %}
+                    <input id="livrer" type="submit" value="Terminer">
             </form>
+            </div>
             {% endif %}
-           </div>
 
         </div>
 
@@ -144,11 +147,14 @@
             <p>Titre : {{repair.title}}</p><br>
             <p>Description : {{repair.description}}</p><br>
             <p>État : {{repair.state}}</p><br>
-            <p>Id Produit : {{repair.product.id}}</p><br>
-            <p>Produit : {{repair.product}}</p><br>
-            <p>Date de réparation : {{repair.repair_date}}</p><br>
-            <p>Client : {{repair.client}}</p><br>
-            <p>Prix : {{repair.repair_price}} DA</p>
+            <p>Id matériel : {{repair.hardware.id}}</p><br>
+            <p>Matériel : {{repair.hardware}}</p><br>
+            <p>Date de dépôt : {{repair.deposit_date}}</p><br>
+            <p>Date de remise : {% if repair.delivery_date %} {{repair.delivery_date}} {% else %} Le matériel n'a pas encore été remis .{% endif %}</p><br>
+            <p>Client : {{repair.client.id}} - {{repair.client}}</p><br>
+            <p>Acompte : {{repair.prepayment }} DA</p><br>
+            <p>Prix de réparation : {{repair.repair_price}} DA</p><br>
+            <p>Reste à payer : {{left_to_pay}} DA</p><br>
 
         </div>
 
@@ -159,11 +165,17 @@
 </div>
 
 <script>
-    function printPDF() {
+    function printInvoicePDF() {
         // Open the PDF in a new window
-        var win = window.open('{% url 'repair-invoice' repair.id %}', '_blank'
-    )
-        ;
+        var win = window.open('{% url 'repair-invoice' repair.id %}', '_blank');
+        // Wait for the PDF to load, then call the print function
+        win.onload = function () {
+            win.print();
+        }
+    }
+    function printReceiptPDF() {
+        // Open the PDF in a new window
+        var win = window.open('{% url 'repair-receipt' repair.id %}', '_blank');
         // Wait for the PDF to load, then call the print function
         win.onload = function () {
             win.print();

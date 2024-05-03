@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
-    <title>Modifier matériel</title>
+    <title>Modifier le matériel à réparer</title>
 
 </head>
 <body>
@@ -104,16 +104,11 @@
         <form action="" class="form" method="post">
 
             <div class="titre">
-                <h3>Modifier le matériel a reparer</h3>
+                <h3>Modifier le matériel à réparer</h3>
             </div>
             <br>
 
             <div class="box">
-<!--                 <input  class="input">-->
-<!--                 <input  class="input" >-->
-<!--                 <input  class="input"    >-->
-<!--                 <input  class="input" >-->
-<!--                 <input  class="input"  > -->
                 {% csrf_token %}
                 {{ form }}
             </div>
@@ -125,9 +120,6 @@
 
 
 </div>
-
-<script src="{% static 'js/jquery-3.7.1.js' %}"></script>
-<script src="{% static 'js/sale-fields-display.js' %}"></script>
 
 </body>
 </html>

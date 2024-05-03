@@ -406,7 +406,7 @@ class RepairForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(RepairForm, self).__init__(*args, **kwargs)
-        if self.instance and self.instance.hardware:
+        if self.instance.pk and self.instance.hardware:
             # If the form is used to update an existing repair, include the current hardware in the queryset
             self.fields['hardware'].queryset = HardwareToRepair.objects.filter(
                 Q( repair__isnull=True) | Q(id=self.instance.hardware.id))
@@ -417,14 +417,30 @@ class RepairForm(forms.ModelForm):
         self.fields['hardware'].required = True
         self.fields['client'].required = True
 
+    #check if the prepayment is lower then the repair price
+    def clean(self):
+        cleaned_data = super().clean()
+        prepayment = cleaned_data.get('prepayment')
+        repair_price = cleaned_data.get('repair_price')
+
+        if prepayment and repair_price:
+            if prepayment > repair_price:
+                raise ValidationError({
+                    'prepayment': ValidationError(
+                        "L'avance ne peut pas être supérieure au prix de réparation.",
+                        code='invalid'
+                    )
+                })
+        return cleaned_data
     class Meta:
         model = Repair
-        fields = ['title','description','hardware','client','repair_price']
+        fields = ['title','description','hardware','client','prepayment','repair_price']
         labels = {
             'title':'',
             'description':'',
             'client':'Choisir le client',
             'hardware':'Choisir le matériel à réparer',
+            'prepayment':'',
             'repair_price':''
         }
         widgets = {
@@ -432,10 +448,25 @@ class RepairForm(forms.ModelForm):
             'description': forms.TextInput(attrs={'placeholder': 'Entrer une description détaillée de la réparation'}),
             'client': forms.Select(attrs={'placeholder': 'Choisir le client'}),
             'hardware': forms.Select(attrs={'placeholder': 'Choisir le matériel à réparer'}),
+            'prepayment': forms.NumberInput(attrs={'placeholder': 'Entrer le montant de l\'avance'}),
             'repair_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix de réparation'}),
         }
 
 
+class HardwareToRepairForm(forms.ModelForm):
+    class Meta:
+        model = HardwareToRepair
+        fields = ['name','category','description']
+        labels = {
+            'name':'',
+            'category':'Choisir la catégorie du matériel',
+            'description':''
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Entrer le nom du matériel'}),
+            'category': forms.Select(attrs={'placeholder': 'Choisir la catégorie du matériel'}),
+            'description': forms.TextInput(attrs={'placeholder': 'Entrer une description du matériel'}),
+        }
 
 
 class CustomSetPasswordForm(SetPasswordForm):
