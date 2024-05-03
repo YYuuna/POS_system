@@ -103,7 +103,7 @@
     <div class="element" id="rep">
 
         <p><strong> Id Réparation :{{repair.id}}</strong></p>
-        <p>Titre : {{repair.title}}</p>
+        <!-- <p>Titre : {{repair.title}}</p>  -->
         <p>Description : {{repair.description}}</p>
         <p>Id matériel : {{repair.hardware.id}}</p>
         <p>Matériel : {{repair.hardware}}</p>
@@ -111,8 +111,8 @@
         <p>Date de dépot : {{repair.deposit_date}}</p>
         <p>Date de remise : {{repair.delivery_date}}</p>
         <p>Client : {{repair.client.id}} - {{repair.client}}</p>
-        <p>Acompte : {{repair.prepayment }} DA</p>
         <p>Prix de réparation : {{repair.repair_price}} DA</p>
+        <p>Verssement : {{repair.prepayment }} DA</p>
         <p>Reste à payer : {{left_to_pay}} DA</p>
 
     </div>

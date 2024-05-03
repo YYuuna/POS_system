@@ -130,7 +130,7 @@
             </div>
             {% else %}
             <div>
-                <button id="imprimer" onclick="printReceiptPDF();">Imprimer bon de réparation</button>
+                <button id="imprimer" onclick="printReceiptPDF();">Imprimer bon</button>
             </div>
             <div>
             <form method="post" action="{% url 'finish-repair' repair.pk %}">
@@ -144,7 +144,7 @@
 
         <div class="c22" id="partieImprimer">
             <p><strong> IdRéparation :{{repair.id}}</strong></p> <br>
-            <p>Titre : {{repair.title}}</p><br>
+            <!-- <p>Titre : {{repair.title}}</p><br>  -->
             <p>Description : {{repair.description}}</p><br>
             <p>État : {{repair.state}}</p><br>
             <p>Id matériel : {{repair.hardware.id}}</p><br>
@@ -152,8 +152,8 @@
             <p>Date de dépôt : {{repair.deposit_date}}</p><br>
             <p>Date de remise : {% if repair.delivery_date %} {{repair.delivery_date}} {% else %} Le matériel n'a pas encore été remis .{% endif %}</p><br>
             <p>Client : {{repair.client.id}} - {{repair.client}}</p><br>
-            <p>Acompte : {{repair.prepayment }} DA</p><br>
             <p>Prix de réparation : {{repair.repair_price}} DA</p><br>
+            <p>Verssement : {{repair.prepayment }} DA</p><br>
             <p>Reste à payer : {{left_to_pay}} DA</p><br>
 
         </div>

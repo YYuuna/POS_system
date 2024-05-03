@@ -448,7 +448,7 @@ class RepairForm(forms.ModelForm):
             'description': forms.TextInput(attrs={'placeholder': 'Entrer une description détaillée de la réparation'}),
             'client': forms.Select(attrs={'placeholder': 'Choisir le client'}),
             'hardware': forms.Select(attrs={'placeholder': 'Choisir le matériel à réparer'}),
-            'prepayment': forms.NumberInput(attrs={'placeholder': 'Entrer le montant de l\'avance'}),
+            'prepayment': forms.NumberInput(attrs={'placeholder': 'Entrer le verssement'}),
             'repair_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix de réparation'}),
         }
 
