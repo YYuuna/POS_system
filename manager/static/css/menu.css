@@ -63,30 +63,3 @@ body{
     transition: all 250ms;
     overflow: hidden;
 }
-
-
-.logoutbtn{
-
-   
-    
-     width: 64%;
-    font-weight: 600;
-    height: 30px;
-    border-radius:10px ;
-    border: none;
-    cursor: pointer;
-    background:#030d146a;
-    color: white;
-    transition: 0.7s;  
-}
-
-.logoutbtn:hover{
-        letter-spacing: 1px;
-        background: #04121c;
-       
-}
-    
-    
-.logoutbtn:focus{
-        transform: scale(1.1);
-}
