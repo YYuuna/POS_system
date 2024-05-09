@@ -64,7 +64,7 @@ body{
     transition: all 250ms;
     overflow: hidden;
 }
-/* footer */
+/* footer 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
 
 
@@ -80,10 +80,10 @@ footer  {
 .footer {
   position: relative;
   width: 100%;
-    /* background: #3586ff6c;    */
+   
     background: #11111170;   
   min-height: 10px;
-  /* padding: 20px 50px;  */
+ 
   margin-top: 29px;
   display: flex;
   justify-content: center;
@@ -109,7 +109,6 @@ footer  {
 }
 
 .social-icon__link {
-  /* font-size: 2rem; */
   font-size: 1.7rem;
   color: #fff;
   margin: 0 10px;
@@ -125,7 +124,6 @@ footer  {
 .footer p {
   color: #fff;
   margin: 15px 0 10px 0;
-  /* font-size: 1rem; */
   font-size: 13px;
   font-weight: 200;
 }
@@ -185,3 +183,7 @@ footer  {
     background-positon-x: 0px;
   }
 }
+
+
+
+*/

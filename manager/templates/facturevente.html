@@ -29,8 +29,8 @@
         }
 
         .element {
-            padding-left: 5%;
-            padding-right: 5%;
+            padding-left: 4%;
+            padding-right: 4%;
             /* background-color:rgba(137, 43, 226, 0.347);  */
         }
 
@@ -62,7 +62,7 @@
 
         table {
             background-color: #6665652c;
-            width: 100%;
+            width: 103%;
             text-align: center;
             margin: 5px 0;
             border-radius: 10px;
@@ -73,7 +73,9 @@
         }
 
         th, td {
-            padding: 2px;
+            /* padding: 2px; */
+            padding-left: 4px;
+            padding-right: 4px;
         }
     </style>
 
@@ -85,9 +87,9 @@
 <div id="partieImprimer" class="printable-content">
     <div class="logo">
         <h2>ProTech</h2>
-        <p><strong>Adresse : </strong>CITE 08 MAI 45 BT N° 20, BAB-EZZOUAR, ALGER </p>
-        <p><strong>Code postal : </strong>16024</p>
-        <p><strong>Tel : </strong> 023 95 01 00 </p>
+        <p>&nbsp;<strong>Adresse : </strong>CITE 08 MAI 45 BT N° 20, BAB-EZZOUAR, ALGER </p>
+        <p>&nbsp;<strong>Code postal : </strong>16024</p>
+        <p>&nbsp;<strong>Tel : </strong> 023 95 01 00 </p>
     </div>
     <div class="titre"><h1>Facture de vente </h1></div><br>
 
@@ -98,7 +100,7 @@
         <p>Date de vente : {{sale.sale_date}}</p>
 
         {% if sale_items_exist %}
-        <h3>Les articles de vente :</h3>
+        <h3>Les articles de la vente :</h3>
         <table>
             <thead>
             <tr>
@@ -129,12 +131,14 @@
         <p><strong> Paiement total de la vente : {{ sale_total }} DA </strong></p>
 
 
-    </div>
 
+    </div> <br>
 
+    <p>---------------------------------------------------------------<br>&nbsp;&nbsp;&nbsp;&nbsp; En cas de besoin d'échange ou remboursement veuillez &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;présenter ce bon à notre équipe. <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Merci pour votre fidélité !  <br> ---------------------------------------------------------------</p>
+    <br>
     <div class="sig">
 
-        <div ><p><strong> Signateur de client :</strong></p></div>
+        <!-- <div ><p><strong> Signateur de client :</strong></p></div>  -->
        
 
         <div class="cachet"><p><strong> Cachet de l'entreprise :</strong></p></div>
