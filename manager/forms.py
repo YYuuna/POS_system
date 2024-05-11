@@ -307,7 +307,6 @@ class SaleItemForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.sale = kwargs.pop('sale', None)  # Get the 'sale' argument
         super().__init__(*args, **kwargs)
-        self.fields['product'].queryset = Product.objects.filter(state='En vente')
         self.fields['product'].widget.attrs.update({'class': 'product-select'})
         self.fields['sale_price'].widget.attrs.update({'class': 'sale-price-input'})
 
@@ -369,18 +368,16 @@ class PurchaseOrderItemForm(forms.ModelForm):
     submitted_products=[]
     class Meta:
         model = PurchaseOrderItem
-        fields = ['product', 'quantity', 'purchase_price']
+        fields = ['product', 'quantity']
         labels = {
             'product': 'Produit',
-            'quantity': 'Quantité',
-            'purchase_price': 'Prix unitaire'
+            'quantity': 'Quantité'
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['product'].queryset = Product.objects.filter(state='En vente')
         self.fields['product'].widget.attrs.update({'class': 'product-select'})
-        self.fields['purchase_price'].widget.attrs.update({'class': 'purchase-price-input'})
+        #self.fields['purchase_price'].widget.attrs.update({'class': 'purchase-price-input'})
 
     def clean(self):
         cleaned_data = super().clean()
@@ -401,6 +398,27 @@ class PurchaseOrderItemForm(forms.ModelForm):
         return cleaned_data
 
 PurchaseOrderItemFormSet = inlineformset_factory(PurchaseOrder, PurchaseOrderItem, form=PurchaseOrderItemForm, can_delete=True, extra=1)
+
+class PurchaseOrderItemDeliveredForm(forms.ModelForm):
+    product = forms.CharField(disabled=True)
+    quantity = forms.IntegerField(disabled=True)
+
+    class Meta:
+        model = PurchaseOrderItem
+        fields = ['product', 'quantity', 'purchase_price']
+        labels = {
+            'product': 'Produit',
+            'quantity': 'Quantité',
+            'purchase_price': 'Prix unitaire'
+        }
+
+PurchaseOrderItemDeliveredFormSet = forms.inlineformset_factory(
+    PurchaseOrder,
+    PurchaseOrderItem,
+    form=PurchaseOrderItemDeliveredForm,
+    extra=0,
+    can_delete=False
+)
 
 class RepairForm(forms.ModelForm):
 
@@ -448,7 +466,7 @@ class RepairForm(forms.ModelForm):
             'description': forms.TextInput(attrs={'placeholder': 'Entrer une description détaillée de la réparation'}),
             'client': forms.Select(attrs={'placeholder': 'Choisir le client'}),
             'hardware': forms.Select(attrs={'placeholder': 'Choisir le matériel à réparer'}),
-            'prepayment': forms.NumberInput(attrs={'placeholder': 'Entrer le verssement'}),
+            'prepayment': forms.NumberInput(attrs={'placeholder': 'Entrer l\'avance'}),
             'repair_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix de réparation'}),
         }
 
