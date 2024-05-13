@@ -116,6 +116,9 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    def form_field_representation(self):
+        return f"{self.id} - {self.name}"
+
     class Meta:
         db_table = 'Produit'
         verbose_name = _('Produit')
@@ -140,7 +143,7 @@ class PurchaseOrderItem(models.Model):
     purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, db_column='Commande')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, db_column='Produit')
     quantity = models.PositiveIntegerField(db_column='Quantité', validators=[MinValueValidator(1, message="La quantité doit être supérieure à 0")])
-    purchase_price = models.PositiveIntegerField(db_column='Prix d\'achat')  # Dynamic price for purchase order
+    purchase_price = models.PositiveIntegerField(null=True,blank=True,db_column='Prix d\'achat')  # Dynamic price for purchase order
 
     # Other fields...
 
@@ -285,7 +288,10 @@ class HardwareToRepair(models.Model):
     description = models.TextField(db_column='Description')
     state = models.CharField(max_length=20, default='En réparation', db_column='État')
     def __str__(self):
-        return f"{self.pk} - {self.name}"
+        return f"{self.name}"
+
+    def form_field_representation(self):
+        return f"{self.id} - {self.name}"
 
     class Meta:
-        db_table = 'MatérielAReparer'
+        db_table = 'MatérielARéparer'

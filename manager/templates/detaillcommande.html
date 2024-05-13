@@ -139,14 +139,12 @@
                 </button>
             </div>
 
-            <div> 
-                {% if not purchase_order.delivery_date and purchase_order_items_exist %}
-                <form method="post" action="{% url 'deliver-purchase-order' pk=purchase_order.pk %}">
-                    {% csrf_token %}
-                    <input type="submit" id="livrer" value="Livrer" class="btn btn-primary">
-                </form>
-                {% endif %}
+            {% if not purchase_order.delivery_date and purchase_order_items_exist %}
+            <div>
+                <button id="livrer"  onclick="location.href='{% url 'deliver-purchase-order' pk=purchase_order.pk %}';">Livrer</button>
             </div>
+            {% endif %}
+
         </div>
 
         <div class="c22" id="partieImprimer">
@@ -171,8 +169,10 @@
                     <th>Id Produit</th>
                     <th>Nom de produit</th>
                     <th>Quantité</th>
-                    <!-- <th>Prix</th>  -->
-                    <!-- <th>Total</th>  -->
+                    {% if purchase_order.delivery_date %}
+                     <th>Prix</th>
+                     <th>Total</th>
+                    {% endif %}
                 </tr>
                 </thead>
                 <tbody>
@@ -182,8 +182,10 @@
                     <td>{{ item.product.id }}</td>
                     <td>{{ item.product.name }}</td>
                     <td>{{ item.quantity }}</td>
-                    <!-- <td>{{ item.purchase_price }} DA</td> -->
-                    <!-- <td id="total"> {{ total }} DA</td> -->
+                    {% if purchase_order.delivery_date %}
+                     <td>{{ item.purchase_price }} DA</td>
+                     <td id="total"> {{ total }} DA</td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -191,8 +193,9 @@
             {% else %}
             <h3>Aucun article trouvé .</h3>
             {% endif %}
-            <!-- <p><strong>Paiement total de la commande : {{ purchase_order_total }} DA</strong></p>  -->
-
+            {% if purchase_order.delivery_date %}
+             <p><strong>Paiement total de la commande : {{ purchase_order_total }} DA</strong></p>
+            {% endif %}
 
         </div>
 

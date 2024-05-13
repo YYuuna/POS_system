@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
-    <title>Prix</title>
+    <title>Insertion des prix d'achat</title>
 
 </head>
 <body>
@@ -121,19 +121,60 @@
         
 
                 <div class="titre">
-                    <h3>Prix </h3>
+                    <h3>Insertion des prix d'achat </h3>
                 </div>
+
+            <form method="POST" action="" class="form">
+                {% if form.non_form_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_form_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <br>
+            <div class="boxvente">
+                {% csrf_token %}
+                {{ form.management_form }}
+                {{ form.non_form_errors.as_ul }}
+                <table id="formset" class="form">
+                    {% for item_form in form %}
+                    {% if forloop.first %}
+                    <thead>
+                    <tr>
+                        {% for field in item_form.visible_fields %}
+                        <th>{{ field.label|capfirst }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+
+                    {% endif %}
+                    <tr class="{% cycle row1 row2 %} purchase-order-item">
+                        {% for field in item_form.visible_fields %}
+                        <td >
+                            {# Include the hidden fields in the form #}
+                            {% if forloop.first %}
+                            {% for hidden in item_form.hidden_fields %}
+                            {{ hidden }}
+                            {% endfor %}
+                            {% endif %}
+                            {{ field.errors.as_ul }}
+                            {{ field }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <input class="button" id="valider" type="submit" value="Valider">
+        </form>
                 
 
 
 
                 
                 
-                <input type="text" placeholder="Entrer le prix d'achat">
-            
-                <button class="button" 
-                        onclick="location.href='{% url 'client-list'%}';">valider
-                </button>
+
 
         </div>
     </div>

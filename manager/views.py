@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
 from django.contrib import messages
-from django.http import JsonResponse, Http404, FileResponse
+from django.http import JsonResponse, Http404, FileResponse, HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views import View
@@ -18,7 +18,7 @@ from .models import Client, Supplier, Product, Account, Employee, PurchaseOrder,
     PurchaseOrderItem, HardwareToRepair
 from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductForm, AccountRegistrationForm, \
     EmployeeForm, CategoryForm, SaleForm, SaleItemFormSet, SaleItemForm, PurchaseOrderForm, PurchaseOrderItemFormSet, \
-    PurchaseOrderItemForm, RepairForm, CustomSetPasswordForm, HardwareToRepairForm
+    PurchaseOrderItemForm, RepairForm, CustomSetPasswordForm, HardwareToRepairForm, PurchaseOrderItemDeliveredFormSet
 
 
 class AddClientView(LoginRequiredMixin, CreateView):
@@ -507,6 +507,7 @@ class PurchaseOrderUpdateView(LoginRequiredMixin, FormView):
         kwargs = super().get_form_kwargs()
         kwargs['instance'] = self.purchase_order
         kwargs['queryset'] = PurchaseOrderItem.objects.filter(purchase_order=self.purchase_order)
+        kwargs['form_kwargs'] = {'purchase_order': self.purchase_order}  # Pass the PurchaseOrder instance to the form
         return kwargs
 
     def form_valid(self, form):
@@ -560,13 +561,18 @@ class PurchaseOrderDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        delivery_date = self.object.delivery_date
         purchase_order_items = PurchaseOrderItem.objects.filter(purchase_order=self.object)
-        context[
-            'purchase_order_items_exist'] = purchase_order_items.exists()  # Check if there are any purchase order items
-        # Calculate the total for each item
-        item_totals = [item.purchase_price * item.quantity for item in purchase_order_items]
-        # Calculate the total for the purchase order
-        purchase_order_total = sum(item_totals)
+        context['purchase_order_items_exist'] = purchase_order_items.exists()  # Check if there are any purchase order items
+        if delivery_date:
+            # Calculate the total for each item
+            item_totals = [item.purchase_price * item.quantity for item in purchase_order_items]
+            # Calculate the total for the purchase order
+            purchase_order_total = sum(item_totals)
+        else:
+            item_totals = [0 for item in purchase_order_items]
+            purchase_order_total = None
+
         context['purchase_order_items'] = zip(purchase_order_items, item_totals)  # Pass both the items and their totals
         context['purchase_order_total'] = purchase_order_total
         return context
@@ -580,6 +586,41 @@ class ProductInitialPurchasePriceView(LoginRequiredMixin, View):
             return JsonResponse({'initial_buying_price': product.initial_buying_price})
         except Product.DoesNotExist:
             raise Http404("Product does not exist")
+
+class PurchaseOrderDeliverView(LoginRequiredMixin, FormView):
+    template_name = 'prix.html'  # replace with your actual template
+    form_class = PurchaseOrderItemDeliveredFormSet
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        self.purchase_order = get_object_or_404(PurchaseOrder, id=self.kwargs['pk'])
+        kwargs['instance'] = self.purchase_order
+        return kwargs
+
+    def form_valid(self, form):
+        instances = form.save()
+        for instance in instances:
+            instance.product.quantity += instance.quantity  # Increase the product quantity
+            instance.product.save()
+        self.purchase_order.delivery_date = timezone.now()
+        self.purchase_order.save()
+        return super().form_valid(form)
+
+    def get(self, request, *args, **kwargs):
+        self.purchase_order = get_object_or_404(PurchaseOrder, id=self.kwargs['pk'])
+        if self.purchase_order.delivery_date:
+            messages.error(request, "La commande est déjà livrée.")
+            return redirect('purchase-order-detail', pk=self.purchase_order.pk)
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.purchase_order = get_object_or_404(PurchaseOrder, id=self.kwargs['pk'])
+        if self.purchase_order.delivery_date:
+            messages.error(request, "La commande est déjà livrée.")
+            return redirect('purchase-order-detail', pk=self.purchase_order.pk)
+        return super().post(request, *args, **kwargs)
+    def get_success_url(self):
+        return reverse_lazy('purchase-order-detail', kwargs={'pk': self.purchase_order.pk})
 
 
 class AddRepairView(LoginRequiredMixin, CreateView):
@@ -628,28 +669,6 @@ class RepairDeleteView(LoginRequiredMixin, DeleteView):
 class CustomLogoutView(LoginRequiredMixin, LogoutView):
     next_page = 'login'
 
-
-class PurchaseOrderDeliverView(LoginRequiredMixin, View):
-    def post(self, request, *args, **kwargs):
-        order = get_object_or_404(PurchaseOrder, pk=kwargs['pk'])
-
-        # Check if the order is already delivered
-        if order.delivery_date is not None:
-            # Display an error message in french and redirect to the purchase order detail view
-            messages.error(request, "La commande est déjà livrée.")
-            return redirect('purchase-order-detail', pk=order.pk)
-
-        order.delivery_date = timezone.now()
-        order.save()
-
-        for item in order.purchaseorderitem_set.all():
-            product = item.product
-            product.quantity += item.quantity
-            product.save()
-
-        # Display a success message in french and redirect to the purchase order detail view
-        messages.success(request, "La commande a été livrée avec succès.")
-        return redirect('purchase-order-detail', pk=order.pk)
 
 
 class RepairFinishView(LoginRequiredMixin, View):

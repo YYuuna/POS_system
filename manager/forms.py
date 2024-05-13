@@ -308,6 +308,7 @@ class SaleItemForm(forms.ModelForm):
         self.sale = kwargs.pop('sale', None)  # Get the 'sale' argument
         super().__init__(*args, **kwargs)
         self.fields['product'].widget.attrs.update({'class': 'product-select'})
+        self.fields['product'].label_from_instance = lambda obj: obj.form_field_representation()
         self.fields['sale_price'].widget.attrs.update({'class': 'sale-price-input'})
 
 
@@ -375,8 +376,12 @@ class PurchaseOrderItemForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        purchase_order = kwargs.pop('purchase_order', None)
         super().__init__(*args, **kwargs)
+        if purchase_order:
+            self.fields['product'].queryset = Product.objects.filter(supplier=purchase_order.supplier)
         self.fields['product'].widget.attrs.update({'class': 'product-select'})
+        self.fields['product'].label_from_instance = lambda obj: obj.form_field_representation()
         #self.fields['purchase_price'].widget.attrs.update({'class': 'purchase-price-input'})
 
     def clean(self):
@@ -400,7 +405,7 @@ class PurchaseOrderItemForm(forms.ModelForm):
 PurchaseOrderItemFormSet = inlineformset_factory(PurchaseOrder, PurchaseOrderItem, form=PurchaseOrderItemForm, can_delete=True, extra=1)
 
 class PurchaseOrderItemDeliveredForm(forms.ModelForm):
-    product = forms.CharField(disabled=True)
+
     quantity = forms.IntegerField(disabled=True)
 
     class Meta:
@@ -411,6 +416,19 @@ class PurchaseOrderItemDeliveredForm(forms.ModelForm):
             'quantity': 'Quantité',
             'purchase_price': 'Prix unitaire'
         }
+    def __init__(self, *args, **kwargs):
+        super(PurchaseOrderItemDeliveredForm, self).__init__(*args, **kwargs)
+        if self.instance and self.instance.purchase_order:
+            self.fields['product'] = forms.ModelChoiceField(
+                queryset=Product.objects.filter(supplier=self.instance.purchase_order.supplier),
+                disabled=True,
+                label="Produit",
+                to_field_name="id"
+            )
+        self.fields['product'].label_from_instance = lambda obj: obj.form_field_representation()
+        self.fields['quantity'].label = "Quantité"
+        self.fields['purchase_price'].required = True  # Make purchase_price field required
+
 
 PurchaseOrderItemDeliveredFormSet = forms.inlineformset_factory(
     PurchaseOrder,
@@ -433,6 +451,7 @@ class RepairForm(forms.ModelForm):
             # related repair
             self.fields['hardware'].queryset = HardwareToRepair.objects.filter(repair__isnull=True)
         self.fields['hardware'].required = True
+        self.fields['hardware'].label_from_instance = lambda obj: obj.form_field_representation()
         self.fields['client'].required = True
 
     #check if the prepayment is lower then the repair price
@@ -466,7 +485,7 @@ class RepairForm(forms.ModelForm):
             'description': forms.TextInput(attrs={'placeholder': 'Entrer une description détaillée de la réparation'}),
             'client': forms.Select(attrs={'placeholder': 'Choisir le client'}),
             'hardware': forms.Select(attrs={'placeholder': 'Choisir le matériel à réparer'}),
-            'prepayment': forms.NumberInput(attrs={'placeholder': 'Entrer le verssement'}),
+            'prepayment': forms.NumberInput(attrs={'placeholder': 'Entrer le versement'}),
             'repair_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix de réparation'}),
         }
 
