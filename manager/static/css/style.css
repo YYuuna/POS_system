@@ -218,6 +218,7 @@ input:focus{
     background: #51025f;
     color: white;
     transition: 0.7s;
+    margin-top: 6%;
     
 }
 #imprimer:hover{
@@ -282,8 +283,14 @@ table{
 }
 #livrer{
     width: 60%;
+    color: white;
+    height: 27px;
+    border-radius:10px ;
+    border: none;
+    cursor: pointer;
     background: #6d3e607a;
     transition: 0.7s;
+    margin-top: 6%;
 }
 #livrer:hover{
     letter-spacing: 1px;
@@ -342,3 +349,4 @@ table{
 .delete-row:hover{
    letter-spacing: 1px; 
 }
+
