@@ -4,13 +4,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
-    <title>Liste des clients</title>
+    <title>Détails de client</title>
 </head>
 <body>
-<div class="corp">
 
+<div class="corp">
     <div class="nav">
 
         <div class="logo">
@@ -110,101 +111,50 @@
 
     </div>
 
-
     <div class="liste">
+        <div class="c11">
+          
+           
 
+            <div class="colone1"><h3>Détails de client :</h3></div>
 
-        <div class="c1">
+            
+           
+            
+           
+         
+        </div>
 
-            <div class="colone1"><h3>Liste des clients</h3></div>
-
-            <div class="colone1" >
-                <form method="GET" action="">
-                    {{ form }}
-                    <button class="button" type="submit">Rechercher</button>
-                </form>
-            </div>
-
-            <div class="colone1">
-                <button class="button" onclick="location.href='{% url 'add-client' %}'">Ajouter client</button>
-            </div>
+        <div class="c22" >
+            <p><strong> IdClient :{{client.id}}</strong></p> <br>
+            
+            <p>Nom : {{client.last_name}}</p><br>
+            <p>Prénom : {{client.first_name}}</p><br>
+            <p>Teléphone : {{client.phone}}</p><br>
+            <p>Email : {{client.email}}</p><br>
+            <p>Adresse : {{client.address}}</p><br>
+        
+            <p>Nombre d'achats : </p><br>
+            <p>Nombre de réparations :  </p><br>
+            
+            <p>Reste à payer :  DA</p><br>
 
         </div>
 
-        <div class="c2">
-            {% if clients %}
-            <table>
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Teléphone</th>
-                    <th>Email</th>
-                    <th>Adresse</th>
-              
-                    <th>Détaill</th>
-                    <th>Modifier</th> 
-                    <th>Supprimer</th>
-
-                </tr>
-                </thead>
-                <tbody id="tbody">
-                {% for client in clients %}
-                <tr>
-                    <td>{{ client.id }}</td>
-                    <td>{{ client.last_name }}</td>
-                    <td>{{ client.first_name }}</td>
-                    <td>{{ client.phone }}</td>
-                    <td>{{ client.email }}</td>
-                    <td>{{ client.address }}</td>
-                    
-                  
-                    <td>
-                        <button class="button" id="detaill"
-                                onclick="location.href='{% url 'update-client' client.id %}';">Détaill
-                        </button>
-                    </td>
-                    <td>
-                        <button class="button" id="modifier"
-                                onclick="location.href='{% url 'update-client' client.id %}';">Modifier
-                        </button>
-                    </td>
-                    <td>
-                        <button class="button" id="supprimer"
-                                onclick="location.href='{% url 'delete-client' client.id %}';">Supprimer
-                        </button>
-                    </td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <p>Pas de clients trouvés.</p>
-            {% endif %}
-            <div class="pagination">
-                <span class="step-links">
-                    {% if page_obj.has_previous %}
-                    <button class="but" >  <a href="?page=1">&laquo; premiére</a></button> 
-                        <button class="but" >   <a href="?page={{ page_obj.previous_page_number }}">précédente</a></button> 
-                    {% endif %}
-
-                    <span class="current">
-                        Page {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
-                    </span>
-
-                    {% if page_obj.has_next %}
-                    <button class="but" >    <a href="?page={{ page_obj.next_page_number }}">prochaine</a></button> 
-                        <button class="but" >   <a href="?page={{ page_obj.paginator.num_pages }}">derniére &raquo;</a></button> 
-                    {% endif %}
-                </span>
-            </div>
-        </div>
 
     </div>
 
 
 </div>
 
+
+
 </body>
 </html>
+
+
+
+
+
+
+
