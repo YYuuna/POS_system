@@ -7,7 +7,7 @@ from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
 from django.contrib import messages
 from django.http import JsonResponse, Http404, FileResponse, HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404, render
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, AccessMixin
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.views.generic import ListView, TemplateView, DetailView
@@ -21,11 +21,25 @@ from .forms import ClientForm, UserLoginForm, FilterForm, SupplierForm, ProductF
     PurchaseOrderItemForm, RepairForm, CustomSetPasswordForm, HardwareToRepairForm, PurchaseOrderItemDeliveredFormSet
 
 
-class AddClientView(LoginRequiredMixin, CreateView):
+class RoleRequiredMixin(AccessMixin):
+    """Verify that the current user has the required role."""
+    required_roles = []  # Define this in your view
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        if not self.required_roles:  # if no role is required, continue
+            return super().dispatch(request, *args, **kwargs)
+        if not request.user.employee.role in self.required_roles:
+            messages.error(request, 'Vous n\'avez pas la permission de consulter cette page.')
+            return redirect('dashboard')  # or wherever
+        return super().dispatch(request, *args, **kwargs)
+class AddClientView(RoleRequiredMixin,LoginRequiredMixin, CreateView):
     model = Client
     form_class = ClientForm
     template_name = 'client_form.html'
     success_url = reverse_lazy('client-list')
+    required_roles = ['Admin','Employé']
 
 
 class UserLoginView(LoginView):
@@ -42,12 +56,13 @@ class UserLoginView(LoginView):
         return super().form_valid(form)
 
 
-class ClientListView(LoginRequiredMixin, ListView):
+class ClientListView(RoleRequiredMixin,LoginRequiredMixin, ListView):
     model = Client
     template_name = 'listeclient.html'
     context_object_name = 'clients'
     form_class = FilterForm
     paginate_by = 7
+    required_roles = ['Admin', 'Employé']
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -62,32 +77,36 @@ class ClientListView(LoginRequiredMixin, ListView):
         return context
 
 
-class ClientUpdateView(LoginRequiredMixin, UpdateView):
+class ClientUpdateView(LoginRequiredMixin,RoleRequiredMixin, UpdateView):
     model = Client
     form_class = ClientForm
     template_name = 'modifierclient.html'
     success_url = reverse_lazy('client-list')
+    required_roles = ['Admin', 'Employé']
 
 
-class ClientDeleteView(LoginRequiredMixin, DeleteView):
+class ClientDeleteView(LoginRequiredMixin,RoleRequiredMixin, DeleteView):
     model = Client
     template_name = 'supprimerclient.html'
     success_url = reverse_lazy('client-list')
+    required_roles = ['Admin', 'Employé']
 
 
-class AddSupplierView(LoginRequiredMixin, CreateView):
+class AddSupplierView(LoginRequiredMixin,RoleRequiredMixin, CreateView):
     model = Supplier
     form_class = SupplierForm
     template_name = 'ajouterfournisseur.html'
     success_url = reverse_lazy('supplier-list')
+    required_roles = ['Admin', 'Employé']
 
 
-class SupplierListView(LoginRequiredMixin, ListView):
+class SupplierListView(LoginRequiredMixin,RoleRequiredMixin, ListView):
     model = Supplier
     template_name = 'listefournisseur.html'
     context_object_name = 'suppliers'
     paginate_by = 7
     form_class = FilterForm
+    required_roles = ['Admin', 'Employé']
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -102,32 +121,36 @@ class SupplierListView(LoginRequiredMixin, ListView):
         return context
 
 
-class SupplierUpdateView(LoginRequiredMixin, UpdateView):
+class SupplierUpdateView(LoginRequiredMixin,RoleRequiredMixin, UpdateView):
     model = Supplier
     form_class = SupplierForm
     template_name = 'modifierfournisseur.html'
     success_url = reverse_lazy('supplier-list')
+    required_roles = ['Admin', 'Employé']
 
 
-class SupplierDeleteView(LoginRequiredMixin, DeleteView):
+class SupplierDeleteView(LoginRequiredMixin,RoleRequiredMixin, DeleteView):
     model = Supplier
     template_name = 'supprimerfournisseur.html'
     success_url = reverse_lazy('supplier-list')
+    required_roles = ['Admin', 'Employé']
 
 
-class AddProductView(LoginRequiredMixin, CreateView):
+class AddProductView(LoginRequiredMixin,RoleRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'ajouterproduit.html'
     success_url = reverse_lazy('product-list')
+    required_roles = ['Admin', 'Employé']
 
 
-class ProductListView(LoginRequiredMixin, ListView):
+class ProductListView(LoginRequiredMixin,RoleRequiredMixin, ListView):
     model = Product
     template_name = 'listeproduit.html'  # replace with your template
     context_object_name = 'products'
     paginate_by = 7
     form_class = FilterForm
+    required_roles = ['Admin', 'Employé']
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -142,18 +165,19 @@ class ProductListView(LoginRequiredMixin, ListView):
         return context
 
 
-class ProductDetailView(View):
-    def get(self, request, pk):
-        product = get_object_or_404(Product, pk=pk)
-        return render(request, 'detaillproduit.html', {'product': product})
+class ProductDetailView(LoginRequiredMixin,RoleRequiredMixin,DetailView):
+    model = Product
+    template_name = 'detaillproduit.html'
+    context_object_name = 'product'
+    required_roles = ['Admin', 'Employé']
 
-
-class AccountListView(UserPassesTestMixin, LoginRequiredMixin, ListView):
+class AccountListView(LoginRequiredMixin,RoleRequiredMixin, ListView):
     model = Account
     template_name = 'listecompte.html'
     context_object_name = 'accounts'
     paginate_by = 7
     form_class = FilterForm
+    required_roles = ['Admin']
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -167,20 +191,16 @@ class AccountListView(UserPassesTestMixin, LoginRequiredMixin, ListView):
         context['form'] = FilterForm(self.request.GET)
         return context
 
-    def test_func(self):
-        return self.request.user.groups.filter(name='Admin').exists()
-
-    def handle_no_permission(self):
-        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
-        return redirect('dashboard')
 
 
-class PurchaseOrderListView(LoginRequiredMixin, ListView):
+
+class PurchaseOrderListView(LoginRequiredMixin,RoleRequiredMixin, ListView):
     model = PurchaseOrder
     template_name = 'listecommande.html'
     context_object_name = 'purchase_orders'
     paginate_by = 7
     form_class = FilterForm
+    required_roles = ['Admin', 'Employé']
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -195,12 +215,13 @@ class PurchaseOrderListView(LoginRequiredMixin, ListView):
         return context
 
 
-class SaleListView(LoginRequiredMixin, ListView):
+class SaleListView(LoginRequiredMixin,RoleRequiredMixin, ListView):
     model = Sale
     template_name = 'listevente.html'
     context_object_name = 'sales'
     paginate_by = 7
     form_class = FilterForm
+    required_roles = ['Admin', 'Employé']
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -215,12 +236,13 @@ class SaleListView(LoginRequiredMixin, ListView):
         return context
 
 
-class RepairListView(LoginRequiredMixin, ListView):
+class RepairListView(LoginRequiredMixin,RoleRequiredMixin, ListView):
     model = Repair
     template_name = 'listereparation.html'
     context_object_name = 'repairs'
     paginate_by = 7
     form_class = FilterForm
+    required_roles = ['Admin', 'Réparateur']
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -243,72 +265,56 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'dashbord.html'
 
 
-class AddAccountView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class AddAccountView(LoginRequiredMixin,RoleRequiredMixin, CreateView):
     model = Account
     form_class = AccountRegistrationForm
     template_name = 'ajoutercompte.html'
     success_url = reverse_lazy('account-list')
-
-    def test_func(self):
-        return self.request.user.groups.filter(name='Admin').exists()
-
-    def handle_no_permission(self):
-        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
-        return redirect('dashboard')
+    required_roles = ['Admin']
 
 
-class AccountUpdateView(LoginRequiredMixin, UserPassesTestMixin, PasswordChangeView):
+
+class AccountUpdateView(LoginRequiredMixin,RoleRequiredMixin, PasswordChangeView):
     model = Account
     form_class = CustomSetPasswordForm
     template_name = 'modifiercompte.html'
     success_url = reverse_lazy('account-list')
+    required_roles = ['Admin']
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = Account.objects.get(pk=self.kwargs['pk'])
         return kwargs
 
-    def test_func(self):
-        return self.request.user.groups.filter(name='Admin').exists()
-
-    def handle_no_permission(self):
-        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
-        return redirect('dashboard')
 
 
-class AccountDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+
+class AccountDeleteView(LoginRequiredMixin, RoleRequiredMixin, DeleteView):
     model = Account
     template_name = 'supprimercompte.html'
     success_url = reverse_lazy('account-list')
-
-    def test_func(self):
-        return self.request.user.groups.filter(name='Admin').exists()
-
-    def handle_no_permission(self):
-        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
-        return redirect('dashboard')
+    required_roles = ['Admin']
 
 
-class AddEmployeeView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+
+
+class AddEmployeeView(LoginRequiredMixin, RoleRequiredMixin, CreateView):
     model = Employee
     form_class = EmployeeForm
     template_name = 'ajouteremploye.html'
     success_url = reverse_lazy('employee-list')
-
-    def test_func(self):
-        return self.request.user.groups.filter(name='Admin').exists()
-
-    def handle_no_permission(self):
-        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
-        return redirect('dashboard')
+    required_roles = ['Admin']
 
 
-class EmployeeListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+
+
+class EmployeeListView(LoginRequiredMixin, RoleRequiredMixin, ListView):
     model = Employee
     template_name = 'listeemploye.html'
     context_object_name = 'employees'
     paginate_by = 7
     form_class = FilterForm
+    required_roles = ['Admin']
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -322,52 +328,41 @@ class EmployeeListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         context['form'] = FilterForm(self.request.GET)
         return context
 
-    def test_func(self):
-        return self.request.user.groups.filter(name='Admin').exists()
-
-    def handle_no_permission(self):
-        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
-        return redirect('dashboard')
 
 
-class EmployeeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+
+class EmployeeUpdateView(LoginRequiredMixin, RoleRequiredMixin, UpdateView):
     model = Employee
     form_class = EmployeeForm
     template_name = 'modifieremploye.html'
     success_url = reverse_lazy('employee-list')
-
-    def test_func(self):
-        return self.request.user.groups.filter(name='Admin').exists()
-
-    def handle_no_permission(self):
-        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
-        return redirect('dashboard')
+    required_roles = ['Admin']
 
 
-class EmployeeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+
+
+class EmployeeDeleteView(LoginRequiredMixin, RoleRequiredMixin, DeleteView):
     model = Employee
     template_name = 'supprimeremploye.html'
     success_url = reverse_lazy('employee-list')
-
-    def test_func(self):
-        return self.request.user.groups.filter(name='Admin').exists()
-
-    def handle_no_permission(self):
-        messages.error(self.request, "Vous n'avez pas la permission d'accéder à cette page.")
-        return redirect('dashboard')
+    required_roles = ['Admin']
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+
+
+class ProductUpdateView(LoginRequiredMixin,RoleRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'modifierproduit.html'
     success_url = reverse_lazy('product-list')
+    required_roles = ['Admin', 'Employé']
 
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin,RoleRequiredMixin, DeleteView):
     model = Product
     template_name = 'supprimerproduit.html'
     success_url = reverse_lazy('product-list')
+    required_roles = ['Admin', 'Employé']
 
 
 class AddCategoryView(LoginRequiredMixin, CreateView):
@@ -377,14 +372,12 @@ class AddCategoryView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('add-product')
 
 
-class TestView(LoginRequiredMixin, TemplateView):
-    template_name = 'pdf.html'
 
-
-class AddSaleView(LoginRequiredMixin, CreateView):
+class AddSaleView(LoginRequiredMixin,RoleRequiredMixin, CreateView):
     model = Sale
     template_name = 'ajoutervente.html'
     form_class = SaleForm
+    required_roles = ['Admin', 'Employé']
 
     def form_valid(self, form):
         self.object = form.save()
@@ -394,9 +387,10 @@ class AddSaleView(LoginRequiredMixin, CreateView):
         return reverse_lazy('update-sale', kwargs={'pk': self.object.pk})
 
 
-class SaleUpdateView(LoginRequiredMixin, FormView):
+class SaleUpdateView(LoginRequiredMixin,RoleRequiredMixin, FormView):
     template_name = 'articlevente.html'
     form_class = SaleItemFormSet
+    required_roles = ['Admin', 'Employé']
 
     def get_success_url(self):
         return reverse_lazy('sale-detail', kwargs={'pk': self.sale.pk})
@@ -445,10 +439,11 @@ class SaleUpdateView(LoginRequiredMixin, FormView):
 #         return super().delete(request, *args, **kwargs)
 
 
-class SaleCancelView(LoginRequiredMixin, DeleteView):
+class SaleCancelView(LoginRequiredMixin,RoleRequiredMixin, DeleteView):
     model = Sale
     template_name = 'supprimervente.html'
     success_url = reverse_lazy('sale-list')
+    required_roles = ['Admin', 'Employé']
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -457,10 +452,11 @@ class SaleCancelView(LoginRequiredMixin, DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-class SaleDetailView(LoginRequiredMixin, DetailView):
+class SaleDetailView(LoginRequiredMixin,RoleRequiredMixin, DetailView):
     model = Sale
     template_name = 'detaillvente.html'
     context_object_name = 'sale'
+    required_roles = ['Admin', 'Employé']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -475,7 +471,8 @@ class SaleDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class ProductInitialSellingPriceView(LoginRequiredMixin, View):
+class ProductInitialSellingPriceView(LoginRequiredMixin,RoleRequiredMixin, View):
+    required_roles = ['Admin', 'Employé']
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         try:
@@ -485,11 +482,12 @@ class ProductInitialSellingPriceView(LoginRequiredMixin, View):
             raise Http404("Product does not exist")
 
 
-class AddPurchaseOrderView(LoginRequiredMixin, CreateView):
+class AddPurchaseOrderView(LoginRequiredMixin,RoleRequiredMixin, CreateView):
     model = PurchaseOrder
     template_name = 'ajoutercommande.html'
     form_class = PurchaseOrderForm
     success_url = reverse_lazy('purchase-order-list')
+    required_roles = ['Admin', 'Employé']
 
     def form_valid(self, form):
         self.object = form.save()
@@ -499,9 +497,10 @@ class AddPurchaseOrderView(LoginRequiredMixin, CreateView):
         return reverse_lazy('update-purchase-order', kwargs={'pk': self.object.pk})
 
 
-class PurchaseOrderUpdateView(LoginRequiredMixin, FormView):
+class PurchaseOrderUpdateView(LoginRequiredMixin,RoleRequiredMixin, FormView):
     template_name = 'articlecommande.html'
     form_class = PurchaseOrderItemFormSet
+    required_roles = ['Admin', 'Employé']
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -548,11 +547,11 @@ class PurchaseOrderUpdateView(LoginRequiredMixin, FormView):
         return super().get(request, *args, **kwargs)
 
 
-class PurchaseOrderDeleteView(LoginRequiredMixin, DeleteView):
+class PurchaseOrderDeleteView(LoginRequiredMixin,RoleRequiredMixin, DeleteView):
     model = PurchaseOrder
     template_name = 'supprimercommande.html'
     success_url = reverse_lazy('purchase-order-list')
-
+    required_roles = ['Admin', 'Employé']
 
 class PurchaseOrderDetailView(LoginRequiredMixin, DetailView):
     model = PurchaseOrder
@@ -578,18 +577,19 @@ class PurchaseOrderDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class ProductInitialPurchasePriceView(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        pk = kwargs.get('pk')
-        try:
-            product = Product.objects.get(pk=pk)
-            return JsonResponse({'initial_buying_price': product.initial_buying_price})
-        except Product.DoesNotExist:
-            raise Http404("Product does not exist")
+# class ProductInitialPurchasePriceView(LoginRequiredMixin, View):
+#     def get(self, request, *args, **kwargs):
+#         pk = kwargs.get('pk')
+#         try:
+#             product = Product.objects.get(pk=pk)
+#             return JsonResponse({'initial_buying_price': product.initial_buying_price})
+#         except Product.DoesNotExist:
+#             raise Http404("Product does not exist")
 
-class PurchaseOrderDeliverView(LoginRequiredMixin, FormView):
+class PurchaseOrderDeliverView(LoginRequiredMixin,RoleRequiredMixin, FormView):
     template_name = 'prix.html'  # replace with your actual template
     form_class = PurchaseOrderItemDeliveredFormSet
+    required_roles = ['Admin', 'Employé']
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -623,20 +623,20 @@ class PurchaseOrderDeliverView(LoginRequiredMixin, FormView):
         return reverse_lazy('purchase-order-detail', kwargs={'pk': self.purchase_order.pk})
 
 
-class AddRepairView(LoginRequiredMixin, CreateView):
+class AddRepairView(LoginRequiredMixin,RoleRequiredMixin, CreateView):
     model = Repair
     template_name = 'ajouterreparation.html'
     form_class = RepairForm
-
+    required_roles = ['Admin', 'Réparateur']
     def get_success_url(self):
         return reverse('repair-detail', kwargs={'pk': self.object.pk})
 
 
-class RepairDetailView(LoginRequiredMixin, DetailView):
+class RepairDetailView(LoginRequiredMixin,RoleRequiredMixin, DetailView):
     model = Repair
     template_name = 'detaillreparation.html'
     context_object_name = 'repair'
-
+    required_roles = ['Admin', 'Réparateur']
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         left_to_pay = self.object.repair_price - self.object.prepayment
@@ -644,11 +644,11 @@ class RepairDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class RepairUpdateView(LoginRequiredMixin, UpdateView):
+class RepairUpdateView(LoginRequiredMixin,RoleRequiredMixin, UpdateView):
     model = Repair
     form_class = RepairForm
     template_name = 'modifierreparation.html'
-
+    required_roles = ['Admin', 'Réparateur']
     def form_valid(self, form):
         # Check if any data has changed and the repair is done
         if form.has_changed() and self.object.state == 'Réparation terminée':
@@ -660,18 +660,19 @@ class RepairUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('repair-detail', kwargs={'pk': self.object.pk})
 
 
-class RepairDeleteView(LoginRequiredMixin, DeleteView):
+class RepairDeleteView(LoginRequiredMixin,RoleRequiredMixin, DeleteView):
     model = Repair
     template_name = 'supprimerreparation.html'
     success_url = reverse_lazy('repair-list')
-
+    required_roles = ['Admin', 'Réparateur']
 
 class CustomLogoutView(LoginRequiredMixin, LogoutView):
     next_page = 'login'
 
 
 
-class RepairFinishView(LoginRequiredMixin, View):
+class RepairFinishView(LoginRequiredMixin,RoleRequiredMixin, View):
+    required_roles = ['Admin', 'Réparateur']
     def post(self, request, *args, **kwargs):
         repair = get_object_or_404(Repair, pk=kwargs['pk'])
 
@@ -693,7 +694,8 @@ class RepairFinishView(LoginRequiredMixin, View):
         return redirect('repair-detail', pk=repair.pk)
 
 
-class SaleInvoiceView(View):
+class SaleInvoiceView(LoginRequiredMixin,RoleRequiredMixin,View):
+    required_roles = ['Admin', 'Employé']
     def get(self, request, *args, **kwargs):
         sale = get_object_or_404(Sale, id=self.kwargs['pk'])
         sale_items = SaleItem.objects.filter(sale=sale)
@@ -734,7 +736,8 @@ class SaleInvoiceView(View):
         return response
 
 
-class PurchaseOrderInvoiceView(LoginRequiredMixin, View):
+class PurchaseOrderInvoiceView(LoginRequiredMixin,RoleRequiredMixin, View):
+    required_roles = ['Admin', 'Employé']
     def get(self, request, *args, **kwargs):
         purchase_order = get_object_or_404(PurchaseOrder, id=self.kwargs['pk'])
         purchase_order_items = PurchaseOrderItem.objects.filter(purchase_order=purchase_order)
@@ -775,7 +778,8 @@ class PurchaseOrderInvoiceView(LoginRequiredMixin, View):
         return response
 
 
-class RepairInvoiceView(LoginRequiredMixin, View):
+class RepairInvoiceView(LoginRequiredMixin,RoleRequiredMixin, View):
+    required_roles = ['Admin', 'Réparateur']
     def get(self, request, *args, **kwargs):
         repair = get_object_or_404(Repair, id=self.kwargs['pk'])
         left_to_pay = repair.repair_price - repair.prepayment
@@ -816,12 +820,13 @@ class RepairInvoiceView(LoginRequiredMixin, View):
         return response
 
 
-class HardwareToRepairListView(LoginRequiredMixin, ListView):
+class HardwareToRepairListView(LoginRequiredMixin,RoleRequiredMixin, ListView):
     model = HardwareToRepair
     template_name = 'listemat.html'  # replace with your actual template
     context_object_name = 'hardwares'
     paginate_by = 7
     form_class = FilterForm
+    required_roles = ['Admin', 'Réparateur']
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -836,37 +841,39 @@ class HardwareToRepairListView(LoginRequiredMixin, ListView):
         return context
 
 
-class AddHardwareToRepairView(LoginRequiredMixin, CreateView):
+class AddHardwareToRepairView(LoginRequiredMixin,RoleRequiredMixin, CreateView):
     model = HardwareToRepair
     form_class = HardwareToRepairForm
     template_name = 'ajoutermat.html'  # replace with your actual template
+    required_roles = ['Admin', 'Réparateur']
 
     def get_success_url(self):
         return reverse_lazy('hardware-detail', kwargs={'pk': self.object.pk})  # replace with your actual url name
 
 
-class HardwareToRepairUpdateView(LoginRequiredMixin, UpdateView):
+class HardwareToRepairUpdateView(LoginRequiredMixin,RoleRequiredMixin, UpdateView):
     model = HardwareToRepair
     form_class = HardwareToRepairForm
     template_name = 'modifiermat.html'  # replace with your actual template
-
+    required_roles = ['Admin', 'Réparateur']
     def get_success_url(self):
         return reverse_lazy('hardware-detail', kwargs={'pk': self.object.pk})  # replace with your actual url name
 
 
-class HardwareToRepairDeleteView(LoginRequiredMixin, DeleteView):
+class HardwareToRepairDeleteView(LoginRequiredMixin,RoleRequiredMixin, DeleteView):
     model = HardwareToRepair
     template_name = 'supprimermat.html'  # replace with your actual template
     success_url = reverse_lazy('hardware-list')  # replace with your actual url name
+    required_roles = ['Admin', 'Réparateur']
 
-
-class HardwareToRepairDetailView(LoginRequiredMixin, DetailView):
+class HardwareToRepairDetailView(LoginRequiredMixin,RoleRequiredMixin, DetailView):
     model = HardwareToRepair
     template_name = 'detaillmat.html'  # replace with your actual template
     context_object_name = 'hardware'  # replace with your actual context object name
+    required_roles = ['Admin', 'Réparateur']
 
-
-class RepairReceiptView(LoginRequiredMixin, View):
+class RepairReceiptView(LoginRequiredMixin,RoleRequiredMixin, View):
+    required_roles = ['Admin', 'Réparateur']
     def get(self, request, *args, **kwargs):
         repair = get_object_or_404(Repair, id=self.kwargs['pk'])
         left_to_pay = repair.repair_price - repair.prepayment
