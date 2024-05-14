@@ -4,13 +4,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
-    <title>Liste des fournisseurs</title>
+    <title>Détails de fournisseur</title>
 </head>
 <body>
-<div class="corp">
 
+<div class="corp">
     <div class="nav">
 
         <div class="logo">
@@ -110,95 +111,49 @@
 
     </div>
 
-
     <div class="liste">
-        <div class="c1">
+        <div class="c11">
+          
+           
 
-            <div class="colone1"><h3>Liste des fournisseurs</h3></div>
+            <div class="colone1"><h3>Détails de fournisseur :</h3></div>
 
-            <div class="colone1">
-                <form method="GET" action="">
-                    {{ form }}
-                    <button class="button" type="submit">Rechercher</button>
-                </form>
-            </div>
-
-            <div class="colone1">
-                <button class="button"><a href="{% url 'add-supplier' %}" class="link">Ajouter fournisseur</a></button>
-            </div>
-
+            
+           
+            
+           
+         
         </div>
 
-        <div class="c2">
-            {% if suppliers %}
-            <table>
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Nom</th>
-                    <th>Teléphone</th>
-                    <th>Email</th>
-                    <th>Adresse</th>
+        <div class="c22" >
+            <p><strong> IdFournisseur :{{supplier.id}}</strong></p> <br>
+            
+            <p>Nom : {{supplier.name}}</p><br>
+           
+            <p>Teléphone : {{supplier.phone}}</p><br>
+            <p>Email : {{supplier.email}}</p><br>
+            <p>Adresse : {{supplier.address}}</p><br>
+        
+            <p>Nombre de commandes : </p><br>
+           
+            
 
-                    <th>Détaill</th>
-                    <th>Modifier</th>
-                    <th>Supprimer</th>
-
-                </tr>
-                </thead>
-                <tbody id="tbody">
-                {% for supplier in suppliers %}
-                <tr>
-                    <td>{{ supplier.id }}</td>
-                    <td>{{ supplier.name }}</td>
-                    <td>{{ supplier.phone }}</td>
-                    <td>{{ supplier.email }}</td>
-                    <td>{{ supplier.address }}</td>
-
-                    <td>
-                        <button class="button" id="detaill"
-                                onclick="location.href='{% url 'update-supplier' supplier.id %}';">Détaill
-                        </button>
-                    </td>
-                    <td>
-                        <button class="button" id="modifier"
-                                onclick="location.href='{% url 'update-supplier' supplier.id %}';">Modifier
-                        </button>
-                    </td>
-                    <td>
-                        <button class="button" id="supprimer"
-                                onclick="location.href='{% url 'delete-supplier' supplier.id %}';">Supprimer
-                        </button>
-                    </td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <p>Pas de fournisseurs trouvés.</p>
-            {% endif %}
-            <div class="pagination">
-                <span class="step-links">
-                    {% if page_obj.has_previous %}
-                    <button class="but" >     <a href="?page=1">&laquo; premiére</a></button>
-                        <button class="but" >     <a href="?page={{ page_obj.previous_page_number }}">précédente</a></button>
-                    {% endif %}
-
-                    <span class="current">
-                        Page {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
-                    </span>
-
-                    {% if page_obj.has_next %}
-                    <button class="but" >      <a href="?page={{ page_obj.next_page_number }}">prochaine</a> </button>
-                        <button class="but" >     <a href="?page={{ page_obj.paginator.num_pages }}">derniére &raquo;</a></button>
-                    {% endif %}
-                </span>
-            </div>
         </div>
 
 
     </div>
 
 
+</div>
+
+
+
 </body>
 </html>
+
+
+
+
+
+
+
