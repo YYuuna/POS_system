@@ -150,22 +150,14 @@
                     <td>{{ sale.id }}</td>
                     <td>{{ sale.client.first_name }} {{ sale.client.last_name }}</td>
                     <td>{{ sale.sale_date }}</td>
-                    <!-- Add more fields as per your requirement -->
+                   
                     
                     <td>
                         <button class="button" id="detail"
-                                onclick="location.href='{% url 'sale-detail' sale.id %}';">Details
+                                 onclick="location.href='{% url 'sale-detail' sale.id %}';">Details <!-- ki y3abez hna yadik le detaill ta3 la vente  -->
                         </button>
 
-                    <!-- <td>  -->
-                        <!-- <button class="button" id="modifierv" onclick="location.href='{% url 'update-sale' sale.id %}';">Modifier </button>       -->
-                    <!-- </td>  -->
-                    
-                    <!-- <td>  -->
-                        <!-- <button class="button" id="supprimerv"onclick="location.href='{% url 'cancel-sale' sale.id %}';">Supprimer </button>  -->
-                                
-                       
-                    <!-- </td>  -->
+                  
                    
 
                 </tr>
