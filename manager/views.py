@@ -99,6 +99,28 @@ class ClientDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'supprimerclient.html'
     success_url = reverse_lazy('client-list')
 
+class ClientSalesListView(LoginRequiredMixin, RoleRequiredMixin, ListView):
+    model = Sale
+    template_name = 'listeventeclient.html'
+    context_object_name = 'sales'
+    paginate_by = 7
+    required_roles = ['Admin', 'Employé']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = FilterForm(self.request.GET)
+        client = get_object_or_404(Client, pk=self.kwargs['pk'])
+        context['client'] = client
+        return context
+
+    def get_queryset(self):
+        client = get_object_or_404(Client, pk=self.kwargs['pk'])
+        queryset = Sale.objects.filter(client=client)
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(id=query)
+        return queryset
+
 
 class AddSupplierView(LoginRequiredMixin,RoleRequiredMixin, CreateView):
     model = Supplier

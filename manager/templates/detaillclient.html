@@ -120,7 +120,7 @@
             {% if request.user.employee.role == 'Admin' or request.user.employee.role == 'Employé' %}
             <div>
                 <button class="button" id="detaill"
-                onclick="location.href=">Liste des achats
+                onclick="location.href='{% url 'client-sales' client.id %}';">Liste des ventes
                  </button>
             </div>
             {% endif %}
@@ -131,10 +131,6 @@
                  </button>
             </div>
             {% endif %}
-           
-            
-           
-         
         </div>
 
         <div class="c22" >
@@ -146,7 +142,7 @@
             <p>Email : {{client.email}}</p><br>
             <p>Adresse : {{client.address}}</p><br>
         
-            <p>Nombre d'achats : {{num_sales}}</p><br>
+            <p>Nombre des ventes : {{num_sales}}</p><br>
             <p>Nombre de réparations : {{num_repairs}}</p><br>
             
             <p>Reste à payer : {{rest_to_pay}} DA</p><br>
