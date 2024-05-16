@@ -124,7 +124,7 @@
             </div>
 
             <div class="colone1">
-                <button class="button"><a href="{% url 'add-supplier' %}" class="link">Ajouter fournisseur</a></button>
+                <button class="button" onclick="location.href='{% url 'add-supplier' %}';">Ajouter fournisseur</button>
             </div>
 
         </div>
@@ -140,7 +140,7 @@
                     <th>Email</th>
                     <th>Adresse</th>
 
-                    <th>Détaill</th>
+                    <th>Détails</th>
                     <th>Modifier</th>
                     <th>Supprimer</th>
 
@@ -157,7 +157,7 @@
 
                     <td>
                         <button class="button" id="detaill"
-                                onclick="location.href='{% url 'update-supplier' supplier.id %}';">Détaill
+                                onclick="location.href='{% url 'supplier-detail' supplier.id %}';">Détails
                         </button>
                     </td>
                     <td>

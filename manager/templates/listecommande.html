@@ -151,7 +151,7 @@
                 {% for purchase_order in page_obj %}
                 <tr>
                     <td>{{ purchase_order.id }}</td>
-                    <td>{{ purchase_order.supplier.name }}</td>
+                    <td><a href="{% url 'supplier-detail' purchase_order.supplier.id %}"> {{ purchase_order.supplier.name }} </a></td>
                     <td>{{ purchase_order.order_date }}</td>
                     <td>
                         {% if purchase_order.delivery_date %}
@@ -164,19 +164,6 @@
                         <button class="button" id="detai"
                                 onclick="location.href='{% url 'purchase-order-detail' purchase_order.id %}';">Détails
                         </button>
-
-                    <!-- <td>  -->
-                        <!-- <button class="button" id="modifier"  onclick="location.href='{% url 'update-purchase-order' purchase_order.id %}';">Modifier </button>                        -->
-                    <!-- </td>  -->
-
-                    <!-- <td>  -->
-                        <!-- <button class="button" id="supprimer"onclick="location.href='{% url 'delete-purchase-order' purchase_order.id %}';">Supprimer </button>  -->
-                                
-                       
-                    <!-- </td> -->
-
-                    
-
                     <!-- Add more fields as per your requirement -->
                 </tr>
                 {% endfor %}

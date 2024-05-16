@@ -50,20 +50,18 @@ class UserLoginView(LoginView):
             self.request.session.set_expiry(0)  # Session will expire when browser is closed
         return super().form_valid(form)
 
-class AddClientView(RoleRequiredMixin,LoginRequiredMixin, CreateView):
+class AddClientView(LoginRequiredMixin, CreateView):
     model = Client
     form_class = ClientForm
     template_name = 'client_form.html'
     success_url = reverse_lazy('client-list')
-    required_roles = ['Admin','Employé']
 
-class ClientListView(RoleRequiredMixin,LoginRequiredMixin, ListView):
+class ClientListView(LoginRequiredMixin, ListView):
     model = Client
     template_name = 'listeclient.html'
     context_object_name = 'clients'
     form_class = FilterForm
     paginate_by = 7
-    required_roles = ['Admin', 'Employé']
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -77,11 +75,10 @@ class ClientListView(RoleRequiredMixin,LoginRequiredMixin, ListView):
         context['form'] = FilterForm(self.request.GET)
         return context
 
-class ClientDetailView(LoginRequiredMixin, RoleRequiredMixin, DetailView):
+class ClientDetailView(LoginRequiredMixin, DetailView):
     model = Client
     template_name = 'detaillclient.html'
     context_object_name = 'client'
-    required_roles = ['Admin', 'Employé']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -90,19 +87,17 @@ class ClientDetailView(LoginRequiredMixin, RoleRequiredMixin, DetailView):
         context['num_repairs'] = Repair.objects.filter(client=client).count()
         context['rest_to_pay'] = Repair.objects.filter(client=client, delivery_date=None).annotate(to_pay=F('repair_price') - F('prepayment')).aggregate(rest_to_pay=Sum('to_pay'))['rest_to_pay'] or 0
         return context
-class ClientUpdateView(LoginRequiredMixin,RoleRequiredMixin, UpdateView):
+class ClientUpdateView(LoginRequiredMixin, UpdateView):
     model = Client
     form_class = ClientForm
     template_name = 'modifierclient.html'
     success_url = reverse_lazy('client-list')
-    required_roles = ['Admin', 'Employé']
 
 
-class ClientDeleteView(LoginRequiredMixin,RoleRequiredMixin, DeleteView):
+class ClientDeleteView(LoginRequiredMixin, DeleteView):
     model = Client
     template_name = 'supprimerclient.html'
     success_url = reverse_lazy('client-list')
-    required_roles = ['Admin', 'Employé']
 
 
 class AddSupplierView(LoginRequiredMixin,RoleRequiredMixin, CreateView):
@@ -133,6 +128,17 @@ class SupplierListView(LoginRequiredMixin,RoleRequiredMixin, ListView):
         context['form'] = FilterForm(self.request.GET)
         return context
 
+class SupplierDetailView(LoginRequiredMixin, RoleRequiredMixin, DetailView):
+    model = Supplier
+    template_name = 'detaillfournisseur.html'
+    context_object_name = 'supplier'
+    required_roles = ['Admin', 'Employé']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        supplier = get_object_or_404(Supplier, pk=self.kwargs['pk'])
+        context['num_purchase_orders'] = PurchaseOrder.objects.filter(supplier=supplier).count()
+        return context
 
 class SupplierUpdateView(LoginRequiredMixin,RoleRequiredMixin, UpdateView):
     model = Supplier
