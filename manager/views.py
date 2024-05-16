@@ -843,7 +843,7 @@ class SaleInvoiceView(LoginRequiredMixin,RoleRequiredMixin,View):
         return response
 
 
-class PurchaseOrderInvoiceView(LoginRequiredMixin,RoleRequiredMixin, View):
+class PurchaseOrderPrintView(LoginRequiredMixin, RoleRequiredMixin, View):
     required_roles = ['Admin', 'Employé']
     def get(self, request, *args, **kwargs):
         purchase_order = get_object_or_404(PurchaseOrder, id=self.kwargs['pk'])
@@ -851,22 +851,18 @@ class PurchaseOrderInvoiceView(LoginRequiredMixin,RoleRequiredMixin, View):
         if (not purchase_order_items.exists()):
             messages.error(request, "La commande ne contient aucun article. Vous ne pouvez pas imprimer la facture.")
             return redirect('purchase-order-detail', pk=purchase_order.pk)
-        # Calculate the total for each item
-        item_totals = [item.purchase_price * item.quantity for item in purchase_order_items]
-        # Calculate the total for the purchase order
-        purchase_order_total = sum(item_totals)
+
 
         data = {
             'purchase_order': purchase_order,
+            'purchase_order_items': purchase_order_items,
             # Check if there are any purchase order items
             'purchase_order_items_exist': purchase_order_items.exists(),
-            'purchase_order_items': zip(purchase_order_items, item_totals),
-            'purchase_order_total': purchase_order_total,
             # include any other data you need in the template
         }
 
         # Rendered html content as a string
-        html_string = render_to_string('facturecommande.html', data)
+        html_string = render_to_string('commande_pdf.html', data)
 
         # Create a WeasyPrint HTML object and write it to PDF
         html = HTML(string=html_string)
