@@ -121,6 +121,28 @@ class ClientSalesListView(LoginRequiredMixin, RoleRequiredMixin, ListView):
             queryset = queryset.filter(id=query)
         return queryset
 
+class ClientRepairsListView(LoginRequiredMixin, RoleRequiredMixin, ListView):
+    model = Repair
+    template_name = 'listereparationclient.html'
+    context_object_name = 'repairs'
+    paginate_by = 7
+    required_roles = ['Admin', 'Réparateur']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = FilterForm(self.request.GET)
+        client = get_object_or_404(Client, pk=self.kwargs['pk'])
+        context['client'] = client
+        return context
+
+    def get_queryset(self):
+        client = get_object_or_404(Client, pk=self.kwargs['pk'])
+        queryset = Repair.objects.filter(client=client)
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(id=query)
+        return queryset
+
 
 class AddSupplierView(LoginRequiredMixin,RoleRequiredMixin, CreateView):
     model = Supplier

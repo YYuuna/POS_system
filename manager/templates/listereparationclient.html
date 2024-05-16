@@ -114,7 +114,7 @@
     <div class="liste">
         <div class="c1">
 
-            <div class="colone1"><h3>Listes des réparations de client</h3></div>
+            <div class="colone1"><h3>Listes des réparations de client <a href="{% url 'client-detail' client.id %}">{{client}}</a> </h3></div>
 
             <div class="colone1">
                 <form method="GET" action="">
@@ -132,25 +132,23 @@
                 <tr>
                     <th>IdRéparation</th>
                     <th>Titre</th>
-                    
                     <th>Matériel</th>
                     <th>Prix</th>
                     <th>Date de dépot</th>
                     <th>État</th>
-                    <th>Détail</th>
+                    <th>Détails</th>
                     
                 </tr>
                 {% for repair in repairs %}
                 <tr>
                     <td>{{ repair.id }}</td>
                     <td>{{ repair.title }}</td>
-                   
                     <td>{{ repair.hardware }}</td>
                     <td>{{ repair.repair_price }}</td>
                     <td>{{ repair.deposit_date }}</td>
                     <td>{{ repair.state }}</td>
                     <td>
-                        <button class="button" id="detai" onclick="location.href='{% url 'repair-detail' repair.id %}';">Détails</button> <!-- ki y3abez hna yadik le detaill ta3 la reparation  -->
+                        <button class="button" id="detai" onclick="location.href='{% url 'repair-detail' repair.id %}';">Détails</button>
                     </td>
                     
                   

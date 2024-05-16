@@ -127,7 +127,7 @@
             {% if request.user.employee.role == 'Admin' or request.user.employee.role == 'Réparateur' %}
             <div>
                 <button class="button" id="detaill"
-                onclick="location.href= ">Liste des réparations
+                onclick="location.href='{% url 'client-repairs' client.id %}';">Liste des réparations
                  </button>
             </div>
             {% endif %}
