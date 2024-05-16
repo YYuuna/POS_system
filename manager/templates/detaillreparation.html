@@ -161,7 +161,7 @@
             <p>Description : {{repair.description}}</p><br>
             <p>État : {{repair.state}}</p><br>
             <p>Id matériel : {{repair.hardware.id}}</p><br>
-            <p>Matériel : {{repair.hardware}}</p><br>
+            <p>Matériel : <a id="touts" href="{% url 'hardware-detail' repair.hardware.id %}"> {{repair.hardware}} </a></p><br>
             <p>Date de dépôt : {{repair.deposit_date}}</p><br>
             <p>Date de remise : {% if repair.delivery_date %} {{repair.delivery_date}} {% else %} Le matériel n'a pas encore été remis .{% endif %}</p><br>
             <p>Client : <a id="touts" href="{% url 'client-detail' repair.client.id %}">{{repair.client}} </a></p><br>
