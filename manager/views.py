@@ -1,5 +1,6 @@
 from io import BytesIO
 
+from django.db.models import Sum, F
 from django.template.loader import render_to_string
 from django.utils import timezone
 
@@ -34,12 +35,6 @@ class RoleRequiredMixin(AccessMixin):
             messages.error(request, 'Vous n\'avez pas la permission de consulter cette page.')
             return redirect('dashboard')  # or wherever
         return super().dispatch(request, *args, **kwargs)
-class AddClientView(RoleRequiredMixin,LoginRequiredMixin, CreateView):
-    model = Client
-    form_class = ClientForm
-    template_name = 'client_form.html'
-    success_url = reverse_lazy('client-list')
-    required_roles = ['Admin','Employé']
 
 
 class UserLoginView(LoginView):
@@ -55,6 +50,12 @@ class UserLoginView(LoginView):
             self.request.session.set_expiry(0)  # Session will expire when browser is closed
         return super().form_valid(form)
 
+class AddClientView(RoleRequiredMixin,LoginRequiredMixin, CreateView):
+    model = Client
+    form_class = ClientForm
+    template_name = 'client_form.html'
+    success_url = reverse_lazy('client-list')
+    required_roles = ['Admin','Employé']
 
 class ClientListView(RoleRequiredMixin,LoginRequiredMixin, ListView):
     model = Client
@@ -76,7 +77,19 @@ class ClientListView(RoleRequiredMixin,LoginRequiredMixin, ListView):
         context['form'] = FilterForm(self.request.GET)
         return context
 
+class ClientDetailView(LoginRequiredMixin, RoleRequiredMixin, DetailView):
+    model = Client
+    template_name = 'detaillclient.html'
+    context_object_name = 'client'
+    required_roles = ['Admin', 'Employé']
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        client = get_object_or_404(Client, pk=self.kwargs['pk'])
+        context['num_sales'] = Sale.objects.filter(client=client).count()
+        context['num_repairs'] = Repair.objects.filter(client=client).count()
+        context['rest_to_pay'] = Repair.objects.filter(client=client, delivery_date=None).annotate(to_pay=F('repair_price') - F('prepayment')).aggregate(rest_to_pay=Sum('to_pay'))['rest_to_pay'] or 0
+        return context
 class ClientUpdateView(LoginRequiredMixin,RoleRequiredMixin, UpdateView):
     model = Client
     form_class = ClientForm

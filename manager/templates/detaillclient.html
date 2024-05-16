@@ -117,18 +117,20 @@
            
 
             <div class="colone1"><h3>Détails de client :</h3></div>
+            {% if request.user.employee.role == 'Admin' or request.user.employee.role == 'Employé' %}
             <div>
                 <button class="button" id="detaill"
-                onclick="location.href=">liste des ventes
+                onclick="location.href=">Liste des achats
                  </button>
             </div>
-
+            {% endif %}
+            {% if request.user.employee.role == 'Admin' or request.user.employee.role == 'Réparateur' %}
             <div>
                 <button class="button" id="detaill"
                 onclick="location.href= ">Liste des réparations
                  </button>
             </div>
-            
+            {% endif %}
            
             
            
@@ -144,10 +146,10 @@
             <p>Email : {{client.email}}</p><br>
             <p>Adresse : {{client.address}}</p><br>
         
-            <p>Nombre d'achats : </p><br>
-            <p>Nombre de réparations :  </p><br>
+            <p>Nombre d'achats : {{num_sales}}</p><br>
+            <p>Nombre de réparations : {{num_repairs}}</p><br>
             
-            <p>Reste à payer :  DA</p><br>
+            <p>Reste à payer : {{rest_to_pay}} DA</p><br>
 
         </div>
 

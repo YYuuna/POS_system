@@ -147,7 +147,7 @@
                 <tr>
                     <td>{{ repair.id }}</td>
                     <td>{{ repair.title }}</td>
-                    <td>{{ repair.client }}</td>
+                    <td><a href="{% url 'client-detail' repair.client.id %}">{{ repair.client }}</a></td>
                     <td>{{ repair.hardware }}</td>
                     <td>{{ repair.repair_price }}</td>
                     <td>{{ repair.deposit_date }}</td>
@@ -155,18 +155,6 @@
                     <td>
                         <button class="button" id="detai" onclick="location.href='{% url 'repair-detail' repair.id %}';">Détails</button>
                     </td>
-                    
-                    <!-- <td>  -->
-                        <!-- <button class="button" id="modifier" onclick="location.href='{% url 'update-repair' repair.id %}';" >Modifier </button>  -->
-                       
-                     <!-- </td>    -->
-
-                     <!-- <td>  -->
-                        <!-- <button class="button" id="supprimer" onclick="location.href='{% url 'delete-repair' repair.id %}';">Supprimer  </button>  -->
-                       
-                    <!-- </td>  -->
-
-                  
                 </tr>
                 {% endfor %}
             </table>

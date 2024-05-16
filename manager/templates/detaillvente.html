@@ -138,7 +138,7 @@
 
         <div class="c22" id="partieImprimer">
             <p><strong> Id Vente :{{sale.id}}</strong></p><br>
-            <p>Client : {{sale.client}}</p><br>
+            <p>Client : <a href="{% url 'client-detail' sale.client.id %}"> {{sale.client}} </a></p><br>
             <p>Date de vente : {{sale.sale_date}}</p><br>
 
             {% if sale_items_exist %}
