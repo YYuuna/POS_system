@@ -379,7 +379,7 @@ class PurchaseOrderItemForm(forms.ModelForm):
         purchase_order = kwargs.pop('purchase_order', None)
         super().__init__(*args, **kwargs)
         if purchase_order:
-            self.fields['product'].queryset = Product.objects.filter(supplier=purchase_order.supplier)
+            self.fields['product'].queryset = Product.objects.filter(suppliers__in=[purchase_order.supplier])
         self.fields['product'].widget.attrs.update({'class': 'product-select'})
         self.fields['product'].label_from_instance = lambda obj: obj.form_field_representation()
         #self.fields['purchase_price'].widget.attrs.update({'class': 'purchase-price-input'})
