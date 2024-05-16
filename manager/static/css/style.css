@@ -160,12 +160,20 @@ input:focus{
     grid-template-columns: 40% 15% 15% 15% 15%;
     /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr ;  */
 }
+
 /* detaill de client et fournisseur  */
 .c0{
     margin-top: 2%;
     text-align: left;
     display: grid;
-    grid-template-columns: 40% 10% 25% 25%;
+    grid-template-columns: 30% 13% 13% 21% 23%;
+
+}
+.c00{
+    margin-top: 2%;
+    text-align: left;
+    display: grid;
+    grid-template-columns: 30% 13% 13% 26% 18%;
 
 }
 
@@ -293,6 +301,12 @@ table{
     background: #1bb635b7;
     margin-top: 6%;
    
+}
+#detaill{
+    margin-top: 4%;
+}
+#detailll{
+    margin-top: 3%;
 }
 #supprimerv{
     width: 58%;

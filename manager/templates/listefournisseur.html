@@ -141,8 +141,8 @@
                     <th>Adresse</th>
 
                     <th>Détails</th>
-                    <th>Modifier</th>
-                    <th>Supprimer</th>
+                    <!-- <th>Modifier</th>  -->
+                    <!-- <th>Supprimer</th> -->
 
                 </tr>
                 </thead>
@@ -160,7 +160,8 @@
                                 onclick="location.href='{% url 'supplier-detail' supplier.id %}';">Détails
                         </button>
                     </td>
-                    <td>
+
+                    <!-- <td>  
                         <button class="button" id="modifier"
                                 onclick="location.href='{% url 'update-supplier' supplier.id %}';">Modifier
                         </button>
@@ -169,7 +170,8 @@
                         <button class="button" id="supprimer"
                                 onclick="location.href='{% url 'delete-supplier' supplier.id %}';">Supprimer
                         </button>
-                    </td>
+                    </td>-->
+
                 </tr>
                 {% endfor %}
                 </tbody>

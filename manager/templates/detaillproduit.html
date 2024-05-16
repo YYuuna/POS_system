@@ -114,9 +114,17 @@
 
 
     <div class="liste">
-        <div class="c11">
+        <div class="c111">
 
             <div class="colone1"><h3>Détails de produit :</h3></div>
+
+             <div><button class="button" id="modifier"
+                onclick="location.href='{% url 'update-product' product.id %}';">Modifier
+        </button></div>
+             <div><button class="button" id="supprimer"
+                onclick="location.href='{% url 'delete-product' product.id %}';">Supprimer
+        </button></div>
+
         </div>
 
 

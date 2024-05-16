@@ -146,8 +146,8 @@
                     <th>Prix de vente</th>
                     <!-- <th>Fournisseur</th>  -->
                     <th>Détail</th>
-                    <th>Modifier</th>
-                    <th>Supprimer</th>
+                    <!-- <th>Modifier</th>  -->
+                    <!-- <th>Supprimer</th> -->
                 </tr>
                 </thead>
                 <tbody id="tbody">
@@ -169,7 +169,7 @@
                         </button>
                     </td>
 
-                    <td>
+                    <!-- <td> 
                         <button class="button" id="modifier"
                                 onclick="location.href='{% url 'update-product' product.id %}';">Modifier
                         </button>
@@ -178,7 +178,7 @@
                         <button class="button" id="supprimer"
                                 onclick="location.href='{% url 'delete-product' product.id %}';">Supprimer
                         </button>
-                    </td>
+                    </td> -->
                 </tr>
                 {% endfor %}
                 </tbody>
