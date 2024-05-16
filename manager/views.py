@@ -198,6 +198,28 @@ class SupplierDeleteView(LoginRequiredMixin,RoleRequiredMixin, DeleteView):
     success_url = reverse_lazy('supplier-list')
     required_roles = ['Admin', 'Employé']
 
+class SupplierPurchaseOrdersListView(LoginRequiredMixin,RoleRequiredMixin, ListView):
+    model = PurchaseOrder
+    template_name = 'listecommandefournisseur.html'
+    context_object_name = 'purchase_orders'
+    paginate_by = 7
+    required_roles = ['Admin', 'Employé']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = FilterForm(self.request.GET)
+        supplier = get_object_or_404(Supplier, pk=self.kwargs['pk'])
+        context['supplier'] = supplier
+        return context
+
+    def get_queryset(self):
+        supplier = get_object_or_404(Supplier, pk=self.kwargs['pk'])
+        queryset = PurchaseOrder.objects.filter(supplier=supplier)
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(id=query)
+        return queryset
+
 
 class AddProductView(LoginRequiredMixin,RoleRequiredMixin, CreateView):
     model = Product

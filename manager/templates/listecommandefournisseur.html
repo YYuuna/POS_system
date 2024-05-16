@@ -114,7 +114,7 @@
     <div class="liste">
         <div class="c1">
 
-            <div class="colone1"><h3>Listes des commandes de fournisseur</h3></div>
+            <div class="colone1"><h3>Listes des commandes de fournisseur <a href="{% url 'supplier-detail' supplier.id %}">{{supplier}}</a> </h3></div>
 
             <div class="colone1">
                 <form method="GET" action="">
@@ -133,22 +133,15 @@
                 <thead>
                 <tr>
                     <th>IdComannde</th>
-                  
                     <th>Date de commande</th>
                     <th>Date de livraison</th>
-
                     <th>Détails</th>
-                  
-         
-
-                    
                 </tr>
                 </thead>
                 <tbody id="tbody">
                 {% for purchase_order in page_obj %}
                 <tr>
                     <td>{{ purchase_order.id }}</td>
-                    <!-- <td>{{ purchase_order.supplier.name }}</td>  -->
                     <td>{{ purchase_order.order_date }}</td>
                     <td>
                         {% if purchase_order.delivery_date %}
@@ -159,13 +152,8 @@
                     </td>
                     <td>
                         <button class="button" id="detai"
-                                onclick="location.href='{% url 'purchase-order-detail' purchase_order.id %}';">Détails <!-- ki y3abez hna yadik le detaill ta3 la comande  -->
+                                onclick="location.href='{% url 'purchase-order-detail' purchase_order.id %}';">Détails
                         </button>
-
-
-                    
-
-                  
                 </tr>
                 {% endfor %}
                 </tbody>
