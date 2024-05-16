@@ -109,8 +109,8 @@ class Product(models.Model):
     # initial_buying_price = models.PositiveIntegerField(blank=True, null=True,
     #                                            db_column='Prix d\'achat initiale')
     initial_selling_price = models.PositiveIntegerField(default=0, db_column='Prix de vente initiale')
-    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL,null=True, db_column='Fournisseur')
-
+    #supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL,null=True, db_column='Fournisseur')
+    suppliers = models.ManyToManyField(Supplier, through='Suppliying', db_column='Fournisseurs', related_name='products')
     # Other fields...
 
     def __str__(self):
@@ -123,6 +123,12 @@ class Product(models.Model):
         db_table = 'Produit'
         verbose_name = _('Produit')
 
+class Suppliying(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, db_column='Produit')
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, db_column='Fournisseur')
+
+    class Meta:
+        db_table = 'Fournir'  # change this to your desired table name
 
 class PurchaseOrder(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True, db_column='Fournisseur')

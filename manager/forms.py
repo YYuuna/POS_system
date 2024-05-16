@@ -186,7 +186,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['name', 'category','description', 'initial_selling_price',
-                  'supplier']
+                  'suppliers']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Entrer le nom du produit'}),
             'category': forms.Select(attrs={'placeholder': 'Choisir la catégorie du produit'}),
@@ -200,7 +200,7 @@ class ProductForm(forms.ModelForm):
             # ]),  # Add 'size': 3 as needed
             # 'initial_buying_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix d\'achat'}),
             'initial_selling_price': forms.NumberInput(attrs={'placeholder': 'Entrer le prix de vente'}),
-            'supplier': forms.Select(attrs={'placeholder': 'Choisir le fournisseur'}),
+            'suppliers': forms.SelectMultiple(attrs={'placeholder': 'Choisir les fournisseurs'}),
         }
         labels = {
             'name': "",
@@ -209,7 +209,7 @@ class ProductForm(forms.ModelForm):
             # 'state': 'Choisir l\'état du produit',
             # 'initial_buying_price': "",
             'initial_selling_price': "",
-            'supplier': "Choisir le fournisseur",
+            'suppliers': "Choisir les fournisseurs",
         }
         error_messages = {
             'name': {
@@ -234,16 +234,16 @@ class ProductForm(forms.ModelForm):
                 'invalid': "Veuillez entrer un prix de vente valide.",
             },
             'supplier': {
-                'required': "Le fournisseur est requis.",
+                'required': "Les fournisseurs sont requis.",
             }
         }
 
     def clean(self):
         cleaned_data = super().clean()
-        supplier = cleaned_data.get('supplier')
+        suppliers = cleaned_data.get('suppliers')
 
-        if not supplier:
-            self.add_error('supplier', 'Le fournisseur est requis.')
+        if not suppliers:
+            self.add_error('supplier', 'Les fournisseurs sont requis.')
 
         return cleaned_data
 
