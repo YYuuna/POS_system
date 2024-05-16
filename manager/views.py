@@ -220,6 +220,28 @@ class SupplierPurchaseOrdersListView(LoginRequiredMixin,RoleRequiredMixin, ListV
             queryset = queryset.filter(id=query)
         return queryset
 
+class SupplierProductsListView(LoginRequiredMixin,RoleRequiredMixin, ListView):
+    model = Product
+    template_name = 'listeproduitfournisseur.html'
+    context_object_name = 'products'
+    paginate_by = 7
+    required_roles = ['Admin', 'Employé']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = FilterForm(self.request.GET)
+        supplier = get_object_or_404(Supplier, pk=self.kwargs['pk'])
+        context['supplier'] = supplier
+        return context
+
+    def get_queryset(self):
+        supplier = get_object_or_404(Supplier, pk=self.kwargs['pk'])
+        queryset = Product.objects.filter(suppliers__in=[supplier])
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(id=query)
+        return queryset
+
 
 class AddProductView(LoginRequiredMixin,RoleRequiredMixin, CreateView):
     model = Product

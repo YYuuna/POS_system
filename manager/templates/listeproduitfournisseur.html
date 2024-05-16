@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/accueil.css' %}">
-    <title>Liste des produit de fournisseur</title>
+    <title>Liste des produits de fournisseur</title>
 </head>
 <body>
 <div class="corp">
@@ -116,44 +116,53 @@
     <div class="liste">
         <div class="ctouts">
 
-            <div class="colone1"><h4>Liste des produit de fournisseu : <a id="touts" href="{% url 'client-detail' client.id %}">{{}}</a></h4></div> 
+            <div class="colone1"><h4>Liste des produits de fournisseu <a id="touts"
+                                                                         href="{% url 'supplier-detail' supplier.id %}">{{supplier}}</a>
+            </h4></div>
 
             <div class="colone1">
                 <form method="GET" action="">
                     {{ form }}
                     <button class="button" type="submit">Rechercher</button>
                 </form>
-                
+
             </div>
-            
 
 
         </div>
 
         <div class="c2">
-            {% if sales %}
+            {% if products %}
             <table>
                 <thead>
                 <tr>
-                    <th>IdProduit</th>
+                    <th>Id</th>
                     <th>Nom</th>
+                    <th>Catégorie</th>
                     <th>Quantité</th>
+                    <th>Prix de vente</th>
+                    <th>Détails</th>
                 </tr>
                 </thead>
                 <tbody id="tbody">
-                {% for %}
+                {% for product in products%}
                 <tr>
-                    <td>{{  }}</td>
-                    <td>{{  }}</td>
-                    <td>{{  }}</td>
-                
-                       
+                    <td>{{ product.id }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.initial_selling_price }} DA</td>
+                    <td>
+                        <button class="button" id="detai"
+                                onclick="location.href='{% url 'product-detail' product.id %}';">Détails
+                        </button>
+                    </td>
                 </tr>
                 {% endfor %}
                 </tbody>
             </table>
             {% else %}
-            <p>Pas de produit trouvées.</p>
+            <p>Pas de produits trouvés.</p>
             {% endif %}
             <div class="pagination">
                 <span class="step-links">
@@ -170,14 +179,8 @@
                         <button class="but">     <a href="?page={{ page_obj.paginator.num_pages }}">dernière &raquo;</a> </button>
                     {% endif %}
                 </span>
-
             </div>
-
-
         </div>
-
-
     </div>
-
 </body>
 </html>

@@ -15,7 +15,8 @@ urlpatterns = [
     path('fournisseurs/', views.SupplierListView.as_view(), name='supplier-list'),
     path('fournisseur/<int:pk>/', views.SupplierDetailView.as_view(), name='supplier-detail'),
     path('fournisseur/<int:pk>/commandes/', views.SupplierPurchaseOrdersListView.as_view(), name='supplier-purchase'
-                                                                                                 '-orders'),
+                                                                                               '-orders'),
+    path('fournisseur/<int:pk>/produits/', views.SupplierProductsListView.as_view(), name='supplier-products'),
     path('fournisseur/<int:pk>/modifier', views.SupplierUpdateView.as_view(), name='update-supplier'),
     path('fournisseur/<int:pk>/supprimer', views.SupplierDeleteView.as_view(), name='delete-supplier'),
     path('ajouter-produit/', views.AddProductView.as_view(), name='add-product'),
