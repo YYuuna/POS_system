@@ -127,6 +127,25 @@ input:focus{
     grid-template-columns: 18% 60% 22%;
  
 }
+.ctouts{
+    margin-top: 2%;
+    margin-bottom: 1%;
+    display: grid;
+    /* grid-template-rows: 1fr 1fr ;  */
+   
+    grid-template-columns: 37%  55% 8%; 
+
+}
+
+#touts{
+    color: #007acc;
+    text-decoration: underline;
+    transition: 0.6s;
+    
+}
+#touts:hover{
+    color: #008b74e9;
+}
 .c11{
     margin-top: 2%;
     text-align: center;
@@ -140,6 +159,14 @@ input:focus{
    
     grid-template-columns: 40% 15% 15% 15% 15%;
     /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr ;  */
+}
+/* detaill de client et fournisseur  */
+.c0{
+    margin-top: 2%;
+    text-align: left;
+    display: grid;
+    grid-template-columns: 40% 10% 25% 25%;
+
 }
 
 .colone2{

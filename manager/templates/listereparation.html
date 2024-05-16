@@ -147,7 +147,7 @@
                 <tr>
                     <td>{{ repair.id }}</td>
                     <td>{{ repair.title }}</td>
-                    <td><a href="{% url 'client-detail' repair.client.id %}">{{ repair.client }}</a></td>
+                    <td><a id="touts" href="{% url 'client-detail' repair.client.id %}">{{ repair.client }}</a></td>
                     <td>{{ repair.hardware }}</td>
                     <td>{{ repair.repair_price }}</td>
                     <td>{{ repair.deposit_date }}</td>

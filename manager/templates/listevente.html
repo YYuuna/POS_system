@@ -150,7 +150,7 @@
                 {% for sale in sales %}
                 <tr>
                     <td>{{ sale.id }}</td>
-                    <td><a href="{% url 'client-detail' sale.client.id %}">{{ sale.client }}</a>  </td>
+                    <td><a id="touts" href="{% url 'client-detail' sale.client.id %}">{{ sale.client }}</a>  </td>
                     <td>{{ sale.sale_date }}</td>
                     <!-- Add more fields as per your requirement -->
                     

@@ -151,7 +151,7 @@
                 {% for purchase_order in page_obj %}
                 <tr>
                     <td>{{ purchase_order.id }}</td>
-                    <td><a href="{% url 'supplier-detail' purchase_order.supplier.id %}"> {{ purchase_order.supplier.name }} </a></td>
+                    <td><a id="touts" href="{% url 'supplier-detail' purchase_order.supplier.id %}"> {{ purchase_order.supplier.name }} </a></td>
                     <td>{{ purchase_order.order_date }}</td>
                     <td>
                         {% if purchase_order.delivery_date %}
