@@ -143,7 +143,7 @@
             <p><strong>Fournisseurs :</strong></p>
             <ul>
                 {% for supplier in product.suppliers.all %}
-                <li><a href="{% url 'supplier-detail' supplier.id %}">{{ supplier.name }} </a></li>
+                <li><a id="touts" href="{% url 'supplier-detail' supplier.id %}">{{ supplier.name }} </a></li>
                 {% empty %}
                     <li>Pas de fournisseurs pour ce produit .</li>
                 {% endfor %}
