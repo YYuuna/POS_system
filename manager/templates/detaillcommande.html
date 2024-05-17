@@ -144,7 +144,7 @@
 
             <button id="imprimer" onclick="printPDF();"
                     {% if not purchase_order_items_exist %} disabled {% endif %}
-            >Imprimer commande
+            >Imprimer 🖨️
 
 
             </button>
@@ -153,7 +153,7 @@
         {% if not purchase_order.delivery_date and purchase_order_items_exist %}
         <div>
             <button id="livrer" onclick="location.href='{% url 'deliver-purchase-order' pk=purchase_order.pk %}';">
-                Livrer
+                Livrer ✅
             </button>
         </div>
         {% endif %}

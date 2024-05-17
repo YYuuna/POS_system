@@ -139,16 +139,16 @@
             {% if repair.state == 'Réparation terminée' %}
             <div>
                 <!-- <button id="imprimer" onclick="imprimerPartie()">Imprimer</button>  -->
-                <button id="imprimer" onclick="printInvoicePDF();">Imprimer facture</button>
+                <button id="imprimer" onclick="printInvoicePDF();">Imprimer facture 🖨️</button>
             </div>
             {% else %}
             <div>
-                <button id="imprimer" onclick="printReceiptPDF();">Imprimer bon</button>
+                <button id="imprimer" onclick="printReceiptPDF();">Imprimer bon 🖨️</button>
             </div>
             <div>
             <form method="post" action="{% url 'finish-repair' repair.pk %}">
                     {% csrf_token %}
-                    <input id="livrer" type="submit" value="Terminer">
+                    <input id="livrer" type="submit" value="Terminer✅">
             </form>
             </div>
             {% endif %}

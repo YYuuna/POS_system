@@ -127,14 +127,14 @@
             {% if request.user.employee.role == 'Admin' or request.user.employee.role == 'Employé' %}
             <div>
                 <button class="button" id="detaill"
-                onclick="location.href='{% url 'client-sales' client.id %}';">Liste des ventes
+                onclick="location.href='{% url 'client-sales' client.id %}';">Liste des ventes📃
                  </button>
             </div>
             {% endif %}
             {% if request.user.employee.role == 'Admin' or request.user.employee.role == 'Réparateur' %}
             <div>
                 <button class="button" id="detaill"
-                onclick="location.href='{% url 'client-repairs' client.id %}';">Liste des réparations
+                onclick="location.href='{% url 'client-repairs' client.id %}';">Liste des réparations📃
                  </button>
             </div>
             {% endif %}
