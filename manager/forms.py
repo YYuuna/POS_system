@@ -509,3 +509,7 @@ class HardwareToRepairForm(forms.ModelForm):
 class CustomSetPasswordForm(SetPasswordForm):
     old_password = None  # Remove the old_password field
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['new_password1'].widget.attrs.update({'placeholder': 'Nouveau mot de passe'})
+        self.fields['new_password2'].widget.attrs.update({'placeholder': 'Confirmation du nouveau mot de passe'})
