@@ -164,8 +164,14 @@
 
     <div class="c22" id="partieImprimer">
         <p><strong> IdCommande :{{purchase_order.id}}</strong></p><br>
-        <p>Fournisseur : <a id="touts" href="{% url 'supplier-detail' purchase_order.supplier.id %}">
-            {{purchase_order.supplier}} </a></p><br>
+        <p>Fournisseur :
+            {% if purchase_order.supplier %}
+            <a id="touts" href="{% url 'supplier-detail' purchase_order.supplier.id %}">
+            {{purchase_order.supplier}} </a>
+            {% else %}
+            Fournisseur inconnu
+            {% endif %}
+        </p><br>
         <p>Date de commande : {{purchase_order.order_date}}</p><br>
         <p>Date de livraison :
             {% if purchase_order.delivery_date %}

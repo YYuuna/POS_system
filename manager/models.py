@@ -139,7 +139,12 @@ class PurchaseOrder(models.Model):
     # Other fields...
 
     def __str__(self):
-        return f"Purchase Order #{self.pk} - Supplier: {self.supplier.name}"
+        str=f"Purchase Order #{self.pk} - Supplier: "
+        if self.supplier:
+            str+=self.supplier.name
+        else:
+            str+="Fournisseur inconnu"
+        return str
 
     class Meta:
         db_table = 'Commande'
