@@ -222,11 +222,7 @@
 <script>
     function printPDF() {
         // Open the PDF in a new window
-        var win = window.open('{% url '
-        purchase - order - print
-        ' purchase_order.id %}', '_blank'
-    )
-        ;
+        var win = window.open('{% url 'purchase-order-print' purchase_order.id %}', '_blank');
         // Wait for the PDF to load, then call the print function
         win.onload = function () {
             win.print();

@@ -420,7 +420,7 @@ class PurchaseOrderItemDeliveredForm(forms.ModelForm):
         super(PurchaseOrderItemDeliveredForm, self).__init__(*args, **kwargs)
         if self.instance and self.instance.purchase_order:
             self.fields['product'] = forms.ModelChoiceField(
-                queryset=Product.objects.filter(supplier=self.instance.purchase_order.supplier),
+                queryset=Product.objects.filter(suppliers__in=[self.instance.purchase_order.supplier]),
                 disabled=True,
                 label="Produit",
                 to_field_name="id"
