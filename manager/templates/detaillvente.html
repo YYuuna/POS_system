@@ -116,6 +116,16 @@
 
     <div class="liste">
         <div class="c111">
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div
+                {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                {{ message }}
+                </div>
+            {% endfor %}
+            </div>
+            {% endif %}
             <div class="colone1"><h3>Détails de la vente :</h3></div>
             <div>
                 <button class="button" id="modifierv" onclick="location.href='{% url 'update-sale' sale.id %}';">
@@ -140,7 +150,13 @@
 
         <div class="c22" id="partieImprimer">
             <p><strong> Id Vente :{{sale.id}}</strong></p><br>
-            <p>Client : <a id="touts" href="{% url 'client-detail' sale.client.id %}"> {{sale.client}} </a></p><br>
+            <p>Client :
+                {% if sale.client %}
+                <a id="touts" href="{% url 'client-detail' sale.client.id %}"> {{sale.client}} </a>
+                {% else %}
+                Client inconnu
+                {% endif %}
+            </p><br>
             <p>Date de vente : {{sale.sale_date}}</p><br>
 
             {% if sale_items_exist %}

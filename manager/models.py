@@ -173,7 +173,12 @@ class Sale(models.Model):
     # Other fields...
 
     def __str__(self):
-        return f"Sale #{self.pk} - Client: {self.client.first_name} {self.client.last_name}"
+        str=f"Sale #{self.pk} - Client: "
+        if self.client:
+            str+=f"{self.client.first_name} {self.client.last_name}"
+        else:
+            str+="Client inconnu"
+        return str
 
     class Meta:
         db_table = 'Vente'

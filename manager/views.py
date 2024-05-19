@@ -806,8 +806,11 @@ class SaleInvoiceView(LoginRequiredMixin,RoleRequiredMixin,View):
     def get(self, request, *args, **kwargs):
         sale = get_object_or_404(Sale, id=self.kwargs['pk'])
         sale_items = SaleItem.objects.filter(sale=sale)
+        if not sale.client:
+            messages.error(request, "La vente n'a pas de client. Vous ne pouvez pas imprimer la facture.")
         if (not sale_items.exists()):
             messages.error(request, "La vente ne contient aucun article. Vous ne pouvez pas imprimer la facture.")
+        if not(sale.client and sale_items.exists()):
             return redirect('sale-detail', pk=sale.pk)
         # Calculate the total for each item
         item_totals = [item.sale_price * item.quantity for item in sale_items]
@@ -848,8 +851,11 @@ class PurchaseOrderPrintView(LoginRequiredMixin, RoleRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         purchase_order = get_object_or_404(PurchaseOrder, id=self.kwargs['pk'])
         purchase_order_items = PurchaseOrderItem.objects.filter(purchase_order=purchase_order)
+        if not purchase_order.supplier:
+            messages.error(request, "La commande n'a pas de fournisseur. Vous ne pouvez pas imprimer la commande.")
         if (not purchase_order_items.exists()):
             messages.error(request, "La commande ne contient aucun article. Vous ne pouvez pas imprimer la facture.")
+        if not (purchase_order.supplier and purchase_order_items.exists()):
             return redirect('purchase-order-detail', pk=purchase_order.pk)
 
 

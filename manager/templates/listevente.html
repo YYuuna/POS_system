@@ -141,9 +141,6 @@
                     <th>Date de vente</th>
                     <!-- Add more fields as per your requirement -->
                     <th>Details</th>
-                    <!-- <th>Modifier</th>  -->
-                    <!-- <th>Supprimer</th>  -->
-              
 
                    
                 </tr>
@@ -152,7 +149,13 @@
                 {% for sale in sales %}
                 <tr>
                     <td>{{ sale.id }}</td>
-                    <td><a id="touts" href="{% url 'client-detail' sale.client.id %}">{{ sale.client }}</a>  </td>
+                    <td>
+                        {% if sale.client %}
+                        <a id="touts" href="{% url 'client-detail' sale.client.id %}">{{ sale.client }}</a>
+                        {% else %}
+                        Client inconnu
+                        {% endif %}
+                    </td>
                     <td>{{ sale.sale_date }}</td>
                     <!-- Add more fields as per your requirement -->
                     
@@ -160,18 +163,6 @@
                         <button class="button" id="detail"
                                 onclick="location.href='{% url 'sale-detail' sale.id %}';">Details
                         </button>
-
-                    <!-- <td>  -->
-                        <!-- <button class="button" id="modifierv" onclick="location.href='{% url 'update-sale' sale.id %}';">Modifier </button>       -->
-                    <!-- </td>  -->
-                    
-                    <!-- <td>  -->
-                        <!-- <button class="button" id="supprimerv"onclick="location.href='{% url 'cancel-sale' sale.id %}';">Supprimer </button>  -->
-                                
-                       
-                    <!-- </td>  -->
-                   
-
                 </tr>
                 {% endfor %}
                 </tbody>
