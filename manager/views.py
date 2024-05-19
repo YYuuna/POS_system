@@ -896,6 +896,9 @@ class RepairInvoiceView(LoginRequiredMixin,RoleRequiredMixin, View):
         # Check if the repair is done
         if repair.state != 'Réparation terminée':
             messages.error(request, "La réparation n'est pas encore terminée. Vous ne pouvez pas imprimer la facture.")
+        if not repair.client:
+            messages.error(request, "La réparation n'a pas de client. Vous ne pouvez pas imprimer la facture.")
+        if not (repair.client and repair.state == 'Réparation terminée'):
             return redirect('repair-detail', pk=repair.pk)
 
         data = {
