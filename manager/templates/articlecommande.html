@@ -174,8 +174,8 @@
 <script>
     $(function() {
         $('.purchase-order-item').formset({
-            addText: 'Plus +',
-            deleteText: 'Supprimer',
+            addText: '➕',
+            deleteText: '❌',
             prefix: '{{ form.prefix }}',
             added: function(row) {
                 updateProductSelection();
