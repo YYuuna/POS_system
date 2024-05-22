@@ -66,7 +66,7 @@ class ClientForm(forms.ModelForm):
         widgets = {
             'first_name': forms.TextInput(attrs={'placeholder': 'Entrer le prénom'}),
             'last_name': forms.TextInput(attrs={'placeholder': 'Entrer le nom'}),
-            'phone': forms.TextInput(attrs={'placeholder': 'Entrer le numero teléphone'}),
+            'phone': forms.TextInput(attrs={'placeholder': 'Entrer le numéro de téléphone'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Entrer l\'email'}),
             'address': forms.TextInput(attrs={'placeholder': 'Entrer l\'adresse'}),
         }
@@ -151,7 +151,7 @@ class SupplierForm(forms.ModelForm):
         fields = ['name', 'phone', 'email', 'address']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Entrer le nom de fournisseur'}),
-            'phone': forms.TextInput(attrs={'placeholder': 'Entrer le numero teléphone'}),
+            'phone': forms.TextInput(attrs={'placeholder': 'Entrer le numéro de téléphone'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Entrer l\'email'}),
             'address': forms.TextInput(attrs={'placeholder': 'Entrer l\'adresse'}),
         }
