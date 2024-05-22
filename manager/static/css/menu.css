@@ -21,15 +21,24 @@ body{
     margin-top: 10px;
     text-align: center;
     letter-spacing: 6px;
-    transition: 0.9s;
+    transition: 0.5s;
 }
 .logoo:hover {
     letter-spacing:8px;
 }
 .logoo{
-    letter-spacing:4px;
+    letter-spacing:3.2px;
 
 }
+.logoo p {
+  letter-spacing:1.5px ;
+  transition: 0.5s;
+}
+.logoo p:hover {
+  letter-spacing:2px ;
+
+}
+
 .menu{
     margin: 5%;
     

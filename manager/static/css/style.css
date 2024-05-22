@@ -400,4 +400,17 @@ table{
 .delete-row:hover{
     letter-spacing: 0.6px;
 }
-
+.head{
+    letter-spacing:3.2px ;
+    transition: 0.5s;
+}
+.head p {
+    letter-spacing:1.5px ;
+    transition: 0.5s;
+}
+.head p:hover {
+    letter-spacing:2px ;
+}
+.head:hover{
+    letter-spacing: 10px;
+}
