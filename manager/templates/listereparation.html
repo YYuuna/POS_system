@@ -151,7 +151,7 @@
                     <td>{{ repair.title }}</td>
                     <td>
                         {% if repair.client %}
-                        <a id="touts" href="{% url 'client-detail' repair.client.id %}">{{ repair.client }</a>
+                        <a id="touts" href="{% url 'client-detail' repair.client.id %}">{{ repair.client }}</a>
                         {% else %}
                         Client inconnu
                         {% endif %}
