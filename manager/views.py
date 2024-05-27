@@ -800,6 +800,25 @@ class RepairFinishView(LoginRequiredMixin,RoleRequiredMixin, View):
         messages.success(request, "La réparation a été terminée avec succès.")
         return redirect('repair-detail', pk=repair.pk)
 
+class RepairPayView(LoginRequiredMixin,RoleRequiredMixin, View):
+    required_roles = ['Admin', 'Réparateur']
+    def post(self, request, *args, **kwargs):
+        repair = get_object_or_404(Repair, pk=kwargs['pk'])
+
+        # Check if the repair is done
+        if repair.state != 'Réparation terminée':
+            # Display an error message in french and redirect to the repair detail view
+            messages.error(request, "La réparation n'est pas encore terminée.")
+            return redirect('repair-detail', pk=repair.pk)
+
+
+        # Display a success message in french and redirect to the repair detail view and change the state to paid and set payment date
+        repair.state = 'Réparation payée'
+        repair.delivery_date=timezone.now()
+        repair.save()
+        messages.success(request, "La réparation a été payée avec succès.")
+        return redirect('repair-detail', pk=repair.pk)
+
 
 class SaleInvoiceView(LoginRequiredMixin,RoleRequiredMixin,View):
     required_roles = ['Admin', 'Employé']
@@ -894,11 +913,11 @@ class RepairInvoiceView(LoginRequiredMixin,RoleRequiredMixin, View):
         left_to_pay = repair.repair_price - repair.prepayment
 
         # Check if the repair is done
-        if repair.state != 'Réparation terminée':
+        if repair.state == 'En cours':
             messages.error(request, "La réparation n'est pas encore terminée. Vous ne pouvez pas imprimer la facture.")
         if not repair.client:
             messages.error(request, "La réparation n'a pas de client. Vous ne pouvez pas imprimer la facture.")
-        if not (repair.client and repair.state == 'Réparation terminée'):
+        if not (repair.client and repair.state != 'En cours'):
             return redirect('repair-detail', pk=repair.pk)
 
         data = {
@@ -907,10 +926,6 @@ class RepairInvoiceView(LoginRequiredMixin,RoleRequiredMixin, View):
             # include any other data you need in the template
         }
 
-        # set the repair delivery date to now if it is not set yet
-        if not repair.delivery_date:
-            repair.delivery_date = timezone.now()
-            repair.save()
 
         # Rendered html content as a string
         html_string = render_to_string('facturereparation.html', data)

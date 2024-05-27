@@ -9,7 +9,7 @@
         body {
             font-family: 'Courier New', Courier, monospace;
             /*background-color: #605d5d1b;*/
-          
+
         }
 
         a {
@@ -22,7 +22,8 @@
             grid-template-rows: 15% 70% 15%;
 
         }
-        .logo{
+
+        .logo {
             padding: 0%;
             margin: 0%;
         }
@@ -31,7 +32,7 @@
             text-align: center;
             background-color: #66656513;
             border-radius: 1px;
-             /* background-color:rgba(245, 222, 179, 0.274);   */
+            /* background-color:rgba(245, 222, 179, 0.274);   */
         }
 
         .element {
@@ -97,7 +98,7 @@
         <p>&nbsp;<strong>Tel : </strong> 023 95 01 00 </p>
     </div>
     <div class="titre">
-       
+
         <h1>Facture de réparation </h1>
 
     </div>
@@ -115,16 +116,20 @@
         <p>Client : {{repair.client.id}} - {{repair.client}}</p>
         <p>Prix de réparation : {{repair.repair_price}} DA </p>
         <p>Versement : {{repair.prepayment }} DA</p>
-    
-        <p>Reste à payer : {{left_to_pay}} DA</p> 
-        <!-- <p>payment : ✅</p>  -->
+        {% if repair.state == 'Réparation payée' %}
+        <p>La réparation est payée.</p><br>
+        {% else %}
+        <p>Reste à payer : {{left_to_pay}} DA</p><br>
+        {% endif %}
 
 
-       
-
-    </div> <br>
-    <p>---------------------------------------------------------------<br>&nbsp;&nbsp;&nbsp;&nbsp; En cas de besoin d'échange ou remboursement veuillez &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;présenter ce bon à notre équipe. <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Merci pour votre fidélité !  <br> ---------------------------------------------------------------</p>
-   <br>
+    </div>
+    <br>
+    <p>---------------------------------------------------------------<br>&nbsp;&nbsp;&nbsp;&nbsp; En cas de besoin
+        d'échange ou remboursement veuillez &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;présenter
+        ce bon à notre équipe. <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Merci pour votre fidélité ! <br> ---------------------------------------------------------------</p>
+    <br>
     <div class="sig">
 
         <!-- <div><p><strong> Signateur de client :</strong></p></div>  -->

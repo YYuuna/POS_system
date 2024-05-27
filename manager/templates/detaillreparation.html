@@ -22,9 +22,12 @@
         <br>
         <button class="value" onclick="location.href='{% url 'dashboard' %}';">
 
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M399 384.2C376.9 345.8 335.4 320 288 320H224c-47.4 0-88.9 25.8-111 64.2c35.2 39.2 86.2 63.8 143 63.8s107.8-24.7 143-63.8zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256 16a72 72 0 1 0 0-144 72 72 0 1 0 0 144z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                <path d="M399 384.2C376.9 345.8 335.4 320 288 320H224c-47.4 0-88.9 25.8-111 64.2c35.2 39.2 86.2 63.8 143 63.8s107.8-24.7 143-63.8zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256 16a72 72 0 1 0 0-144 72 72 0 1 0 0 144z"/>
+            </svg>
 
-             Mon profile
+            Mon profile
         </button>
         {% if request.user.employee.role == 'Admin' %}
         <button class="value" onclick="location.href='{% url 'account-list' %}';">
@@ -64,8 +67,9 @@
         <!-- ---------------------------------------------------------------------------------------- -->
         {% if request.user.employee.role == 'Admin' or request.user.employee.role == 'Employé' %}
         <button class="value" onclick="location.href='{% url 'sale-list' %}';">
-            
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96zM252 160c0 11 9 20 20 20h44v44c0 11 9 20 20 20s20-9 20-20V180h44c11 0 20-9 20-20s-9-20-20-20H356V96c0-11-9-20-20-20s-20 9-20 20v44H272c-11 0-20 9-20 20z"/>
+
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                <path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96zM252 160c0 11 9 20 20 20h44v44c0 11 9 20 20 20s20-9 20-20V180h44c11 0 20-9 20-20s-9-20-20-20H356V96c0-11-9-20-20-20s-20 9-20 20v44H272c-11 0-20 9-20 20z"/>
             </svg>
             Ventes
         </button>
@@ -100,17 +104,15 @@
         <!-- ----------------------------------- -->
 
         <button class="value" onclick="location.href='{% url 'hardware-list' %}';">
-            
-               
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
-                    <path d="M384 96V320H64L64 96H384zM64 32C28.7 32 0 60.7 0 96V320c0 35.3 28.7 64 64 64H181.3l-10.7 32H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H352c17.7 0 32-14.3 32-32s-14.3-32-32-32H277.3l-10.7-32H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm464 0c-26.5 0-48 21.5-48 48V432c0 26.5 21.5 48 48 48h64c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48H528zm16 64h32c8.8 0 16 7.2 16 16s-7.2 16-16 16H544c-8.8 0-16-7.2-16-16s7.2-16 16-16zm-16 80c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16s-7.2 16-16 16H544c-8.8 0-16-7.2-16-16zm32 160a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/>
+
+
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                <path d="M384 96V320H64L64 96H384zM64 32C28.7 32 0 60.7 0 96V320c0 35.3 28.7 64 64 64H181.3l-10.7 32H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H352c17.7 0 32-14.3 32-32s-14.3-32-32-32H277.3l-10.7-32H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm464 0c-26.5 0-48 21.5-48 48V432c0 26.5 21.5 48 48 48h64c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48H528zm16 64h32c8.8 0 16 7.2 16 16s-7.2 16-16 16H544c-8.8 0-16-7.2-16-16s7.2-16 16-16zm-16 80c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16s-7.2 16-16 16H544c-8.8 0-16-7.2-16-16zm32 160a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/>
             </svg>
             Matériels à réparer
         </button>
         {% endif %}
 
-        
-       
 
     </div>
 
@@ -140,37 +142,47 @@
                 </button>
             </div>
             {% if repair.state == 'Réparation terminée' %}
-            
-                <div> <form method="post" action="{% url 'finish-repair' repair.pk %}">
+
+            <div>
+                <form method="post" action="{% url 'pay-repair' repair.pk %}">
                     {% csrf_token %}
                     <input id="livrer" type="submit" value="Payée✅">
-            </form> 
+                </form>
             </div>  <!-- Réparation est payée  -->
-              <div>  <button id="imprimer" onclick="printInvoicePDF();">Imprimer facture 🖨️</button>
+            {% endif %}
+            {% if repair.state != 'En cours' %}
+            <div>
+                <button id="imprimer" onclick="printInvoicePDF();">Imprimer facture 🖨️</button>
             </div>
-            {% else %}
+            {% endif %}
+            {% if repair.state == 'En cours' %}
+            <div>
+                <form method="post" action="{% url 'finish-repair' repair.pk %}">
+                    {% csrf_token %}
+                    <input id="livrer" type="submit" value="Terminer✅">
+                </form>
+            </div>
+            {% endif %}
+            {% if repair.state == 'En cours' %}
             <div>
                 <button id="imprimer" onclick="printReceiptPDF();">Imprimer bon 🖨️</button>
             </div>
-            <div>
-            <form method="post" action="{% url 'finish-repair' repair.pk %}">
-                    {% csrf_token %}
-                    <input id="livrer" type="submit" value="Terminer✅">
-            </form>
-            </div>
             {% endif %}
+
 
         </div>
 
         <div class="c22" id="partieImprimer">
             <p><strong> IdRéparation :{{repair.id}}</strong></p> <br>
-            <!-- <p>Titre : {{repair.title}}</p><br>  -->
+            <p>Titre : {{repair.title}}</p><br>
             <p>Description : {{repair.description}}</p><br>
             <p>État : {{repair.state}}</p><br>
             <p>Id matériel : {{repair.hardware.id}}</p><br>
-            <p>Matériel : <a id="touts" href="{% url 'hardware-detail' repair.hardware.id %}"> {{repair.hardware}} </a></p><br>
+            <p>Matériel : <a id="touts" href="{% url 'hardware-detail' repair.hardware.id %}"> {{repair.hardware}} </a>
+            </p><br>
             <p>Date de dépôt : {{repair.deposit_date}}</p><br>
-            <p>Date de remise : {% if repair.delivery_date %} {{repair.delivery_date}} {% else %} Le matériel n'a pas encore été remis .{% endif %}</p><br>
+            <p>Date de remise : {% if repair.delivery_date %} {{repair.delivery_date}} {% else %} Le matériel n'a pas
+                encore été remis .{% endif %}</p><br>
             <p>Client :
                 {% if repair.client %}
                 <a id="touts" href="{% url 'client-detail' repair.client.id %}">{{repair.client}} </a>
@@ -180,7 +192,11 @@
             </p><br>
             <p>Prix de réparation : {{repair.repair_price}} DA</p><br>
             <p>Versement : {{repair.prepayment }} DA</p><br>
+            {% if repair.state == 'Réparation payée' %}
+            <p>La réparation est payée .</p><br>
+            {% else %}
             <p>Reste à payer : {{left_to_pay}} DA</p><br>
+            {% endif %}
 
         </div>
 
@@ -199,6 +215,7 @@
             win.print();
         }
     }
+
     function printReceiptPDF() {
         // Open the PDF in a new window
         var win = window.open('{% url 'repair-receipt' repair.id %}', '_blank');

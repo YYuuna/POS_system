@@ -55,6 +55,7 @@ urlpatterns = [
     path('reparation/<int:pk>/modifier/', views.RepairUpdateView.as_view(), name='update-repair'),
     path('reparation/<int:pk>/supprimer/', views.RepairDeleteView.as_view(), name='delete-repair'),
     path('reparation/<int:pk>/terminer/', views.RepairFinishView.as_view(), name='finish-repair'),
+    path('reparation/<int:pk>/payer/', views.RepairPayView.as_view(), name='pay-repair'),
     path('reparation/<int:pk>/facture/', views.RepairInvoiceView.as_view(), name='repair-invoice'),
     path('reparation/<int:pk>/bon/', views.RepairReceiptView.as_view(), name='repair-receipt'),
     path('materiels-a-reparer/', views.HardwareToRepairListView.as_view(), name='hardware-list'),
