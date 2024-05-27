@@ -140,9 +140,13 @@
                 </button>
             </div>
             {% if repair.state == 'Réparation terminée' %}
-            <div>
-                <!-- <button id="imprimer" onclick="imprimerPartie()">Imprimer</button>  -->
-                <button id="imprimer" onclick="printInvoicePDF();">Imprimer facture 🖨️</button>
+            
+                <div> <form method="post" action="{% url 'finish-repair' repair.pk %}">
+                    {% csrf_token %}
+                    <input id="livrer" type="submit" value="Payée✅">
+            </form> 
+            </div>  <!-- Réparation est payée  -->
+              <div>  <button id="imprimer" onclick="printInvoicePDF();">Imprimer facture 🖨️</button>
             </div>
             {% else %}
             <div>
